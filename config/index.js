@@ -42,7 +42,8 @@ module.exports = exports = {
     'react-router',
     'redux',
     'redux-devtools',
-    'redux-devtools/lib/react'
+    'redux-devtools/lib/react',
+    'react-bootstrap'
   ],
 
   // server configuration
