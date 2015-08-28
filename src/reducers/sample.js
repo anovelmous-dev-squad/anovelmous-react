@@ -5,7 +5,7 @@ import { createReducer } from 'utils';
 // the constant here.
 const SAMPLE_ACTION = 'SAMPLE_ACTION';
 const initialState  = {
-  message : 'Welcome to the React Redux Starter Kit!'
+  message : 'Welcome to Anovelmous!'
 };
 
 export default createReducer(initialState, {
