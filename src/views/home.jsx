@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Header from 'components/header';
+import { Grid, Row, Col, Navbar, Nav, NavItem } from 'react-bootstrap';
 
 @connect(state => ({
   sampleStore : state.sample
@@ -10,10 +12,12 @@ export default class HomeView extends React.Component {
   }
 
   render () {
+    const { sampleStore } = this.props;
+
     return (
-      <div className='view view--home container'>
-        <h1 className='text-center'>{this.props.sampleStore.message}</h1>
-      </div>
+        <div className='view view--home container'>
+          <p>{sampleStore}</p>
+        </div>
     );
   }
 }
