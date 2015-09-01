@@ -8,7 +8,7 @@ function fetchNovel (id) {
   return {
     [CALL_API]: {
       types: [NOVEL_REQUEST, NOVEL_SUCCESS, NOVEL_FAILURE],
-      endpoint: `novels/${id}`,
+      endpoint: `novels/${id}/`,
       schema: Schemas.NOVEL
     }
   }

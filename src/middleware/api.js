@@ -5,12 +5,31 @@ import { Schema, arrayOf, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import 'isomorphic-fetch';
 import { API_ROOT } from 'constants';
+import 'babel/polyfill';
 
-function callApi (endpoint, schema) {
+function callApi (endpoint, schema, options) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1)
                   ? API_ROOT + endpoint : endpoint;
 
-  return fetch(fullUrl)
+  const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
+  };
+
+  const { method, payload } = options;
+
+  const requestOptions = {
+    headers,
+    credentials: 'same-origin',
+    method
+  };
+
+  if (typeof payload !== 'undefined' && payload !== null) {
+    requestOptions.body = JSON.stringify(payload);
+  }
+
+  return fetch(fullUrl, requestOptions)
     .then(response =>
       response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
@@ -60,6 +79,9 @@ export const Schemas = {
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = Symbol('Call API');
 
+const HTTP_METHODS = ['head', 'get', 'post', 'put',
+                      'patch', 'delete', 'options'];
+
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
 export default store => next => action => {
@@ -69,11 +91,16 @@ export default store => next => action => {
     return next(action);
   }
 
-  let { endpoint } = callAPI;
-  const { schema, types } = callAPI;
+  let { endpoint, method } = callAPI;
+  const { schema, types, payload } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
+  }
+  method = typeof method === 'undefined' ? 'get' : method;
+
+  if (HTTP_METHODS.findIndex(legalMethod => legalMethod === method) < 0) {
+    throw new Error(`${method} is not a legal HTTP method.`);
   }
 
   if (typeof endpoint !== 'string') {
@@ -100,7 +127,7 @@ export default store => next => action => {
 
   next(actionWith({ type: requestType }));
 
-  return callApi(endpoint, schema).then(
+  return callApi(endpoint, schema, { method, payload }).then(
     response => next(actionWith({
       response,
       type: successType

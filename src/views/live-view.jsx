@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { loadNovel } from 'actions';
 
 @connect(state => ({
-  novel: state.currentNovel.novel
+  novel: state.currentNovel
 }), { loadNovel })
 export default class LiveView extends React.Component {
     static propTypes = {
@@ -15,7 +15,7 @@ export default class LiveView extends React.Component {
     }
 
     handleLoadNovel = () => {
-      this.props.loadNovel(1);
+      this.props.loadNovel('f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780');
     }
 
     render () {
@@ -23,7 +23,7 @@ export default class LiveView extends React.Component {
 
       return (
         <div>
-          <p>Currently reading: {novel.name}</p>
+          <p>Currently reading:</p>
           <button onClick={this.handleLoadNovel}></button>
         </div>
       );
