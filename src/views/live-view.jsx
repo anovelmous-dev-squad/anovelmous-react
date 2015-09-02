@@ -5,7 +5,7 @@ import { loadNovel } from 'actions';
 const NOVEL_ID = 'f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780';
 
 @connect(state => ({
-  currentNovel: state.currentNovel
+  live: state.live
 }), { loadNovel })
 export default class LiveView extends React.Component {
     static propTypes = {
@@ -21,8 +21,8 @@ export default class LiveView extends React.Component {
     }
 
     render () {
-      const { currentNovel } = this.props;
-      const novel = currentNovel.novels[NOVEL_ID];
+      const { live } = this.props;
+      const novel = live.novels[NOVEL_ID];
       const novelTitle = novel ? novel.title : 'Loading...';
 
       return (
