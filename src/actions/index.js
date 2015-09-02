@@ -11,13 +11,34 @@ function fetchNovel (id) {
       endpoint: `novels/${id}/`,
       schema: Schemas.NOVEL
     }
-  }
+  };
 }
 
 export function loadNovel (id) {
   return (dispatch, getState) => {
     return dispatch(fetchNovel(id));
   };
+}
+
+export const NOVELS_REQUEST = 'NOVELS_REQUEST';
+export const NOVELS_SUCCESS = 'NOVELS_SUCCESS';
+export const NOVELS_FAILURE = 'NOVELS_FAILURE';
+
+function fetchNovels (queryParams, url = '') {
+  return {
+    [CALL_API]: {
+      types: [],
+      endpoints: url ? url : 'novels/',
+      schema: Schemas.NOVEL_ARRAY,
+      queryParams: queryParams
+    }
+  };
+}
+
+export function loadNovels (queryParams, url = '') {
+  return (dispatch, getState) => {
+    return dispatch(fetchNovels(queryParams, url));
+  }
 }
 
 export const CHAPTER_REQUEST = 'CHAPTER_REQUEST';
@@ -31,13 +52,13 @@ function fetchChapter (id, url = '') {
       endpoint: url ? url : `chapters/${id}/`,
       schema: Schemas.CHAPTER
     }
-  }
+  };
 }
 
 export function loadChapter (id) {
   return (dispatch, getState) => {
     return dispatch(fetchChapter(id));
-  }
+  };
 }
 
 export const CHAPTERS_REQUEST = 'CHAPTERS_REQUEST';
@@ -49,9 +70,10 @@ function fetchChapters (queryParams, url = '') {
     [CALL_API]: {
       types: [CHAPTERS_REQUEST, CHAPTERS_SUCCESS, CHAPTERS_FAILURE],
       endpoint: url ? url : 'chapters/',
+      schema: Schemas.CHAPTER_ARRAY,
       queryParams: queryParams
     }
-  }
+  };
 }
 
 export const CHAPTER_TEXT_REQUEST = 'CHAPTER_TEXT_REQUEST';
@@ -63,7 +85,8 @@ function fetchChapterText (queryParams, url = '') {
     [CALL_API]: {
       types: [CHAPTER_TEXT_REQUEST, CHAPTER_TEXT_SUCCESS, CHAPTER_TEXT_FAILURE],
       endpoint: url ? url : 'formatted_novel_tokens/',
+      schema: Schemas.CHAPTER_TEXT_ARRAY,
       queryParams: queryParams
     }
-  }
+  };
 }

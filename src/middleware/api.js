@@ -55,7 +55,7 @@ const novelSchema = new Schema('novels', idField);
 const chapterSchema = new Schema('chapters', idField);
 const tokenSchema = new Schema('tokens', idField);
 const novelTokenSchema = new Schema('novelTokens', idField);
-const formattedNovelTokenSchema = new Schema('chapterText', idField);
+const chapterTextSchema = new Schema('chapterText', idField);
 const voteSchema = new Schema('votes', idField);
 
 
@@ -72,8 +72,8 @@ export const Schemas = {
   TOKEN_ARRAY: arrayOf(tokenSchema),
   NOVEL_TOKEN: novelTokenSchema,
   NOVEL_TOKEN_ARRAY: arrayOf(novelTokenSchema),
-  FORMATTED_NOVEL_TOKEN: formattedNovelTokenSchema,
-  FORMATTED_NOVEL_TOKEN_ARRAY: arrayOf(formattedNovelTokenSchema),
+  CHAPTER_TOKEN: chapterTextSchema,
+  CHAPTER_TEXT: arrayOf(chapterTextSchema),
   VOTE: voteSchema,
   VOTE_ARRAY: arrayOf(voteSchema)
 };
