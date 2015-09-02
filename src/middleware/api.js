@@ -8,8 +8,10 @@ import { API_ROOT } from 'constants';
 import 'babel/polyfill';
 
 function callApi (endpoint, schema, options) {
-  const fullUrl = (endpoint.indexOf(API_ROOT) === -1)
+  let fullUrl = (endpoint.indexOf(API_ROOT) === -1)
                   ? API_ROOT + endpoint : endpoint;
+
+  fullUrl = fullUrl + options.queryString;
 
   const headers = {
     Accept: 'application/json',
@@ -53,7 +55,7 @@ const novelSchema = new Schema('novels', idField);
 const chapterSchema = new Schema('chapters', idField);
 const tokenSchema = new Schema('tokens', idField);
 const novelTokenSchema = new Schema('novelTokens', idField);
-const formattedNovelTokenSchema = new Schema('formattedNovelTokens', idField);
+const formattedNovelTokenSchema = new Schema('chapterText', idField);
 const voteSchema = new Schema('votes', idField);
 
 
@@ -92,7 +94,7 @@ export default store => next => action => {
   }
 
   let { endpoint, method } = callAPI;
-  const { schema, types, payload } = callAPI;
+  const { schema, types, payload, queryParams } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -115,6 +117,11 @@ export default store => next => action => {
   if (!types.every(type => typeof type === 'string')) {
     throw new Error('Expected action types to be strings.');
   }
+  let queryString = '';
+
+  if (typeof queryParams !== 'undefined' && queryParams !== null) {
+    queryString = JSON.stringify(queryParams);
+  }
 
   function actionWith (data) {
     const finalAction = Object.assign({}, action, data);
@@ -127,7 +134,7 @@ export default store => next => action => {
 
   next(actionWith({ type: requestType }));
 
-  return callApi(endpoint, schema, { method, payload }).then(
+  return callApi(endpoint, schema, { method, payload, queryString }).then(
     response => next(actionWith({
       response,
       type: successType

@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { loadNovel } from 'actions';
 
+const NOVEL_ID = 'f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780';
+
 @connect(state => ({
-  novel: state.currentNovel
+  currentNovel: state.currentNovel
 }), { loadNovel })
 export default class LiveView extends React.Component {
     static propTypes = {
@@ -15,15 +17,17 @@ export default class LiveView extends React.Component {
     }
 
     handleLoadNovel = () => {
-      this.props.loadNovel('f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780');
+      this.props.loadNovel(NOVEL_ID);
     }
 
     render () {
-      const { novel } = this.props;
+      const { currentNovel } = this.props;
+      const novel = currentNovel.novels[NOVEL_ID];
+      const novelTitle = novel ? novel.title : 'Loading...';
 
       return (
         <div>
-          <p>Currently reading:</p>
+          <p>Currently reading: {novelTitle}</p>
           <button onClick={this.handleLoadNovel}></button>
         </div>
       );
