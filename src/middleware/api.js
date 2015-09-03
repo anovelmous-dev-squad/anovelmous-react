@@ -7,6 +7,23 @@ import 'isomorphic-fetch';
 import { API_ROOT } from 'constants';
 import 'babel/polyfill';
 
+// Extracts the next page URL from the Anovelmous API response.
+function getNextPageUrl (response) {
+  const link = response.headers.get('link');
+
+  if (!link) {
+    return null;
+  }
+
+  const nextLink = link.split(',').find(s => s.indexOf('rel="next"') > -1);
+
+  if (!nextLink) {
+    return null;
+  }
+
+  return nextLink.split(';')[0].slice(1, -1);
+}
+
 function callApi (endpoint, schema, options) {
   let fullUrl = (endpoint.indexOf(API_ROOT) === -1)
                   ? API_ROOT + endpoint : endpoint;
@@ -40,9 +57,11 @@ function callApi (endpoint, schema, options) {
       }
 
       const camelizedJson = camelizeKeys(json);
+      const nextPageUrl = getNextPageUrl(response) || undefined;
 
       return Object.assign({},
-        normalize(camelizedJson, schema)
+        normalize(camelizedJson, schema),
+        { getNextPageUrl }
       );
     });
 }
@@ -55,7 +74,7 @@ const novelSchema = new Schema('novels', idField);
 const chapterSchema = new Schema('chapters', idField);
 const tokenSchema = new Schema('tokens', idField);
 const novelTokenSchema = new Schema('novelTokens', idField);
-const chapterTextSchema = new Schema('chapterText', idField);
+const formattedNovelTokensSchema = new Schema('formattedNovelTokens', idField);
 const voteSchema = new Schema('votes', idField);
 
 
@@ -72,8 +91,8 @@ export const Schemas = {
   TOKEN_ARRAY: arrayOf(tokenSchema),
   NOVEL_TOKEN: novelTokenSchema,
   NOVEL_TOKEN_ARRAY: arrayOf(novelTokenSchema),
-  CHAPTER_TOKEN: chapterTextSchema,
-  CHAPTER_TEXT: arrayOf(chapterTextSchema),
+  FORMATTED_NOVEL_TOKEN: formattedNovelTokensSchema,
+  FORMATTED_NOVEL_TOKEN_ARRAY: arrayOf(formattedNovelTokensSchema),
   VOTE: voteSchema,
   VOTE_ARRAY: arrayOf(voteSchema)
 };

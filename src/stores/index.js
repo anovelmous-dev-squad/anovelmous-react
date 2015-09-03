@@ -1,6 +1,6 @@
-import { compose, createStore, combineReducers, applyMiddleware } from 'redux';
+import { compose, createStore, applyMiddleware } from 'redux';
 import { devTools } from 'redux-devtools';
-import * as reducers from 'reducers';
+import reducer from 'reducers';
 import thunkMiddleware from 'redux-thunk';
 import apiMiddleware from '../middleware/api';
 import createLogger from 'redux-logger';
@@ -18,8 +18,6 @@ const logger = createLogger({
   collapsed: true,
   predicate: (getState, action) => __DEV__
 })
-
-const reducer = combineReducers(reducers);
 
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware,
