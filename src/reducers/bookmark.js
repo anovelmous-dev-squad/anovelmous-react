@@ -1,11 +1,15 @@
-import { TransformTypes } from 'constants';
+import { TransformTypes as types } from 'constants';
+import { merge } from 'lodash';
 
 export default function bookmark (state = {
   novel: '',
   chapter: '',
   ordinal: 0
 }, action) {
-  const { type } = action;
-
-  return state;
+  switch (action.type) {
+    case types.UPDATE_BOOKMARK:
+      return merge({}, state, action.bookmark);
+    default:
+      return state;
+  }
 }

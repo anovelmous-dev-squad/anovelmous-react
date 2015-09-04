@@ -1,5 +1,8 @@
 import { TransformTypes as types } from 'constants';
 
-export function updateBookmark (chapterId, ordinal) {
-  return { type: types.UPDATE_BOOKMARK, chapterId, ordinal };
+export function updateBookmark (novel, chapter, ordinal) {
+  return {
+    type: types.UPDATE_BOOKMARK,
+    bookmark: { novel, chapter, ordinal }
+  };
 }
