@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadNovel, loadChapters, loadChapterText } from 'actions';
+import { loadNovel, loadChapters, loadFormattedNovelTokens } from 'actions';
+import Immutable from 'immutable';
 
 const NOVEL_ID = 'f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780';
+const CHAPTER_ID = '6dfe0d41-e7fd-4728-b392-82bf1cf12422';
 
 function isEmpty (obj) {
   return Object.keys(obj).length === 0;
@@ -11,17 +13,14 @@ function isEmpty (obj) {
 @connect(state => ({
   entities: state.entities,
   bookmark: state.bookmark,
-  novelLoaded: state.bookmark.novel === NOVEL_ID,
-  chaptersLoaded: !isEmpty(state.entities.chapters),
-  chapterTextLoaded: !isEmpty(state.entities.formattedNovelTokens)
-}), { loadNovel, loadChapters, loadChapterText })
+  pagination: state.pagination
+}), { loadNovel, loadChapters, loadFormattedNovelTokens })
 export default class LiveView extends React.Component {
     static propTypes = {
       loadNovel: PropTypes.func.isRequired,
-      entities: PropTypes.object.isRequired,
-      novelLoaded: PropTypes.bool.isRequired,
-      chaptersLoaded: PropTypes.bool.isRequired,
-      chapterTextLoaded: PropTypes.bool.isRequired
+      loadChapters: PropTypes.func.isRequired,
+      loadFormattedNovelTokens: PropTypes.func.isRequired,
+      entities: PropTypes.object.isRequired
     };
 
     constructor () {
@@ -32,35 +31,60 @@ export default class LiveView extends React.Component {
       this.props.loadNovel(NOVEL_ID);
     }
 
-    componentWillUpdate (nextProps, nextState) {
-      const { novelLoaded, chaptersLoaded,
-              chapterTextLoaded, entities } = nextProps;
-      const { novels, chapters, chapterText } = entities;
+    componentWillReceiveProps (nextProps) {
+      const {
+        entities: { novels, chapters, formattedNovelTokens },
+        pagination: { chaptersByNovel, formattedTokensByChapter }
+      } = nextProps;
 
-      /* if (!chaptersLoaded) {
-        this.props.loadChapters(null, novels[NOVEL_ID].chapters);
-      } else if (!chapterTextLoaded) {
+      const isFetchingChapters = chaptersByNovel[NOVEL_ID]
+                                 && chaptersByNovel[NOVEL_ID].isFetching;
 
-        // this.props.loadChapterText();
+      const requestChapters = !isFetchingChapters
+                              && isEmpty(chapters)
+                              && !isEmpty(novels);
 
+      const isFetchingText = formattedTokensByChapter[CHAPTER_ID]
+                             && formattedTokensByChapter[CHAPTER_ID].isFetching;
+      const requestChapterText = !isFetchingText
+                                 && isEmpty(formattedNovelTokens)
+                                 && !isEmpty(chapters);
+
+      console.log('requestChapters: ' + requestChapters)
+      console.log('requestText: ' + requestChapterText)
+
+      if (requestChapters) {
+        this.props.loadChapters(novels[NOVEL_ID]);
+      }
+
+      /* if (requestChapterText) {
+        this.props.loadFormattedNovelTokens(chapters[CHAPTER_ID]);
       }*/
     }
 
-    handleLoadChapters = () => {
-      const { entities: { novels } } = this.props;
-
-      this.props.loadChapters(novels[NOVEL_ID]);
+    handleText = () => {
+      this.props.loadFormattedNovelTokens(
+        this.props.entities.chapters[CHAPTER_ID]);
     }
 
     render () {
-      const { entities: { novels, chapters, chapterText } } = this.props;
+      const {
+        entities: { novels, chapters, formattedNovelTokens }
+      } = this.props;
       const novel = novels[NOVEL_ID];
       const novelTitle = novel ? novel.title : 'Loading...';
 
+      const sortedTokens = Immutable.fromJS(formattedNovelTokens, (k, v) => {
+        var isIndexed = Immutable.Iterable.isIndexed(v.ordinal);
+
+        return isIndexed ? v.toList() : v.toOrderedMap();
+      });
+
       return (
         <div>
+          <button onClick={this.handleText}></button>
           <p>Currently reading: {novelTitle}</p>
-          <button onClick={this.handleLoadChapters}></button>
+          <p>{sortedTokens.map(token => token.get('content') + ' ')}</p>
         </div>
       );
     }

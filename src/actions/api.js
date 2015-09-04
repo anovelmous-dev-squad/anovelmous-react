@@ -114,7 +114,7 @@ function fetchFormattedNovelTokens (chapter, nextPageUrl) {
         FORMATTED_NOVEL_TOKENS_FAILURE
       ],
       endpoint: nextPageUrl,
-      schema: Schemas.FORMATTED_NOVEL_TOKENS_ARRAY
+      schema: Schemas.FORMATTED_NOVEL_TOKEN_ARRAY
     }
   };
 }
