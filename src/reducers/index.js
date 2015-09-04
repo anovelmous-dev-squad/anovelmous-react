@@ -1,23 +1,8 @@
-import { default as paginate } from './paginate'
+import { default as paginate } from './paginate';
+import { default as bookmark } from './bookmark';
 import { merge } from 'lodash';
 import * as ActionTypes from 'actions';
 import { combineReducers } from 'redux';
-
-function bookmark (state = {
-  novel: '',
-  chapter: '',
-  ordinal: 0
-}, action) {
-  const { type } = action;
-
-  if (type === ActionTypes.NOVEL_SUCCESS) {// TODO: diff action types req
-    return merge({}, state, { novel: action.response.result });
-  } else if (type === ActionTypes.CHAPTER_SUCCESS) {
-    return merge({}, state, { chapter: action.response.result });
-  }
-
-  return state;
-}
 
 // Updates an entity cache in response to any action with response.entities.
 function entities (state = {
