@@ -5,7 +5,8 @@ import { combineReducers } from 'redux';
 
 function bookmark (state = {
   novel: '',
-  chapter: ''
+  chapter: '',
+  ordinal: 0
 }, action) {
   const { type } = action;
 
@@ -38,7 +39,7 @@ function entities (state = {
 
 const pagination = combineReducers({
   novelsByContributor: paginate({
-    mapActionToKey: action => action.contributor,
+    mapActionToKey: action => action.contributor.clientId,
     types: [
       ActionTypes.NOVELS_REQUEST,
       ActionTypes.NOVELS_SUCCESS,
@@ -46,7 +47,7 @@ const pagination = combineReducers({
     ]
   }),
   chaptersByNovel: paginate({
-    mapActionToKey: action => action.currentNovel,
+    mapActionToKey: action => action.novel.clientId,
     types: [
       ActionTypes.CHAPTERS_REQUEST,
       ActionTypes.CHAPTERS_SUCCESS,
@@ -54,7 +55,7 @@ const pagination = combineReducers({
     ]
   }),
   formattedTokensByChapter: paginate({
-    mapActionToKey: action => action.currentChapter,
+    mapActionToKey: action => action.chapter.clientId,
     types: [
       ActionTypes.FORMATTED_NOVEL_TOKENS_REQUEST,
       ActionTypes.FORMATTED_NOVEL_TOKENS_SUCCESS,
