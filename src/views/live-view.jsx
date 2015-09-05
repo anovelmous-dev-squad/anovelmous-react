@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadNovel, loadChapters, loadFormattedNovelTokens } from 'actions';
+import { loadNovel, loadChapters, loadFormattedNovelTokens,
+         updateBookmark } from 'actions';
 import Immutable from 'immutable';
 
 const NOVEL_ID = 'f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780';
@@ -14,12 +15,13 @@ function isEmpty (obj) {
   entities: state.entities,
   bookmark: state.bookmark,
   pagination: state.pagination
-}), { loadNovel, loadChapters, loadFormattedNovelTokens })
+}), { loadNovel, loadChapters, loadFormattedNovelTokens, updateBookmark })
 export default class LiveView extends React.Component {
     static propTypes = {
       loadNovel: PropTypes.func.isRequired,
       loadChapters: PropTypes.func.isRequired,
       loadFormattedNovelTokens: PropTypes.func.isRequired,
+      updateBookmark: PropTypes.func.isRequired,
       entities: PropTypes.object.isRequired
     };
 
@@ -34,7 +36,9 @@ export default class LiveView extends React.Component {
     componentWillReceiveProps (nextProps) {
       const {
         entities: { novels, chapters, formattedNovelTokens },
-        pagination: { chaptersByNovel, formattedTokensByChapter }
+        pagination: {
+          novelsByContributor, chaptersByNovel, formattedTokensByChapter
+        }
       } = nextProps;
 
       const isFetchingChapters = chaptersByNovel[NOVEL_ID]
@@ -62,6 +66,13 @@ export default class LiveView extends React.Component {
       }*/
     }
 
+    handleBookmarkUpdate = () => {
+      const { pagination: { chaptersByNovel } } = this.props;
+
+      this.props.updateBookmark(NOVEL_ID,
+        chaptersByNovel[NOVEL_ID].ids[0], 0);
+    }
+
     handleText = () => {
       this.props.loadFormattedNovelTokens(
         this.props.entities.chapters[CHAPTER_ID]);
@@ -82,7 +93,8 @@ export default class LiveView extends React.Component {
 
       return (
         <div>
-          <button onClick={this.handleText}></button>
+          <button onClick={this.handleText}>Load text</button>
+          <button onClick={this.handleBookmarkUpdate}>Update bookmark</button>
           <p>Currently reading: {novelTitle}</p>
           <p>{sortedTokens.map(token => token.get('content') + ' ')}</p>
         </div>

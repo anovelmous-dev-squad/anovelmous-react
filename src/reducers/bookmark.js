@@ -1,4 +1,4 @@
-import { TransformTypes as types } from 'constants';
+import * as types from 'constants';
 import { merge } from 'lodash';
 
 export default function bookmark (state = {
