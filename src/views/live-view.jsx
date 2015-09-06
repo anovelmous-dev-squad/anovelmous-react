@@ -1,24 +1,32 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadNovel, loadChapters, loadFormattedNovelTokens,
+import { loadNovels, loadChapters, loadFormattedNovelTokens,
          updateBookmark } from 'actions';
 import Immutable from 'immutable';
 
-const NOVEL_ID = 'f2d1c3b5-b9d7-4e4d-a8ea-3d0bb9a26780';
+
+const CONTRIBUTOR = { clientId: '8d12c47c-8167-4df6-a5cc-def15cb3e4d8' };
 const CHAPTER_ID = '6dfe0d41-e7fd-4728-b392-82bf1cf12422';
 
 function isEmpty (obj) {
   return Object.keys(obj).length === 0;
 }
 
+function getNovelId (state) {
+  const { novelsByContributor } = state.pagination;
+  const pages = novelsByContributor[CONTRIBUTOR.clientId];
+
+  return typeof pages !== 'undefined' ? pages.ids[0] : pages;
+}
+
 @connect(state => ({
   entities: state.entities,
   bookmark: state.bookmark,
   pagination: state.pagination
-}), { loadNovel, loadChapters, loadFormattedNovelTokens, updateBookmark })
+}), { loadNovels, loadChapters, loadFormattedNovelTokens, updateBookmark })
 export default class LiveView extends React.Component {
     static propTypes = {
-      loadNovel: PropTypes.func.isRequired,
+      loadNovels: PropTypes.func.isRequired,
       loadChapters: PropTypes.func.isRequired,
       loadFormattedNovelTokens: PropTypes.func.isRequired,
       updateBookmark: PropTypes.func.isRequired,
@@ -30,7 +38,7 @@ export default class LiveView extends React.Component {
     }
 
     componentWillMount () {
-      this.props.loadNovel(NOVEL_ID);
+      this.props.loadNovels(CONTRIBUTOR);
     }
 
     componentWillReceiveProps (nextProps) {
@@ -41,8 +49,9 @@ export default class LiveView extends React.Component {
         }
       } = nextProps;
 
-      const isFetchingChapters = chaptersByNovel[NOVEL_ID]
-                                 && chaptersByNovel[NOVEL_ID].isFetching;
+      const novelId = getNovelId(nextProps);
+      const isFetchingChapters = chaptersByNovel[novelId]
+                                 && chaptersByNovel[novelId].isFetching;
 
       const requestChapters = !isFetchingChapters
                               && isEmpty(chapters)
@@ -58,7 +67,7 @@ export default class LiveView extends React.Component {
       console.log('requestText: ' + requestChapterText)
 
       if (requestChapters) {
-        this.props.loadChapters(novels[NOVEL_ID]);
+        this.props.loadChapters(novels[novelId]);
       }
 
       /* if (requestChapterText) {
@@ -68,9 +77,10 @@ export default class LiveView extends React.Component {
 
     handleBookmarkUpdate = () => {
       const { pagination: { chaptersByNovel } } = this.props;
+      const novelId = getNovelId(this.props);
 
-      this.props.updateBookmark(NOVEL_ID,
-        chaptersByNovel[NOVEL_ID].ids[0], 0);
+      this.props.updateBookmark(novelId,
+        chaptersByNovel[novelId].ids[0], 0);
     }
 
     handleText = () => {
@@ -82,7 +92,7 @@ export default class LiveView extends React.Component {
       const {
         entities: { novels, chapters, formattedNovelTokens }
       } = this.props;
-      const novel = novels[NOVEL_ID];
+      const novel = novels[getNovelId(this.props)];
       const novelTitle = novel ? novel.title : 'Loading...';
 
       const sortedTokens = Immutable.fromJS(formattedNovelTokens, (k, v) => {

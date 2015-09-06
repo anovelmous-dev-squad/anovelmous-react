@@ -29,7 +29,7 @@ function fetchNovels (contributor, nextPageUrl) {
     contributor,
     [CALL_API]: {
       types: [NOVELS_REQUEST, NOVELS_SUCCESS, NOVELS_FAILURE],
-      endpoints: nextPageUrl,
+      endpoint: nextPageUrl,
       schema: Schemas.NOVEL_ARRAY
     }
   };
@@ -38,7 +38,7 @@ function fetchNovels (contributor, nextPageUrl) {
 export function loadNovels (contributor, nextPage) {
   return (dispatch, getState) => {
     const {
-      nextPageUrl = `novels/`,
+      nextPageUrl = 'novels/',
       pageCount = 0
     } = getState().pagination.novelsByContributor[contributor] || {};
 
