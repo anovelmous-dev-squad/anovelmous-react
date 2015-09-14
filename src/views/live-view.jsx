@@ -59,20 +59,18 @@ export default class LiveView extends React.Component {
 
       const isFetchingText = formattedTokensByChapter[CHAPTER_ID]
                              && formattedTokensByChapter[CHAPTER_ID].isFetching;
+
       const requestChapterText = !isFetchingText
                                  && isEmpty(formattedNovelTokens)
                                  && !isEmpty(chapters);
-
-      console.log('requestChapters: ' + requestChapters)
-      console.log('requestText: ' + requestChapterText)
 
       if (requestChapters) {
         this.props.loadChapters(novels[novelId]);
       }
 
-      /* if (requestChapterText) {
+      if (requestChapterText) {
         this.props.loadFormattedNovelTokens(chapters[CHAPTER_ID]);
-      }*/
+      }
     }
 
     handleBookmarkUpdate = () => {
@@ -81,11 +79,6 @@ export default class LiveView extends React.Component {
 
       this.props.updateBookmark(novelId,
         chaptersByNovel[novelId].ids[0], 0);
-    }
-
-    handleText = () => {
-      this.props.loadFormattedNovelTokens(
-        this.props.entities.chapters[CHAPTER_ID]);
     }
 
     render () {
@@ -103,7 +96,6 @@ export default class LiveView extends React.Component {
 
       return (
         <div>
-          <button onClick={this.handleText}>Load text</button>
           <button onClick={this.handleBookmarkUpdate}>Update bookmark</button>
           <p>Currently reading: {novelTitle}</p>
           <p>{sortedTokens.map(token => token.get('content') + ' ')}</p>
