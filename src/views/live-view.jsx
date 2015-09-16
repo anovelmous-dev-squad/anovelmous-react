@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { loadNovels, loadChapters, loadFormattedNovelTokens,
-         updateBookmark } from 'actions';
-import Immutable from 'immutable';
+         updateBookmark, loadGrammarFilteredTokens } from 'actions';
 import VoteCaster from 'components/vote-caster';
+import Immutable from 'immutable';
 
 const CONTRIBUTOR = { clientId: '8d12c47c-8167-4df6-a5cc-def15cb3e4d8' };
 const CHAPTER_ID = '6dfe0d41-e7fd-4728-b392-82bf1cf12422';
@@ -23,22 +23,21 @@ function getNovelId (state) {
   entities: state.entities,
   bookmark: state.bookmark,
   pagination: state.pagination
-}), { loadNovels, loadChapters, loadFormattedNovelTokens, updateBookmark })
+}), { loadNovels, loadChapters, loadFormattedNovelTokens,
+      updateBookmark, loadGrammarFilteredTokens })
 export default class LiveView extends React.Component {
     static propTypes = {
       loadNovels: PropTypes.func.isRequired,
       loadChapters: PropTypes.func.isRequired,
       loadFormattedNovelTokens: PropTypes.func.isRequired,
+      loadGrammarFilteredTokens: PropTypes.func.isRequired,
       updateBookmark: PropTypes.func.isRequired,
       entities: PropTypes.object.isRequired
     };
 
-    constructor () {
-      super();
-    }
-
     componentWillMount () {
       this.props.loadNovels(CONTRIBUTOR);
+      this.props.loadGrammarFilteredTokens();
     }
 
     componentWillReceiveProps (nextProps) {
@@ -73,7 +72,7 @@ export default class LiveView extends React.Component {
       }
     }
 
-    handleBookmarkUpdate = () => {
+    _handleBookmarkUpdate = () => {
       const { pagination: { chaptersByNovel } } = this.props;
       const novelId = getNovelId(this.props);
 
@@ -83,23 +82,25 @@ export default class LiveView extends React.Component {
 
     render () {
       const {
-        entities: { novels, chapters, formattedNovelTokens }
+        entities: { novels, chapters, formattedNovelTokens, tokens }
       } = this.props;
       const novel = novels[getNovelId(this.props)];
       const novelTitle = novel ? novel.title : 'Loading...';
 
-      const sortedTokens = Immutable.fromJS(formattedNovelTokens, (k, v) => {
-        var isIndexed = Immutable.Iterable.isIndexed(v.ordinal);
+      const novelTokensByOrdinal = Immutable.fromJS(formattedNovelTokens,
+        (k, v) => {
+          const isIndexed = Immutable.Iterable.isIndexed(v.ordinal);
 
-        return isIndexed ? v.toList() : v.toOrderedMap();
-      });
+          return isIndexed ? v.toList() : v.toOrderedMap();
+        });
+      const tokenList = Object.keys(tokens).map(key => tokens[key]);
 
       return (
         <div>
-          <button onClick={this.handleBookmarkUpdate}>Update bookmark</button>
+          <button onClick={this._handleBookmarkUpdate}>Update bookmark</button>
           <p>Currently reading: {novelTitle}</p>
-          <p>{sortedTokens.map(token => token.get('content') + ' ')}</p>
-          <VoteCaster/>
+          <p>{novelTokensByOrdinal.map(token => token.get('content') + ' ')}</p>
+          <VoteCaster tokens={tokenList}/>
         </div>
       );
     }

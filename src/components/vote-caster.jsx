@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Autocomplete from 'react-autocomplete';
 
 const styles = {
-  item: {
+  token: {
     padding: '2px 6px',
     cursor: 'default'
   },
 
-  highlightedItem: {
+  highlightedToken: {
     color: 'white',
     background: 'hsl(200, 50%, 50%)',
     padding: '2px 6px',
@@ -15,44 +15,24 @@ const styles = {
   }
 }
 
-function getTokens () {
-  return ['arrow', 'blow', 'tack', 'tacky', 'take', 'taken']
-}
-
-function filterTokens (value, cb) {
-  if (value === '') {
-    return getTokens()
-  }
-
-  const tokens = getTokens().filter((token) => {
-    return token.startsWith(value);
-  })
-
-  cb(tokens);
-}
-
-
 export default class VoteCaster extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = { allowedTokens: getTokens(), loading: false };
+  static propTypes = {
+    tokens: PropTypes.array.isRequired
   }
 
   render () {
-    const { allowedTokens } = this.props;
-
     return (
       <div>
         <Autocomplete
           initialValue=""
-          items={getTokens()}
-          getItemValue={(item) => item}
-          shouldItemRender={(token, value) => token.startsWith(value)}
-          renderItem={(item, isHighlighted) => (
+          items={this.props.tokens}
+          getItemValue={(item) => item.content}
+          shouldItemRender={(token, value) => token.content.startsWith(value)}
+          renderItem={(token, isHighlighted) => (
             <div
-              style={isHighlighted ? styles.highlightedItem : styles.item}
-              key={item}
-            >{item}</div>
+              style={isHighlighted ? styles.highlightedToken : styles.token}
+              key={token.clientId}
+            >{token.content}</div>
           )}
         />
       </div>

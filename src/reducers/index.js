@@ -46,6 +46,14 @@ const pagination = combineReducers({
       ActionTypes.FORMATTED_NOVEL_TOKENS_SUCCESS,
       ActionTypes.FORMATTED_NOVEL_TOKENS_FAILURE
     ]
+  }),
+  grammarFilteredTokens: paginate({
+    mapActionToKey: action => action.live,
+    types: [
+      ActionTypes.FILTERED_TOKENS_REQUEST,
+      ActionTypes.FILTERED_TOKENS_SUCCESS,
+      ActionTypes.FILTERED_TOKENS_FAILURE
+    ]
   })
 });
 

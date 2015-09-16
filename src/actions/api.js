@@ -134,6 +134,40 @@ export function loadFormattedNovelTokens (chapter, nextPage) {
   };
 }
 
+export const FILTERED_TOKENS_REQUEST = 'FILTERED_TOKENS_REQUEST';
+export const FILTERED_TOKENS_SUCCESS = 'FILTERED_TOKENS_SUCCESS';
+export const FILTERED_TOKENS_FAILURE = 'FILTERED_TOKENS_FAILURE';
+
+
+function fetchGrammarFilteredTokens (nextPageUrl) {
+  return {
+    live: 'live',
+    [CALL_API]: {
+      types: [
+        FILTERED_TOKENS_REQUEST,
+        FILTERED_TOKENS_SUCCESS,
+        FILTERED_TOKENS_FAILURE
+      ],
+      endpoint: nextPageUrl,
+      schema: Schemas.TOKEN_ARRAY
+    }
+  }
+}
+
+export function loadGrammarFilteredTokens (nextPage) {
+  return (dispatch, getState) => {
+    const {
+      nextPageUrl = `tokens/?filter_on_grammar=True&fields=client_id,content`,
+      pageCount = 0
+    } = getState().pagination.grammarFilteredTokens.live || {};
+
+    if (pageCount > 0 && !nextPage) {
+      return null;
+    }
+
+    return dispatch(fetchGrammarFilteredTokens(nextPageUrl))
+  };
+}
 
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
