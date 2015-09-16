@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { loadNovels, loadChapters, loadFormattedNovelTokens,
          updateBookmark } from 'actions';
 import Immutable from 'immutable';
-
+import VoteCaster from 'components/vote-caster';
 
 const CONTRIBUTOR = { clientId: '8d12c47c-8167-4df6-a5cc-def15cb3e4d8' };
 const CHAPTER_ID = '6dfe0d41-e7fd-4728-b392-82bf1cf12422';
@@ -99,6 +99,7 @@ export default class LiveView extends React.Component {
           <button onClick={this.handleBookmarkUpdate}>Update bookmark</button>
           <p>Currently reading: {novelTitle}</p>
           <p>{sortedTokens.map(token => token.get('content') + ' ')}</p>
+          <VoteCaster/>
         </div>
       );
     }
