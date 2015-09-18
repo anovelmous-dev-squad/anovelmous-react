@@ -1,13 +1,14 @@
 import React from 'react';
+import Relay from 'react-relay';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import store from 'stores';
 import routes from 'routes';
 import { DevTools, LogMonitor, DebugPanel } from 'redux-devtools/lib/react';
+import Chapter from 'components/chapter';
 
-export default class ClientApp extends React.Component {
+class ClientApp extends React.Component {
   static propTypes = {
-    history      : React.PropTypes.object,
     initialState : React.PropTypes.object
   }
 
@@ -30,7 +31,7 @@ export default class ClientApp extends React.Component {
       );
     } else {
       return (
-        <Router history={this.props.history}>
+        <Router>
           {routes}
         </Router>
       );
@@ -42,9 +43,26 @@ export default class ClientApp extends React.Component {
       <div>
         {__DEBUG__ && this.renderDevTools()}
         <Provider store={store}>
-          {() => this.renderRouter()}
+          {this.renderRouter()}
         </Provider>
       </div>
     );
   }
 }
+
+export default Relay.createContainer(ClientApp, {
+  fragments: {
+    novels: () => Relay.QL`
+      fragment on Novel @relay(plural: true) {
+        title,
+        chapters {
+          edges {
+            node {
+              ${Chapter.getFragment('chapter')}
+            }
+          }
+        }
+      }
+    `
+  }
+});

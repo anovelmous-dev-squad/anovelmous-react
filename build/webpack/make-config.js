@@ -52,7 +52,8 @@ function makeDefaultConfig () {
       loaders : [{
         test : /\.(js|jsx)$/,
         include : projectConfig.inProject(projectConfig.SRC_DIRNAME),
-        loaders : ['babel?optional[]=runtime&stage=0']
+        loaders :
+        ['babel?optional[]=runtime&stage=0&plugins[]=./build/babelRelayPlugin']
       }]
     },
     eslint : {

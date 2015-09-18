@@ -1,6 +1,6 @@
 import React  from 'react';
+import Relay from 'react-relay';
 import './core-layout.scss';
-import { Grid, Col } from 'react-bootstrap';
 import Header from 'components/header';
 
 export default class CoreLayout extends React.Component {
@@ -10,14 +10,14 @@ export default class CoreLayout extends React.Component {
 
   render () {
     return (
-      <Grid>
+      <div>
         <Header title="Anovelmous"/>
         <div className='page-container'>
           <div className='view-container'>
             {this.props.children}
           </div>
         </div>
-      </Grid>
+      </div>
     );
   }
 }

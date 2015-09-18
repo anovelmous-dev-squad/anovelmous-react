@@ -1,5 +1,15 @@
 import React from 'react';
+import Relay from 'react-relay';
 import App from 'containers/app';
-import { history } from 'react-router/lib/BrowserHistory';
+import ReactDOM from 'react-dom';
+import AppHomeRoute from '../query-routes/AppHomeRoute';
 
-React.render(<App history={history} />, document.getElementById('mount'));
+ReactDOM.render(
+  <Relay.RootContainer
+    Component={App}
+    route={new AppHomeRoute({
+      novelIds: ['1', '2']
+    })}
+  />,
+  document.getElementById('mount')
+);

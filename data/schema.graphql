@@ -1,0 +1,36 @@
+type Chapter implements Node {
+  id: ID!
+  title: String
+}
+
+type ChapterConnection {
+  pageInfo: PageInfo!
+  edges: [ChapterEdge]
+}
+
+type ChapterEdge {
+  node: Chapter
+  cursor: String!
+}
+
+interface Node {
+  id: ID!
+}
+
+type Novel implements Node {
+  id: ID!
+  title: String
+  chapters(before: String, after: String, first: Int, last: Int): ChapterConnection
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  novels(ids: [String]): [Novel]
+  node(id: ID!): Node
+}
