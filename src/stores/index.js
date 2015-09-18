@@ -1,28 +1,24 @@
-import { compose, createStore, applyMiddleware } from 'redux';
+import { compose, createStore } from 'redux';
 import { devTools } from 'redux-devtools';
-import reducer from 'reducers';
-import thunkMiddleware from 'redux-thunk';
-import apiMiddleware from '../middleware/api';
-import createLogger from 'redux-logger';
+import rootReducer from 'reducers';
 
-let buildStore;
+let createStoreWithMiddleware;
 
 if (__DEBUG__) {
-  buildStore = compose(devTools(), createStore);
+  createStoreWithMiddleware = compose(devTools())(createStore);
 } else {
-  buildStore = createStore;
+  createStoreWithMiddleware = createStore;
 }
 
-const logger = createLogger({
-  level: 'info',
-  collapsed: true,
-  predicate: (getState, action) => __DEV__
-})
+export default function configureStore (initialState) {
+  const store = createStoreWithMiddleware(rootReducer, initialState);
 
-const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware,
-  apiMiddleware,
-  logger
-);
+  if (module.hot) {
+    module.hot.accept('../reducers', () => {
+      const nextRootReducer = require('../reducers/index');
 
-export default compose(createStoreWithMiddleware, buildStore)(reducer);
+      store.replaceReducer(nextRootReducer);
+    });
+  }
+  return store;
+}

@@ -1,51 +1,103 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = (process.env.NODE_ENV || 'development').trim();
 
-const resolve = require('path').resolve,
-      argv    = require('yargs').argv,
-      _slice  = [].slice;
+import path     from 'path';
+import { argv } from 'yargs';
 
-const SRC_DIRNAME  = 'src',
-      DIST_DIRNAME = 'dist',
-      PROJECT_PATH = resolve(__dirname, '../');
-
-function inProject () {
-  return resolve.apply(resolve, [PROJECT_PATH].concat(_slice.apply(arguments)));
-}
+const config = new Map();
 
 // ------------------------------------
-// Configuration Definition
+// User Configuration
 // ------------------------------------
-module.exports = exports = {
+// NOTE: Due to limitations with Webpack's custom require, which is used for
+// looking up all *.spec.js files, if you edit dir_src you _must_ also edit
+// the path in ~/karma.entry.js.
+config.set('dir_src',  'src');
+config.set('dir_dist', 'dist');
 
-  // environment globals
-  NODE_ENV  : process.env.NODE_ENV,
-  __DEBUG__ : !!argv.debug,
-  __DEV__   : process.env.NODE_ENV === 'development',
-  __PROD__  : process.env.NODE_ENV === 'production',
+config.set('server_host',  'localhost');
+config.set('server_port',  process.env.PORT || 4000);
+config.set('webpack_port', 3000);
 
-  // configuration flags
-  QUIET_MODE : !!argv.quiet,
+config.set('vendor_dependencies', [
+  'history',
+  'immutable',
+  'react',
+  'react-redux',
+  'react-router',
+  'redux',
+  'redux-devtools',
+  'redux-devtools/lib/react'
+]);
 
-  // path helpers
-  SRC_DIRNAME  : SRC_DIRNAME,
-  DIST_DIRNAME : DIST_DIRNAME,
-  PROJECT_PATH : PROJECT_PATH,
-  inProject : inProject,
-  inSrc     : inProject.bind(undefined, SRC_DIRNAME),
-  inDist    : inProject.bind(undefined, DIST_DIRNAME),
+config.set('webpack_lint_in_dev', true);
 
-  // build system
-  VENDOR_DEPENDENCIES : [
-    'immutable',
-    'react',
-    'react-redux',
-    'react-router',
-    'redux',
-    'redux-devtools',
-    'redux-devtools/lib/react'
-  ],
+/*  *********************************************
+-------------------------------------------------
 
-  // server configuration
-  WEBPACK_PORT : 3000,
-  SERVER_PORT  : process.env.PORT || 4000
-};
+All Internal Configuration Below
+Edit at your own risk
+
+-------------------------------------------------
+************************************************/
+// ------------------------------------
+// Environment
+// ------------------------------------
+config.set('env', process.env.NODE_ENV);
+config.set('globals', {
+  'process.env'  : {
+    'NODE_ENV' : JSON.stringify(config.get('env'))
+  },
+  'NODE_ENV'     : config.get('env'),
+  '__DEV__'      : config.get('env') === 'development',
+  '__PROD__'     : config.get('env') === 'production',
+  '__DEBUG__'    : config.get('env') === 'development' && !argv.no_debug,
+  '__DEBUG_NW__' : !!argv.nw
+});
+
+// ------------------------------------
+// Webpack
+// ------------------------------------
+config.set('webpack_public_path',
+  `http://${config.get('server_host')}:${config.get('webpack_port')}/`
+);
+
+// ------------------------------------
+// Project
+// ------------------------------------
+config.set('path_project', path.resolve(__dirname, '../'));
+
+// ------------------------------------
+// Utilities
+// ------------------------------------
+const paths = (() => {
+  const base    = [config.get('path_project')],
+        resolve = path.resolve;
+
+  const project = (...args) => resolve.apply(resolve, [...base, ...args]);
+
+  return {
+    project : project,
+    src     : project.bind(null, config.get('dir_src')),
+    dist    : project.bind(null, config.get('dir_dist'))
+  };
+})();
+
+config.set('utils_paths', paths);
+config.set('utils_aliases', [
+  'actions',
+  'components',
+  'constants',
+  'containers',
+  'dispatchers',
+  'layouts',
+  'models',
+  'reducers',
+  'routes',
+  'services',
+  'stores',
+  'styles',
+  'utils',
+  'views'
+].reduce((acc, x) => ((acc[x] = paths.src(x)) && acc), {}));
+
+export default config;

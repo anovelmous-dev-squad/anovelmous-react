@@ -1,28 +1,24 @@
-import React  from 'react';
-import Router from 'react-router';
-import Location from 'react-router/lib/Location';
-import routes from '../routes';
-import App from 'containers/app';
+import routes          from 'routes';
+import { match }       from 'react-router';
+import createLocation  from 'history/lib/createLocation';
 
-export default function render (request) {
-  return function renderThunk (callback) {
-    const location = new Location(request.path, request.query);
+export Root           from 'containers/Root';
+export configureStore from '../stores';
 
-    try {
-      Router.run(routes, location, function (error, initialState, transition) {
-        if (!initialState) {
-          throw new Error(
-            `Could not render ${request.path}: no initial state returned.`
-          );
-        }
+export function route (url) {
+  const location = createLocation(url);
 
-        const rendered = React.renderToString(
-          <App initialState={initialState} />
-        );
-        callback(null, rendered);
-      });
-    } catch (e) {
-      callback(e);
-    }
-  };
+  return new Promise((resolve, reject) => {
+    match({ routes, location }, (err, redirectLocation, renderProps) => {
+      if (err) {
+        reject([500], err);
+      } else if (redirectLocation) {
+        reject([301, redirectLocation]);
+      } else if (renderProps === null) {
+        reject([404]);
+      } else {
+        resolve(renderProps);
+      }
+    });
+  });
 }
