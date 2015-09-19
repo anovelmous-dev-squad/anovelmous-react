@@ -1,5 +1,4 @@
 import React        from 'react';
-import Relay        from 'react-relay';
 import { Provider } from 'react-redux';
 import { Router }   from 'react-router';
 import invariant    from 'invariant';
@@ -7,9 +6,9 @@ import routes       from '../routes';
 import { RoutingContext } from 'react-router';
 import { createDevToolsWindow } from '../utils';
 import { DevTools, LogMonitor, DebugPanel } from 'redux-devtools/lib/react';
-import Chapter from 'components/chapter';
+import ReactRouterRelay from 'react-router-relay';
 
-class Root extends React.Component {
+export default class Root extends React.Component {
 
   // routerHistory is provided by the client bundle to determine which
   // history to use (memory, hash, browser). routingContext, on the other hand,
@@ -47,7 +46,10 @@ class Root extends React.Component {
       return <RoutingContext {...this.props.routingContext} />;
     } else {
       return (
-        <Router history={this.props.routerHistory}>
+        <Router
+          history={this.props.routerHistory}
+          createElement={ReactRouterRelay.createElement}
+        >
           {routes}
         </Router>
       );
@@ -71,20 +73,3 @@ class Root extends React.Component {
     );
   }
 }
-
-export default Relay.createContainer(Root, {
-  fragments: {
-    novels: () => Relay.QL`
-      fragment on Novel @relay(plural: true) {
-        title,
-        chapters {
-          edges {
-            node {
-              ${Chapter.getFragment('chapter')}
-            }
-          }
-        }
-      }
-    `
-  }
-});

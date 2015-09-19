@@ -1,10 +1,20 @@
 import { Route }   from 'react-router';
 import React       from 'react';
+import Relay       from 'react-relay';
 import CoreLayout  from 'layouts/CoreLayout';
 import RelayView    from 'views/relay-view';
 
+const contributorQueries = {
+  contributor: () => Relay.QL`query { contributor }`
+};
+
 export default (
   <Route component={CoreLayout}>
-    <Route name='home' path='/' component={RelayView} />
+    <Route
+      name='live'
+      path='/'
+      component={RelayView}
+      queries={contributorQueries}
+    />
   </Route>
 );

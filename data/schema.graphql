@@ -13,6 +13,11 @@ type ChapterEdge {
   cursor: String!
 }
 
+type Contributor implements Node {
+  id: ID!
+  name: String
+}
+
 interface Node {
   id: ID!
 }
@@ -31,6 +36,7 @@ type PageInfo {
 }
 
 type Query {
-  novels(ids: [String]): [Novel]
+  novels: [Novel]
+  contributor: Contributor
   node(id: ID!): Node
 }

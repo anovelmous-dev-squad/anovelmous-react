@@ -21,23 +21,34 @@ import {
   getNovel,
   getNovels,
   getChapter,
-  getLiveNovel
+  getLiveNovel,
+  getContributor
 } from './anovelmousDatabase';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId);
 
-    if (type === 'Faction') {
+    if (type === 'Novel') {
       return getNovel(id);
     } else if (type === 'Chapter') {
       return getChapter(id);
+    } else if (type === 'Contributor') {
+      return getContributor(id);
     } else {
       return null;
     }
   },
   (obj) => {
-    return obj.chapters ? novelType : chapterType;
+    if (obj instanceof Novel) {
+      return novelType;
+    } else if (obj instanceof Chapter) {
+      return chapterType;
+    } else if (obj instanceof Contributor) {
+      return contributorType;
+    } else {
+      return null;
+    }
   }
 );
 
@@ -70,10 +81,23 @@ const novelType = new GraphQLObjectType({
       type: chapterConnection,
       description: 'The chapters of the novel.',
       args: connectionArgs,
-      resolve: (faction, args) => connectionFromArray(
-        faction.ships.map((id) => getChapter(id)),
+      resolve: (novel, args) => connectionFromArray(
+        novel.chapters.map((id) => getChapter(id)),
         args
       )
+    }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const contributorType = new GraphQLObjectType({
+  name: 'Contributor',
+  description: 'A collaborative author of novels',
+  fields: () => ({
+    id: globalIdField('Contributor'),
+    name: {
+      type: GraphQLString,
+      description: 'The name of the contributor.'
     }
   }),
   interfaces: [nodeInterface]
@@ -84,12 +108,11 @@ const queryType = new GraphQLObjectType({
   fields: () => ({
     novels: {
       type: new GraphQLList(novelType),
-      args: {
-        ids: {
-          type: new GraphQLList(GraphQLString)
-        }
-      },
-      resolve: (root, { ids }) => getNovels(ids)
+      resolve: () => getNovels()
+    },
+    contributor: {
+      type: contributorType,
+      resolve: () => getContributor(1)
     },
     node: nodeField
   })
