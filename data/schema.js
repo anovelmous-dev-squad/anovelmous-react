@@ -28,6 +28,7 @@ import {
   getLiveNovel,
   getNovels,
   getNovelToken,
+  getChapter,
   getFormattedNovelToken,
   getContributor
 } from './anovelmousDatabase';
