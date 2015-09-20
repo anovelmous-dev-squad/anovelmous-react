@@ -25,6 +25,7 @@ import {
   Vote,
   Contributor,
   data,
+  getLiveNovel,
   getNovels,
   getNovelToken,
   getFormattedNovelToken,
@@ -202,6 +203,10 @@ const queryType = new GraphQLObjectType({
     novels: {
       type: new GraphQLList(novelType),
       resolve: () => getNovels()
+    },
+    liveNovel: {
+      type: novelType,
+      resolve: () => getLiveNovel()
     },
     contributor: {
       type: contributorType,

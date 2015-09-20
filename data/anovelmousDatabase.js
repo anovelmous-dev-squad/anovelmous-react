@@ -188,6 +188,10 @@ export function getNovels () {
   return [data.Novel[1], data.Novel[2]];
 }
 
+export function getLiveNovel () {
+  return data.Novel[2];
+}
+
 export function getChapter (id) {
   return data.Chapter[id];
 }

@@ -3,14 +3,18 @@ import Relay from 'react-relay';
 
 class RelayView extends React.Component {
     static propTypes = {
-      contributor: PropTypes.object.isRequired
+      contributor: PropTypes.object.isRequired,
+      novel: PropTypes.object.isRequired
     };
 
     render () {
-      const { contributor } = this.props;
+      const { contributor, novel } = this.props;
 
       return (
-        <div>Hello {contributor.name}!</div>
+        <div>
+          <h1>Hello {contributor.name}!</h1>
+          <h3>You are reading {novel.title}</h3>
+      </div>
       );
     }
 }
@@ -21,6 +25,12 @@ export default Relay.createContainer(RelayView, {
       fragment on Contributor {
         id
         name
+      }
+    `,
+    novel: () => Relay.QL`
+      fragment on Novel {
+        id
+        title
       }
     `
   }

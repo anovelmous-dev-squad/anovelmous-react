@@ -28,6 +28,18 @@
               "deprecationReason": null
             },
             {
+              "name": "liveNovel",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Novel",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "contributor",
               "description": null,
               "args": [],

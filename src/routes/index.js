@@ -5,7 +5,8 @@ import CoreLayout  from 'layouts/CoreLayout';
 import RelayView    from 'views/relay-view';
 
 const contributorQueries = {
-  contributor: () => Relay.QL`query { contributor }`
+  contributor: () => Relay.QL`query { contributor }`,
+  novel: () => Relay.QL`query { liveNovel }`
 };
 
 export default (

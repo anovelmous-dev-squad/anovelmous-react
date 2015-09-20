@@ -73,6 +73,7 @@ type PageInfo {
 
 type Query {
   novels: [Novel]
+  liveNovel: Novel
   contributor: Contributor
   node(id: ID!): Node
 }
