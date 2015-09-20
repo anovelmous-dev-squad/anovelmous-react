@@ -1,6 +1,8 @@
 type Chapter implements Node {
   id: ID!
   title: String
+  tokens(before: String, after: String, first: Int, last: Int): NovelTokenConnection
+  text(before: String, after: String, first: Int, last: Int): FormattedNovelTokenConnection
 }
 
 type ChapterConnection {
@@ -18,6 +20,23 @@ type Contributor implements Node {
   name: String
 }
 
+type FormattedNovelToken implements Node {
+  id: ID!
+  content: String
+  ordinal: Int
+  createdAt: String
+}
+
+type FormattedNovelTokenConnection {
+  pageInfo: PageInfo!
+  edges: [FormattedNovelTokenEdge]
+}
+
+type FormattedNovelTokenEdge {
+  node: FormattedNovelToken
+  cursor: String!
+}
+
 interface Node {
   id: ID!
 }
@@ -26,6 +45,23 @@ type Novel implements Node {
   id: ID!
   title: String
   chapters(before: String, after: String, first: Int, last: Int): ChapterConnection
+}
+
+type NovelToken implements Node {
+  id: ID!
+  token: ID!
+  createdAt: String
+  ordinal: Int
+}
+
+type NovelTokenConnection {
+  pageInfo: PageInfo!
+  edges: [NovelTokenEdge]
+}
+
+type NovelTokenEdge {
+  node: NovelToken
+  cursor: String!
 }
 
 type PageInfo {
@@ -39,4 +75,22 @@ type Query {
   novels: [Novel]
   contributor: Contributor
   node(id: ID!): Node
+}
+
+type Token implements Node {
+  id: ID!
+  content: String
+  isPunctuation: Boolean
+  createdAt: String
+  isValid: Boolean
+}
+
+type Vote implements Node {
+  id: ID!
+  chapter: ID!
+  contributor: ID!
+  token: ID!
+  ordinal: Int
+  selected: Boolean
+  createdAt: String
 }

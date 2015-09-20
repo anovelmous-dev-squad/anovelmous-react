@@ -1,10 +1,10 @@
 import {
-  GraphQLID,
+  GraphQLBoolean,
+  GraphQLInt,
   GraphQLList,
-  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
-  GraphQLString,
+  GraphQLString
 } from 'graphql';
 
 import {
@@ -13,37 +13,42 @@ import {
   connectionFromArray,
   fromGlobalId,
   globalIdField,
-  mutationWithClientMutationId,
-  nodeDefinitions,
+  nodeDefinitions
 } from 'graphql-relay';
 
 import {
-  getNovel,
+  Novel,
+  Chapter,
+  Token,
+  NovelToken,
+  FormattedNovelToken,
+  Vote,
+  Contributor,
+  data,
   getNovels,
-  getChapter,
-  getLiveNovel,
+  getNovelToken,
+  getFormattedNovelToken,
   getContributor
 } from './anovelmousDatabase';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
     const { type, id } = fromGlobalId(globalId);
-
-    if (type === 'Novel') {
-      return getNovel(id);
-    } else if (type === 'Chapter') {
-      return getChapter(id);
-    } else if (type === 'Contributor') {
-      return getContributor(id);
-    } else {
-      return null;
-    }
+    return data[type][id];
   },
   (obj) => {
     if (obj instanceof Novel) {
       return novelType;
     } else if (obj instanceof Chapter) {
       return chapterType;
+    } else if (obj instanceof Token) {
+      return tokenType;
+    } else if (obj instanceof NovelToken ) {
+      return novelTokenType;
+    } else if (obj instanceof FormattedNovelToken) {
+      return formattedNovelTokenType;
+    } else if (obj instanceof Vote) {
+      return voteType;
     } else if (obj instanceof Contributor) {
       return contributorType;
     } else {
@@ -51,6 +56,61 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     }
   }
 );
+
+const tokenType = new GraphQLObjectType({
+  name: 'Token',
+  description: 'A language token (word or punctuation) used for contribution',
+  fields: () => ({
+    id: globalIdField('Token'),
+    content: {
+      type: GraphQLString,
+      description: 'The string representation of the token.'
+    },
+    isPunctuation: {
+      type: GraphQLBoolean,
+      description: 'Is this token a valid punctuation?'
+    },
+    createdAt: {
+      type: GraphQLString
+    },
+    isValid: {
+      type: GraphQLBoolean
+    }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const novelTokenType = new GraphQLObjectType({
+  name: 'NovelToken',
+  description: 'A token that has been attributed to a Novel',
+  fields: () => ({
+    id: globalIdField('NovelToken'),
+    token: globalIdField('Token'),
+    createdAt: { type: GraphQLString },
+    ordinal: {type: GraphQLInt }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const formattedNovelTokenType = new GraphQLObjectType({
+  name: 'FormattedNovelToken',
+  description: 'A formatted token that has been attributed to a novel.',
+  fields: () => ({
+    id: globalIdField('FormattedNovelToken'),
+    content: { type: GraphQLString },
+    ordinal: { type: GraphQLInt },
+    createdAt: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const { connectionType: novelTokenConnection } =
+  connectionDefinitions({ name: 'NovelToken', nodeType: novelTokenType });
+
+const { connectionType: formattedNovelTokenConnection } =
+  connectionDefinitions(
+    { name: 'FormattedNovelToken', nodeType: formattedNovelTokenType }
+  );
 
 const chapterType = new GraphQLObjectType({
   name: 'Chapter',
@@ -60,7 +120,40 @@ const chapterType = new GraphQLObjectType({
     title: {
       type: GraphQLString,
       description: 'The title of the chapter.'
+    },
+    tokens: {
+      type: novelTokenConnection,
+      description: 'The tokens that make up the chapter.',
+      args: connectionArgs,
+      resolve: (chapter, args) => connectionFromArray(
+        chapter.tokens.map((id) => getNovelToken(id)),
+        args
+      )
+    },
+    text: {
+      type: formattedNovelTokenConnection,
+      description: 'The formatted text of the chapter, space delimited.',
+      args: connectionArgs,
+      resolve: (chapter, args) => connectionFromArray(
+        chapter.text.map((id) => getFormattedNovelToken(id)),
+        args
+      )
     }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const voteType = new GraphQLObjectType({
+  name: 'Vote',
+  description: 'A contributor\'s vote for the next token in the novel',
+  fields: () => ({
+    id: globalIdField('Vote'),
+    chapter: globalIdField('Chapter'),
+    contributor: globalIdField('Contributor'),
+    token: globalIdField('Token'),
+    ordinal: { type: GraphQLInt },
+    selected: { type: GraphQLBoolean },
+    createdAt: { type: GraphQLString }
   }),
   interfaces: [nodeInterface]
 });

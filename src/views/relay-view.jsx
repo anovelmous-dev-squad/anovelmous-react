@@ -19,7 +19,7 @@ export default Relay.createContainer(RelayView, {
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
-        id,
+        id
         name
       }
     `
