@@ -101,19 +101,22 @@ const sixthFNToken = {
 const chapterOne = {
   id: '1',
   title: 'Chapter One',
-  formattedNovelTokens: ['1', '2', '3']
+  tokens: ['1', '2', '3', '4'],
+  text: ['1', '2', '3']
 };
 
 const chapterOneDos = {
   id: '2',
   title: 'Chapter 1',
-  formattedNovelTokens: ['4']
+  tokens: ['5'],
+  text: ['4']
 };
 
 const chapterTwo = {
   id: '3',
   title: 'Chapter 2',
-  formattedNovelTokens: ['5']
+  tokens: ['6'],
+  text: ['5']
 };
 
 const oldNovel = {
