@@ -12,7 +12,7 @@ class ChapterPane extends React.Component {
       <div>
         <h3>{chapter.title}</h3>
         <p>
-          {chapter.text.edges.map(edge => (
+          {chapter.tokens.edges.map(edge => (
             edge.node.content + ' '
           ))}
         </p>
@@ -27,9 +27,10 @@ export default Relay.createContainer(ChapterPane, {
       fragment on Chapter {
         id
         title
-        text(first: 2) {
+        tokens(first: 3) {
           edges {
             node {
+              id
               content
             }
           }

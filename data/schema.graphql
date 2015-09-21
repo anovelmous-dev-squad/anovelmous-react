@@ -1,8 +1,7 @@
 type Chapter implements Node {
   id: ID!
   title: String
-  tokens(before: String, after: String, first: Int, last: Int): NovelTokenConnection
-  text(before: String, after: String, first: Int, last: Int): FormattedNovelTokenConnection
+  tokens(before: String, after: String, first: Int, last: Int): TokenConnection
 }
 
 type ChapterConnection {
@@ -18,23 +17,9 @@ type ChapterEdge {
 type Contributor implements Node {
   id: ID!
   name: String
-}
-
-type FormattedNovelToken implements Node {
-  id: ID!
-  content: String
-  ordinal: Int
-  createdAt: String
-}
-
-type FormattedNovelTokenConnection {
-  pageInfo: PageInfo!
-  edges: [FormattedNovelTokenEdge]
-}
-
-type FormattedNovelTokenEdge {
-  node: FormattedNovelToken
-  cursor: String!
+  novels(before: String, after: String, first: Int, last: Int): NovelConnection
+  vocabulary(before: String, after: String, first: Int, last: Int): TokenConnection
+  votes(before: String, after: String, first: Int, last: Int): VoteConnection
 }
 
 interface Node {
@@ -47,20 +32,13 @@ type Novel implements Node {
   chapters(before: String, after: String, first: Int, last: Int): ChapterConnection
 }
 
-type NovelToken implements Node {
-  id: ID!
-  token: ID!
-  createdAt: String
-  ordinal: Int
-}
-
-type NovelTokenConnection {
+type NovelConnection {
   pageInfo: PageInfo!
-  edges: [NovelTokenEdge]
+  edges: [NovelEdge]
 }
 
-type NovelTokenEdge {
-  node: NovelToken
+type NovelEdge {
+  node: Novel
   cursor: String!
 }
 
@@ -71,10 +49,8 @@ type PageInfo {
   endCursor: String
 }
 
-type Query {
-  novels: [Novel]
-  liveNovel: Novel
-  contributor: Contributor
+type Root {
+  viewer: Contributor
   node(id: ID!): Node
 }
 
@@ -86,6 +62,16 @@ type Token implements Node {
   isValid: Boolean
 }
 
+type TokenConnection {
+  pageInfo: PageInfo!
+  edges: [TokenEdge]
+}
+
+type TokenEdge {
+  node: Token
+  cursor: String!
+}
+
 type Vote implements Node {
   id: ID!
   chapter: ID!
@@ -94,4 +80,14 @@ type Vote implements Node {
   ordinal: Int
   selected: Boolean
   createdAt: String
+}
+
+type VoteConnection {
+  pageInfo: PageInfo!
+  edges: [VoteEdge]
+}
+
+type VoteEdge {
+  node: Vote
+  cursor: String!
 }

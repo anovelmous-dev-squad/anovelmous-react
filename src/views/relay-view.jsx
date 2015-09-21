@@ -1,24 +1,22 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import ChapterPane from 'components/ChapterPane';
+import VoteCaster from 'components/VoteCaster';
+import Novel from 'components/Novel';
 
 class RelayView extends React.Component {
     static propTypes = {
-      contributor: PropTypes.object.isRequired,
-      novel: PropTypes.object.isRequired
+      contributor: PropTypes.object.isRequired
     };
 
     render () {
-      const { contributor, novel } = this.props;
+      const { contributor } = this.props;
       return (
         <div>
           <h1>Hello {contributor.name}!</h1>
-          <h3>You are reading {novel.title}</h3>
-          <div>
-            {novel.chapters.edges.map(edge => (
-              <ChapterPane chapter={edge.node}/>
-            ))}
-          </div>
+          {contributor.novels.edges.map(edge => (
+            <Novel key={edge.node.id} novel={edge.node}/>
+          ))}
+          <VoteCaster tokens={contributor.vocabulary}/>
       </div>
       );
     }
@@ -30,18 +28,22 @@ export default Relay.createContainer(RelayView, {
       fragment on Contributor {
         id
         name
-      }
-    `,
-    novel: () => Relay.QL`
-      fragment on Novel {
-        id
-        title
-        chapters(first: 2) {
+        novels(last: 1) {
           edges {
             node {
-              ${ChapterPane.getFragment('chapter')}
+              id
+              ${Novel.getFragment('novel')}
             }
           }
+        }
+        vocabulary(first: 5) {
+          edges {
+            node {
+              id
+              content
+            }
+          }
+          ${VoteCaster.getFragment('tokens')}
         }
       }
     `

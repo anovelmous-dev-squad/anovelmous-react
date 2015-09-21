@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Relay from 'react-relay';
 import Autocomplete from 'react-autocomplete';
 
 const styles = {
@@ -13,25 +14,28 @@ const styles = {
     padding: '2px 6px',
     cursor: 'default'
   }
-}
+};
 
-export default class VoteCaster extends React.Component {
+class VoteCaster extends React.Component {
   static propTypes = {
-    tokens: PropTypes.array.isRequired
+    tokens: PropTypes.object.isRequired
   }
 
   render () {
+    const { tokens } = this.props;
+    const tokenList = tokens.edges.map(edge => edge.node);
+
     return (
       <div>
         <Autocomplete
           initialValue=""
-          items={this.props.tokens}
+          items={tokenList}
           getItemValue={(item) => item.content}
           shouldItemRender={(token, value) => token.content.startsWith(value)}
           renderItem={(token, isHighlighted) => (
             <div
               style={isHighlighted ? styles.highlightedToken : styles.token}
-              key={token.clientId}
+              key={token.id}
             >{token.content}</div>
           )}
         />
@@ -39,3 +43,18 @@ export default class VoteCaster extends React.Component {
     );
   }
 }
+
+export default Relay.createContainer(VoteCaster, {
+  fragments: {
+    tokens: () => Relay.QL`
+      fragment on TokenConnection {
+        edges {
+          node {
+            id
+            content
+          }
+        }
+      }
+    `
+  }
+});

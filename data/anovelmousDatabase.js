@@ -1,6 +1,11 @@
+const VIEWER_ID = 1;
+
 const me = {
   id: '1',
-  name: 'Me'
+  name: 'Me',
+  novels: ['1', '2'],
+  vocabulary: ['1', '2', '3', '4', '5'],
+  votes: ['1']
 };
 
 const i = {
@@ -33,90 +38,22 @@ const not = {
   isPunctuation: false
 };
 
-const firstNToken = {
-  id: '1',
-  token: '1'
-};
-
-const secondNToken = {
-  id: '2',
-  token: '2'
-};
-
-const thirdNToken = {
-  id: '3',
-  token: '3'
-};
-
-const fourthNToken = {
-  id: '4',
-  token: '4'
-};
-
-const fifthNToken = {
-  id: '5',
-  token: '1'
-};
-
-const sixthNToken = {
-  id: '6',
-  token: '2'
-};
-
-const seventhNToken = {
-  id: '7',
-  token: '5'
-};
-
-const firstFNToken = {
-  id: '1',
-  content: 'I'
-};
-
-const secondFNToken = {
-  id: '2',
-  content: 'am'
-};
-
-const thirdFNToken = {
-  id: '3',
-  content: 'finished.'
-};
-
-const fourthFNToken = {
-  id: '4',
-  content: 'I'
-};
-
-const fifthFNToken = {
-  id: '5',
-  content: 'am'
-};
-
-const sixthFNToken = {
-  id: '6',
-  content: 'not'
-};
-
 const chapterOne = {
   id: '1',
   title: 'Chapter One',
-  tokens: ['1', '2', '3', '4'],
-  text: ['1', '2', '3']
+  tokens: ['1', '2', '3', '4']
 };
 
 const chapterOneDos = {
   id: '2',
   title: 'Chapter 1',
-  tokens: ['5'],
-  text: ['4']
+  tokens: ['5']
 };
 
 const chapterTwo = {
   id: '3',
   title: 'Chapter 2',
-  tokens: ['6'],
-  text: ['5']
+  tokens: ['1', '2']
 };
 
 const oldNovel = {
@@ -134,7 +71,7 @@ const liveNovel = {
 const firstVote = {
   id: '1',
   chapter: '1',
-  contributor: '1',
+  contributor: `${VIEWER_ID}`,
   token: '1',
   ordinal: 0,
   selected: false,
@@ -158,23 +95,6 @@ const data = {
     4: period,
     5: not
   },
-  NovelToken: {
-    1: firstNToken,
-    2: secondNToken,
-    3: thirdNToken,
-    4: fourthNToken,
-    5: fifthNToken,
-    6: sixthNToken,
-    7: seventhNToken
-  },
-  FormattedNovelToken: {
-    1: firstFNToken,
-    2: secondFNToken,
-    3: thirdFNToken,
-    4: fourthFNToken,
-    5: fifthFNToken,
-    6: sixthFNToken
-  },
   Vote: {
     1: firstVote
   },
@@ -183,30 +103,30 @@ const data = {
   }
 };
 
-export function getNovel (id) {
+export function getNovel(id) {
   return data.Novel[id];
 }
 
-export function getNovels () {
-  return [data.Novel[1], data.Novel[2]];
+export function getNovels() {
+  return Object.keys(data.Novel).map(k => data.Novel[k]);
 }
 
-export function getLiveNovel () {
-  return data.Novel[2];
-}
-
-export function getChapter (id) {
+export function getChapter(id) {
   return data.Chapter[id];
 }
 
-export function getNovelToken(id) {
-  return data.NovelToken[id];
+export function getToken(id) {
+  return data.Token[id];
 }
 
-export function getFormattedNovelToken(id) {
-  return data.FormattedNovelToken[id];
+export function getViewer() {
+  return data.Contributor[VIEWER_ID];
 }
 
-export function getContributor(id) {
-  return data.Contributor[id];
+export function getVote(id) {
+  return data.Vote[id];
+}
+
+export function getVocabulary() {
+  return Object.keys(data.Token).map(k => data.Token[k]);
 }

@@ -4,9 +4,8 @@ import Relay       from 'react-relay';
 import CoreLayout  from 'layouts/CoreLayout';
 import RelayView    from 'views/relay-view';
 
-const contributorQueries = {
-  contributor: () => Relay.QL`query { contributor }`,
-  novel: () => Relay.QL`query { liveNovel }`
+const viewerQueries = {
+  contributor: () => Relay.QL`query RootQuery { viewer }`
 };
 
 export default (
@@ -15,7 +14,7 @@ export default (
       name='live'
       path='/'
       component={RelayView}
-      queries={contributorQueries}
+      queries={viewerQueries}
     />
   </Route>
 );

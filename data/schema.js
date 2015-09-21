@@ -20,17 +20,15 @@ import {
   Novel,
   Chapter,
   Token,
-  NovelToken,
-  FormattedNovelToken,
   Vote,
   Contributor,
   data,
-  getLiveNovel,
-  getNovels,
-  getNovelToken,
+  getNovel,
   getChapter,
-  getFormattedNovelToken,
-  getContributor
+  getToken,
+  getViewer,
+  getVote,
+  getVocabulary
 } from './anovelmousDatabase';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
@@ -40,26 +38,22 @@ const { nodeInterface, nodeField } = nodeDefinitions(
   },
   (obj) => {
     if (obj instanceof Novel) {
-      return novelType;
+      return GraphQLNovel;
     } else if (obj instanceof Chapter) {
-      return chapterType;
+      return GraphQLChapter;
     } else if (obj instanceof Token) {
-      return tokenType;
-    } else if (obj instanceof NovelToken ) {
-      return novelTokenType;
-    } else if (obj instanceof FormattedNovelToken) {
-      return formattedNovelTokenType;
+      return GraphQLToken;
     } else if (obj instanceof Vote) {
-      return voteType;
+      return GraphQLVote;
     } else if (obj instanceof Contributor) {
-      return contributorType;
+      return GraphQLContributor;
     } else {
       return null;
     }
   }
 );
 
-const tokenType = new GraphQLObjectType({
+const GraphQLToken = new GraphQLObjectType({
   name: 'Token',
   description: 'A language token (word or punctuation) used for contribution',
   fields: () => ({
@@ -82,39 +76,10 @@ const tokenType = new GraphQLObjectType({
   interfaces: [nodeInterface]
 });
 
-const novelTokenType = new GraphQLObjectType({
-  name: 'NovelToken',
-  description: 'A token that has been attributed to a Novel',
-  fields: () => ({
-    id: globalIdField('NovelToken'),
-    token: globalIdField('Token'),
-    createdAt: { type: GraphQLString },
-    ordinal: {type: GraphQLInt }
-  }),
-  interfaces: [nodeInterface]
-});
+const { connectionType: tokenConnection } =
+  connectionDefinitions({ name: 'Token', nodeType: GraphQLToken });
 
-const formattedNovelTokenType = new GraphQLObjectType({
-  name: 'FormattedNovelToken',
-  description: 'A formatted token that has been attributed to a novel.',
-  fields: () => ({
-    id: globalIdField('FormattedNovelToken'),
-    content: { type: GraphQLString },
-    ordinal: { type: GraphQLInt },
-    createdAt: { type: GraphQLString }
-  }),
-  interfaces: [nodeInterface]
-});
-
-const { connectionType: novelTokenConnection } =
-  connectionDefinitions({ name: 'NovelToken', nodeType: novelTokenType });
-
-const { connectionType: formattedNovelTokenConnection } =
-  connectionDefinitions(
-    { name: 'FormattedNovelToken', nodeType: formattedNovelTokenType }
-  );
-
-const chapterType = new GraphQLObjectType({
+const GraphQLChapter = new GraphQLObjectType({
   name: 'Chapter',
   description: 'A chapter of a novel.',
   fields: () => ({
@@ -124,20 +89,11 @@ const chapterType = new GraphQLObjectType({
       description: 'The title of the chapter.'
     },
     tokens: {
-      type: novelTokenConnection,
+      type: tokenConnection,
       description: 'The tokens that make up the chapter.',
       args: connectionArgs,
       resolve: (chapter, args) => connectionFromArray(
-        chapter.tokens.map((id) => getNovelToken(id)),
-        args
-      )
-    },
-    text: {
-      type: formattedNovelTokenConnection,
-      description: 'The formatted text of the chapter, space delimited.',
-      args: connectionArgs,
-      resolve: (chapter, args) => connectionFromArray(
-        chapter.text.map((id) => getFormattedNovelToken(id)),
+        chapter.tokens.map((id) => getToken(id)),
         args
       )
     }
@@ -145,7 +101,7 @@ const chapterType = new GraphQLObjectType({
   interfaces: [nodeInterface]
 });
 
-const voteType = new GraphQLObjectType({
+const GraphQLVote = new GraphQLObjectType({
   name: 'Vote',
   description: 'A contributor\'s vote for the next token in the novel',
   fields: () => ({
@@ -161,9 +117,9 @@ const voteType = new GraphQLObjectType({
 });
 
 const { connectionType: chapterConnection } =
-  connectionDefinitions({ name: 'Chapter', nodeType: chapterType });
+  connectionDefinitions({ name: 'Chapter', nodeType: GraphQLChapter });
 
-const novelType = new GraphQLObjectType({
+const GraphQLNovel = new GraphQLObjectType({
   name: 'Novel',
   description: 'A narrative masterpiece created by a community',
   fields: () => ({
@@ -185,7 +141,13 @@ const novelType = new GraphQLObjectType({
   interfaces: [nodeInterface]
 });
 
-const contributorType = new GraphQLObjectType({
+const { connectionType: novelConnection } =
+  connectionDefinitions({ name: 'Novel', nodeType: GraphQLNovel });
+
+const { connectionType: voteConnection } =
+  connectionDefinitions({ name: 'Vote', nodeType: GraphQLVote });
+
+const GraphQLContributor = new GraphQLObjectType({
   name: 'Contributor',
   description: 'A collaborative author of novels',
   fields: () => ({
@@ -193,30 +155,49 @@ const contributorType = new GraphQLObjectType({
     name: {
       type: GraphQLString,
       description: 'The name of the contributor.'
+    },
+    novels: {
+      type: novelConnection,
+      description: 'All viewable novels.',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.novels.map((id) => getNovel(id)),
+        args
+      )
+    },
+    vocabulary: {
+      type: tokenConnection,
+      description: 'Possible words for voting',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.vocabulary.map((id) => getToken(id)),
+        args
+      )
+    },
+    votes: {
+      type: voteConnection,
+      description: 'Past votes by this viewer',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.votes.map((id) => getVote(id)),
+        args
+      )
     }
   }),
   interfaces: [nodeInterface]
 });
 
-const queryType = new GraphQLObjectType({
-  name: 'Query',
-  fields: () => ({
-    novels: {
-      type: new GraphQLList(novelType),
-      resolve: () => getNovels()
-    },
-    liveNovel: {
-      type: novelType,
-      resolve: () => getLiveNovel()
-    },
-    contributor: {
-      type: contributorType,
-      resolve: () => getContributor(1)
+const Root = new GraphQLObjectType({
+  name: 'Root',
+  fields: {
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
     },
     node: nodeField
-  })
+  }
 });
 
 export const Schema = new GraphQLSchema({
-  query: queryType
+  query: Root
 });
