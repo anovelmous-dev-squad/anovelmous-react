@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import Chapter from 'components/Chapter';
+import Chapter from './Chapter';
 
 class Novel extends React.Component {
   static propTypes = {
