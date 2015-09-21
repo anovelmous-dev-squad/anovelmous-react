@@ -22,11 +22,7 @@ config.set('vendor_dependencies', [
   'history',
   'immutable',
   'react',
-  'react-redux',
-  'react-router',
-  'redux',
-  'redux-devtools',
-  'redux-devtools/lib/react'
+  'react-router'
 ]);
 
 config.set('webpack_lint_in_dev', true);

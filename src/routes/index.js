@@ -2,7 +2,7 @@ import { Route }   from 'react-router';
 import React       from 'react';
 import Relay       from 'react-relay';
 import CoreLayout  from 'layouts/CoreLayout';
-import RelayView    from 'views/relay-view';
+import LiveView    from 'views/LiveView';
 
 const viewerQueries = {
   contributor: () => Relay.QL`query RootQuery { viewer }`
@@ -13,7 +13,7 @@ export default (
     <Route
       name='live'
       path='/'
-      component={RelayView}
+      component={LiveView}
       queries={viewerQueries}
     />
   </Route>

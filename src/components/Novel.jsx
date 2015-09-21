@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import ChapterPane from 'components/ChapterPane';
+import Chapter from 'components/Chapter';
 
 class Novel extends React.Component {
   static propTypes = {
@@ -13,7 +13,7 @@ class Novel extends React.Component {
       <div>
         <h3>{novel.title}</h3>
         {novel.chapters.edges.map(edge => (
-          <ChapterPane key={edge.node.id} chapter={edge.node}/>
+          <Chapter key={edge.node.id} chapter={edge.node}/>
         ))}
       </div>
     );
@@ -30,7 +30,7 @@ export default Relay.createContainer(Novel, {
           edges {
             node {
               id
-              ${ChapterPane.getFragment('chapter')}
+              ${Chapter.getFragment('chapter')}
             }
           }
         }

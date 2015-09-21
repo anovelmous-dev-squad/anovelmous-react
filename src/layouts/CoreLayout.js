@@ -1,6 +1,5 @@
 import React  from 'react';
-import Relay from 'react-relay';
-import Header from 'components/header';
+import Header from 'components/Header';
 
 export default class CoreLayout extends React.Component {
   static propTypes = {

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 
-class ChapterPane extends React.Component {
+class Chapter extends React.Component {
   static propTypes = {
     chapter: PropTypes.object.isRequired
   }
@@ -21,7 +21,7 @@ class ChapterPane extends React.Component {
   }
 }
 
-export default Relay.createContainer(ChapterPane, {
+export default Relay.createContainer(Chapter, {
   fragments: {
     chapter: () => Relay.QL`
       fragment on Chapter {

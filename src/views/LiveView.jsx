@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import VoteCaster from 'components/VoteCaster';
 import Novel from 'components/Novel';
 
-class RelayView extends React.Component {
+class LiveView extends React.Component {
     static propTypes = {
       contributor: PropTypes.object.isRequired
     };
@@ -17,12 +17,12 @@ class RelayView extends React.Component {
             <Novel key={edge.node.id} novel={edge.node}/>
           ))}
           <VoteCaster tokens={contributor.vocabulary}/>
-      </div>
+        </div>
       );
     }
 }
 
-export default Relay.createContainer(RelayView, {
+export default Relay.createContainer(LiveView, {
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
