@@ -1,5 +1,6 @@
 import React  from 'react';
 import Header from 'components/Header';
+import { Grid, Row, Cell } from 'react-inline-grid';
 
 export default class CoreLayout extends React.Component {
   static propTypes = {
@@ -12,14 +13,16 @@ export default class CoreLayout extends React.Component {
 
   render () {
     return (
-      <div>
-        <Header title="Anovelmous"/>
-        <div className='page-container'>
-          <div className='view-container'>
+      <Grid>
+        <Row>
+          <Header title="Anovelmous"/>
+        </Row>
+        <Row>
+          <Cell>
             {this.props.children}
-          </div>
-        </div>
-      </div>
+          </Cell>
+        </Row>
+      </Grid>
     );
   }
 }
