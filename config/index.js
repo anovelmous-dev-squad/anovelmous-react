@@ -22,7 +22,8 @@ config.set('vendor_dependencies', [
   'history',
   'immutable',
   'react',
-  'react-router'
+  'react-router',
+  'react-inline-grid'
 ]);
 
 config.set('webpack_lint_in_dev', true);

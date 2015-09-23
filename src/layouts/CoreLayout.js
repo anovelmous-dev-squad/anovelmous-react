@@ -14,11 +14,9 @@ export default class CoreLayout extends React.Component {
   render () {
     return (
       <Grid>
-        <Row>
-          <Header title="Anovelmous"/>
-        </Row>
-        <Row>
-          <Cell>
+        <Row is="center">
+          <Cell is="8 tablet-6 phone-4">
+            <Header title="Anovelmous"/>
             {this.props.children}
           </Cell>
         </Row>
