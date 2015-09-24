@@ -12,18 +12,16 @@ const webpackConfig = {
   devtool : 'source-map',
   entry   : {
     app : [
-      paths.src('entry-points/client')
+      paths.src('index')
     ]
   },
   output : {
     filename   : '[name].[hash].js',
-    path       : paths.dist('client'),
+    path       : paths.dist(),
     publicPath : '/'
   },
   plugins : [
-    new webpack.DefinePlugin(Object.assign(config.get('globals'), {
-      __CLIENT__ : true
-    })),
+    new webpack.DefinePlugin(config.get('globals')),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.DedupePlugin(),
     new ExtractTextPlugin('[name].[contenthash].css'),
