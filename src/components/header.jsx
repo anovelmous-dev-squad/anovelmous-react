@@ -1,19 +1,19 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Radium from 'radium';
 
 const styles = {
   base: {
-    background: 'blue',
+    background: 'rgba(185, 42, 63, 0.95)',
     border: 0,
     borderRadius: 4,
-    color: 'white',
-    padding: '1.5em'
+    color: 'rgb(212, 208, 208)',
+    paddingLeft: 30,
+    paddingTop: 10,
+    height: 80
   },
-  block: {
-    display: 'block',
-
+  brand: {
     ':hover': {
-      boxShadow: '0 3px 0 rgba(0,0,0,0.2)'
+      color: 'rgb(234, 234, 237)'
     }
   }
 };
@@ -21,15 +21,17 @@ const styles = {
 @Radium
 export default class Header extends React.Component {
   static propTypes = {
-    title: PropTypes.string.isRequired
+    title: React.PropTypes.string.isRequired
   };
 
   render() {
     const { title } = this.props;
 
     return (
-      <div style={[styles.base, styles.block]}>
-        <h2>{title}</h2>
+      <div style={styles.base}>
+        <div style={styles.brand}>
+          <h3>{title}</h3>
+        </div>
       </div>
     );
   }
