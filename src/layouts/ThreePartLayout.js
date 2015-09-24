@@ -14,13 +14,13 @@ export default class ThreePartLayout extends React.Component {
     return (
       <Grid>
         <Row is="around tablet-start phone-start">
-          <Cell is="2 tablet-2 phone-1">
+          <Cell is="3 tablet-2 phone-4">
             {leftSidebar}
           </Cell>
-          <Cell is="4 tablet-4 phone-4">
+          <Cell is="6 tablet-4 phone-4">
             {middleContent}
           </Cell>
-          <Cell is="2 tablet-2 phone-4">
+          <Cell is="3 tablet-2 phone-4">
             {rightSidebar}
           </Cell>
         </Row>
