@@ -18,13 +18,7 @@ config.set('server_host',  'localhost');
 config.set('server_port',  process.env.PORT || 4000);
 config.set('webpack_port', 3000);
 
-config.set('vendor_dependencies', [
-  'history',
-  'immutable',
-  'react',
-  'react-router',
-  'react-inline-grid'
-]);
+config.set('vendor_dependencies', []);
 
 config.set('webpack_lint_in_dev', true);
 
