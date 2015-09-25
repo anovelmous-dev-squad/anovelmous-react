@@ -13,7 +13,7 @@ const styles = {
 };
 
 @Radium
-class NavPanel extends React.Component {
+class NavView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired
   }
@@ -33,7 +33,7 @@ class NavPanel extends React.Component {
   }
 }
 
-export default Relay.createContainer(NavPanel, {
+export default Relay.createContainer(NavView, {
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {

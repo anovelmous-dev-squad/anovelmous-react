@@ -4,7 +4,7 @@ import VoteCaster from 'components/VoteCaster';
 import Novel from 'components/Novel';
 import Radium from 'radium';
 import ThreePartLayout from 'layouts/ThreePartLayout';
-import NavPanel from 'components/NavPanel';
+import NavView from 'components/NavView';
 import VocabularyView from './VocabularyView';
 import Progress from 'components/Progress';
 
@@ -22,8 +22,8 @@ class ContributeView extends React.Component {
       contributor: PropTypes.object.isRequired
     };
 
-    renderNavPanel() {
-      return (<NavPanel contributor={this.props.contributor}/>);
+    renderNavView() {
+      return (<NavView contributor={this.props.contributor}/>);
     }
 
     renderReader() {
@@ -48,7 +48,7 @@ class ContributeView extends React.Component {
     render () {
       return (
         <ThreePartLayout
-          leftSidebar={this.renderNavPanel()}
+          leftSidebar={this.renderNavView()}
           middleContent={this.renderReader()}
           rightSidebar={this.renderVocabularyView()}
           />
@@ -79,7 +79,7 @@ export default Relay.createContainer(ContributeView, {
           }
           ${VoteCaster.getFragment('tokens')}
         }
-        ${NavPanel.getFragment('contributor')}
+        ${NavView.getFragment('contributor')}
         ${VocabularyView.getFragment('contributor')}
       }
     `
