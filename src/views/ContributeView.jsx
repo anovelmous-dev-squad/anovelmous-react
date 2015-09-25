@@ -6,6 +6,7 @@ import Radium from 'radium';
 import ThreePartLayout from 'layouts/ThreePartLayout';
 import NavPanel from 'components/NavPanel';
 import VocabularyView from './VocabularyView';
+import Progress from 'components/Progress';
 
 const styles = {
   base: {
@@ -28,6 +29,7 @@ class ContributeView extends React.Component {
     renderReader() {
       return (
         <div style={styles.base}>
+          <Progress percent={30}/>
           <h1>Hello {this.props.contributor.name}!</h1>
           <div>
           {this.props.contributor.novels.edges.map(edge => (
