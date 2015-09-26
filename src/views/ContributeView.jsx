@@ -4,7 +4,7 @@ import VoteCaster from 'components/VoteCaster';
 import Novel from 'components/Novel';
 import Radium from 'radium';
 import ThreePartLayout from 'layouts/ThreePartLayout';
-import NavView from 'components/NavView';
+import NavView from './NavView';
 import VocabularyView from './VocabularyView';
 import Progress from 'components/Progress';
 
