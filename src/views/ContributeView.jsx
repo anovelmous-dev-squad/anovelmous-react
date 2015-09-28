@@ -6,6 +6,7 @@ import ThreePartLayout from 'layouts/ThreePartLayout';
 import NavView from './NavView';
 import VocabularyView from './VocabularyView';
 import Progress from 'components/Progress';
+import Novel from 'components/Novel';
 
 const styles = {
   base: {
@@ -26,15 +27,12 @@ class ContributeView extends React.Component {
     }
 
     renderReader() {
-      const { contributor: { novel } } = this.props;
-
+      const { contributor } = this.props;
       return (
         <div style={styles.base}>
           <Progress percent={30}/>
-          <div>
-            <h1>{novel.title}</h1>
-          </div>
-          <VoteCaster tokens={this.props.contributor.vocabulary}/>
+          <Novel novel={contributor.novel}/>
+          <VoteCaster tokens={contributor.vocabulary}/>
         </div>
       );
     }
@@ -64,16 +62,9 @@ export default Relay.createContainer(ContributeView, {
         id
         name
         novel(id: $novelId) {
-          id
-          title
+          ${Novel.getFragment('novel')}
         }
         vocabulary(first: 5) {
-          edges {
-            node {
-              id
-              content
-            }
-          }
           ${VoteCaster.getFragment('tokens')}
         }
         ${NavView.getFragment('contributor')}

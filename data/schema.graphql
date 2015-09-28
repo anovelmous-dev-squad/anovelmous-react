@@ -30,6 +30,7 @@ interface Node {
 type Novel implements Node {
   id: ID!
   title: String
+  chapter(id: String, mostRecent: Boolean = false): Chapter
   chapters(before: String, after: String, first: Int, last: Int): ChapterConnection
 }
 

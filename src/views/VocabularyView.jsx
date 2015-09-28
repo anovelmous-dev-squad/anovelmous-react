@@ -12,7 +12,7 @@ class VocabularyView extends React.Component {
     return (
       <ul>
         {contributor.vocabulary.edges.map(edge => (
-          <li>{edge.node.content}</li>
+          <li key={edge.node.id}>{edge.node.content}</li>
         ))}
       </ul>
     );
@@ -24,7 +24,7 @@ export default Relay.createContainer(VocabularyView, {
     contributor: () => Relay.QL`
       fragment on Contributor {
         id
-        vocabulary(first: 2) {
+        vocabulary(first: 4) {
           edges {
             node {
               id

@@ -103,30 +103,34 @@ const data = {
   }
 };
 
-export function getNovel(id) {
+export const getNovel = (id) => {
   return data.Novel[id];
-}
+};
 
-export function getNovels() {
+export const getNovels = () => {
   return Object.keys(data.Novel).map(k => data.Novel[k]);
-}
+};
 
-export function getChapter(id) {
+export const getChapter = (id) => {
   return data.Chapter[id];
-}
+};
 
-export function getToken(id) {
+export const getMostRecentChapter = () => {
+  return data.Chapter[3];
+};
+
+export const getToken = (id) => {
   return data.Token[id];
-}
+};
 
-export function getViewer() {
+export const getViewer = () => {
   return data.Contributor[VIEWER_ID];
-}
+};
 
-export function getVote(id) {
+export const getVote = (id) => {
   return data.Vote[id];
-}
+};
 
-export function getVocabulary() {
+export const getVocabulary = () => {
   return Object.keys(data.Token).map(k => data.Token[k]);
-}
+};

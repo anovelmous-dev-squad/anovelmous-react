@@ -26,6 +26,7 @@ import {
   data,
   getNovel,
   getChapter,
+  getMostRecentChapter,
   getToken,
   getViewer,
   getVote,
@@ -129,6 +130,21 @@ const GraphQLNovel = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The title of the novel.'
     },
+    chapter: {
+      type: GraphQLChapter,
+      args: {
+        id: {
+          type: GraphQLString
+        },
+        mostRecent: {
+          type: GraphQLBoolean,
+          defaultValue: false
+        }
+      },
+      resolve: (novel, {id, mostRecent}) => (
+        mostRecent ? getMostRecentChapter() : getChapter(id)
+      )
+    },
     chapters: {
       type: chapterConnection,
       description: 'The chapters of the novel.',
@@ -164,7 +180,7 @@ const GraphQLContributor = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLString)
         }
       },
-      resolve: (root, {id}) => getNovel(parseInt(id, 10))
+      resolve: (contributor, {id}) => getNovel(parseInt(id, 10))
     },
     novels: {
       type: novelConnection,

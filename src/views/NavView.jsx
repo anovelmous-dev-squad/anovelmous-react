@@ -25,7 +25,7 @@ class NavView extends React.Component {
       <div style={styles.base}>
         <ul>
           {contributor.novels.edges.map(edge => (
-            <li>{edge.node.title}</li>
+            <li key={edge.node.id}>{edge.node.title}</li>
           ))}
         </ul>
       </div>

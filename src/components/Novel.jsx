@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import Chapter from './Chapter';
+import Radium from 'radium';
 
+@Radium
 class Novel extends React.Component {
   static propTypes = {
     novel: PropTypes.object.isRequired
@@ -12,9 +14,7 @@ class Novel extends React.Component {
     return (
       <div>
         <h3>{novel.title}</h3>
-        {novel.chapters.edges.map(edge => (
-          <Chapter key={edge.node.id} chapter={edge.node}/>
-        ))}
+        <Chapter chapter={novel.chapter}/>
       </div>
     );
   }
@@ -26,13 +26,8 @@ export default Relay.createContainer(Novel, {
       fragment on Novel {
         id
         title
-        chapters(first: 2) {
-          edges {
-            node {
-              id
-              ${Chapter.getFragment('chapter')}
-            }
-          }
+        chapter(mostRecent: true) {
+          ${Chapter.getFragment('chapter')}
         }
       }
     `
