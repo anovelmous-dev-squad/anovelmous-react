@@ -17,6 +17,7 @@ type ChapterEdge {
 type Contributor implements Node {
   id: ID!
   name: String
+  novel(id: String!): Novel
   novels(before: String, after: String, first: Int, last: Int): NovelConnection
   vocabulary(before: String, after: String, first: Int, last: Int): TokenConnection
   votes(before: String, after: String, first: Int, last: Int): VoteConnection

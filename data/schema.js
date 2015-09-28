@@ -1,6 +1,7 @@
 import {
   GraphQLBoolean,
   GraphQLInt,
+  GraphQLNonNull,
   GraphQLList,
   GraphQLObjectType,
   GraphQLSchema,
@@ -155,6 +156,15 @@ const GraphQLContributor = new GraphQLObjectType({
     name: {
       type: GraphQLString,
       description: 'The name of the contributor.'
+    },
+    novel: {
+      type: GraphQLNovel,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString)
+        }
+      },
+      resolve: (root, {id}) => getNovel(parseInt(id, 10))
     },
     novels: {
       type: novelConnection,

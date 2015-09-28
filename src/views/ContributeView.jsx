@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
 import VoteCaster from 'components/VoteCaster';
-import Novel from 'components/Novel';
 import Radium from 'radium';
 import ThreePartLayout from 'layouts/ThreePartLayout';
 import NavView from './NavView';
@@ -27,14 +26,13 @@ class ContributeView extends React.Component {
     }
 
     renderReader() {
+      const { contributor: { novel } } = this.props;
+
       return (
         <div style={styles.base}>
           <Progress percent={30}/>
-          <h1>Hello {this.props.contributor.name}!</h1>
           <div>
-          {this.props.contributor.novels.edges.map(edge => (
-              <Novel key={edge.node.id} novel={edge.node}/>
-            ))}
+            <h1>{novel.title}</h1>
           </div>
           <VoteCaster tokens={this.props.contributor.vocabulary}/>
         </div>
@@ -57,18 +55,17 @@ class ContributeView extends React.Component {
 }
 
 export default Relay.createContainer(ContributeView, {
+  initialVariables: {
+    novelId: null
+  },
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
         id
         name
-        novels(last: 1) {
-          edges {
-            node {
-              id
-              ${Novel.getFragment('novel')}
-            }
-          }
+        novel(id: $novelId) {
+          id
+          title
         }
         vocabulary(first: 5) {
           edges {

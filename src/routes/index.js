@@ -12,7 +12,7 @@ export default (
   <Route path='/' component={CoreLayout}>
     <Route
       name='contribute'
-      path='contribute/:novel'
+      path='contribute/:novelId'
       component={ContributeView}
       queries={viewerQueries}
     />
