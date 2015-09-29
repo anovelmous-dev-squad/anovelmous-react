@@ -2,7 +2,6 @@ import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLNonNull,
-  GraphQLList,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString
@@ -30,7 +29,7 @@ import {
   getToken,
   getViewer,
   getVote,
-  getVocabulary
+  getMostRecentToken
 } from './anovelmousDatabase';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
@@ -49,8 +48,6 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLVote;
     } else if (obj instanceof Contributor) {
       return GraphQLContributor;
-    } else {
-      return null;
     }
   }
 );
@@ -98,6 +95,15 @@ const GraphQLChapter = new GraphQLObjectType({
         chapter.tokens.map((id) => getToken(id)),
         args
       )
+    },
+    votingDuration: {
+      type: GraphQLInt,
+      description: 'Length of voting round in seconds'
+    },
+    tokenAddedAt: {
+      type: GraphQLString,
+      description: 'The time the most recent token was appended.',
+      resolve: (chapter) => getMostRecentToken(chapter).addedAt
     }
   }),
   interfaces: [nodeInterface]

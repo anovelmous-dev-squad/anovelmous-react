@@ -62,6 +62,10 @@ export default Relay.createContainer(ContributeView, {
         id
         name
         novel(id: $novelId) {
+          chapter(mostRecent: true) {
+            votingDuration,
+            tokenAddedAt
+          }
           ${Novel.getFragment('novel')}
         }
         vocabulary(first: 5) {

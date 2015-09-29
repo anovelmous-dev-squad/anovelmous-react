@@ -11,49 +11,57 @@ const me = {
 const i = {
   id: '1',
   content: 'I',
-  isPunctuation: false
+  isPunctuation: false,
+  addedAt: '2015-02-12T01:03:14.046431Z'
 };
 
 const am = {
   id: '2',
   content: 'am',
-  isPunctuation: false
+  isPunctuation: false,
+  addedAt: '2015-02-12T01:03:14.146431Z'
 };
 
 const finished = {
   id: '3',
   content: 'finished',
-  isPunctuation: false
+  isPunctuation: false,
+  addedAt: '2015-02-12T01:03:14.246431Z'
 };
 
 const period = {
   id: '4',
   content: '.',
-  isPunctuation: true
+  isPunctuation: true,
+  addedAt: '2015-02-12T01:03:14.346431Z'
 };
 
 const not = {
   id: '5',
   content: 'not',
-  isPunctuation: false
+  isPunctuation: false,
+  addedAt: '2015-02-12T01:03:14.446431Z'
 };
 
 const chapterOne = {
   id: '1',
   title: 'Chapter One',
-  tokens: ['1', '2', '3', '4']
+  tokens: ['1', '2', '3', '4'],
+  votingDuration: 10
 };
 
 const chapterOneDos = {
   id: '2',
   title: 'Chapter 1',
-  tokens: ['5']
+  tokens: ['5'],
+  votingDuration: 10
 };
 
 const chapterTwo = {
   id: '3',
   title: 'Chapter 2',
-  tokens: ['1', '2']
+  tokens: ['1', '2'],
+  votingDuration: 15
 };
 
 const oldNovel = {
@@ -133,4 +141,9 @@ export const getVote = (id) => {
 
 export const getVocabulary = () => {
   return Object.keys(data.Token).map(k => data.Token[k]);
+};
+
+export const getMostRecentToken = (chapter) => {
+  const tokens = data.Chapter[3].tokens;
+  return data.Token[tokens[tokens.length - 1]];
 };
