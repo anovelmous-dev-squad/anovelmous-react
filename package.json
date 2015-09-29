@@ -2,6 +2,11 @@
   "name": "anovelmous-web",
   "version": "0.1.0",
   "description": "Front-End for Anovelmous",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/anovelmous-dev-squad/anovelmous-web"
+  },
+  "license": "BSD-3-Clause",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
