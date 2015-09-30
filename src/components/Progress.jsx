@@ -3,14 +3,13 @@ import Radium from 'radium';
 
 const styles = {
   base: {
-    background: 'rgb(27, 238, 112)',
-    height: 10
+    background: 'rgb(27, 238, 112)'
   },
-  percent: (percent) => {
+  percent: (percent = 0) => {
     return { width: percent + '%' };
   },
   height: (height = 10) => {
-    height: height;
+    return { height: height };
   },
   transition: (transition = 0) => {
     return { transition: transition + 'ms' };
@@ -34,9 +33,9 @@ export default class Progress extends React.Component {
         <div
           style={[
             styles.base,
+            styles.height(this.props.height),
             styles.percent(percent),
-            styles.transition(this.props.transition),
-            styles.height(this.props.height)
+            styles.transition(this.props.transition)
           ]}>
           {this.props.children}
         </div>

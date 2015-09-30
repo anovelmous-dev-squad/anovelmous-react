@@ -7,9 +7,9 @@ import NavView from './NavView';
 import VocabularyView from './VocabularyView';
 import Progress from 'components/Progress';
 import Novel from 'components/Novel';
-import { getVotingRoundPercentage } from 'utils';
+import { getVotingRoundProgress } from 'utils';
 
-const PROGRESS_BAR_UPDATE_INTERVAL = 1000; // in ms
+const PROGRESS_BAR_UPDATE_INTERVAL = 2000; // in ms
 
 const styles = {
   base: {
@@ -29,18 +29,22 @@ class ContributeView extends React.Component {
       super(props);
       const chapter = props.contributor.novel.chapter;
       this.state = {
-        votingRoundPercent: getVotingRoundPercentage(
+        votingRoundProgress: getVotingRoundProgress(
           chapter.prevVotingEndedAt, chapter.votingDuration
         )
       };
     }
 
     componentDidMount() {
+      this._updateVotingRoundProgress();
+    }
+
+    _updateVotingRoundProgress() {
       const self = this;
       setInterval(() => {
         const chapter = self.props.contributor.novel.chapter;
         self.setState({
-          votingRoundPercent: getVotingRoundPercentage(
+          votingRoundProgress: getVotingRoundProgress(
             chapter.prevVotingEndedAt, chapter.votingDuration
           )
         });
@@ -55,8 +59,12 @@ class ContributeView extends React.Component {
       const { contributor } = this.props;
       return (
         <div style={styles.base}>
-          <Progress percent={this.state.votingRoundPercent}
-                    transition={PROGRESS_BAR_UPDATE_INTERVAL}/>
+          <Progress percent={this.state.votingRoundProgress.percentComplete}
+                    transition={PROGRESS_BAR_UPDATE_INTERVAL}
+                    height={20}
+                    >
+            <p>{this.state.votingRoundProgress.secondsRemaining} Seconds Left</p>
+          </Progress>
           <Novel novel={contributor.novel}/>
           <VoteCaster tokens={contributor.vocabulary}/>
         </div>
