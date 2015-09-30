@@ -157,14 +157,14 @@ export const getVocabulary = () => {
 
 const addVote = (vote) => data.Vote[vote.id];
 
-export const castVote = (token, chapter, ordinal) => {
+export const castVote = (tokenId, chapterId, ordinal) => {
   const voteIds = Object.keys(data.Vote);
   const newId = voteIds.sort()[voteIds.length - 1] + 1;
   const newVote = {
     id: newId,
-    token,
+    token: tokenId,
     contributor: getViewer(),
-    chapter,
+    chapter: chapterId,
     ordinal,
     selected: false,
     createdAt: moment()

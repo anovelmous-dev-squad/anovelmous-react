@@ -1,7 +1,7 @@
 input CastVoteInput {
   tokenId: String!
   chapterId: String!
-  ordinalId: String!
+  ordinal: Int!
   clientMutationId: String!
 }
 

@@ -227,7 +227,7 @@ const GraphQLCastVoteMutation = mutationWithClientMutationId({
   inputFields: {
     tokenId: { type: new GraphQLNonNull(GraphQLString) },
     chapterId: { type: new GraphQLNonNull(GraphQLString) },
-    ordinalId: { type: new GraphQLNonNull(GraphQLString) }
+    ordinal: { type: new GraphQLNonNull(GraphQLInt) }
   },
   outputFields: {
     voteEdge: {
@@ -245,8 +245,8 @@ const GraphQLCastVoteMutation = mutationWithClientMutationId({
       resolve: () => getViewer()
     }
   },
-  mutateAndGetPayload: ({tokenId, chapterId, ordinalId}) => {
-    const localVoteId = castVote(tokenId, chapterId, ordinalId);
+  mutateAndGetPayload: ({tokenId, chapterId, ordinal}) => {
+    const localVoteId = castVote(tokenId, chapterId, ordinal);
     return {localVoteId};
   }
 });
