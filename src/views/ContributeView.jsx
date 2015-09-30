@@ -7,7 +7,9 @@ import NavView from './NavView';
 import VocabularyView from './VocabularyView';
 import Progress from 'components/Progress';
 import Novel from 'components/Novel';
-import { getRemainingVotingTime, getVotingRoundPercentage } from 'utils';
+import { getVotingRoundPercentage } from 'utils';
+
+const PROGRESS_BAR_UPDATE_INTERVAL = 1000; // in ms
 
 const styles = {
   base: {
@@ -42,7 +44,7 @@ class ContributeView extends React.Component {
             chapter.prevVotingEndedAt, chapter.votingDuration
           )
         });
-      }, 1000);
+      }, PROGRESS_BAR_UPDATE_INTERVAL);
     }
 
     renderNavView() {
@@ -53,7 +55,8 @@ class ContributeView extends React.Component {
       const { contributor } = this.props;
       return (
         <div style={styles.base}>
-          <Progress percent={this.state.votingRoundPercent}/>
+          <Progress percent={this.state.votingRoundPercent}
+                    transition={PROGRESS_BAR_UPDATE_INTERVAL}/>
           <Novel novel={contributor.novel}/>
           <VoteCaster tokens={contributor.vocabulary}/>
         </div>
