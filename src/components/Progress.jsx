@@ -4,7 +4,7 @@ import Radium from 'radium';
 const styles = {
   base: {
     background: 'rgb(27, 238, 112)',
-    transition: 'width 200ms',
+    transition: 'width 300ms',
     height: 10
   },
   percent: (percent) => {

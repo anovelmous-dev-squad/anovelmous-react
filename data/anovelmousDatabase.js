@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const VIEWER_ID = 1;
 
 const me = {
@@ -47,21 +49,24 @@ const chapterOne = {
   id: '1',
   title: 'Chapter One',
   tokens: ['1', '2', '3', '4'],
-  votingDuration: 10
+  votingDuration: 10,
+  prevVotingEndedAt: moment().startOf('day')
 };
 
 const chapterOneDos = {
   id: '2',
   title: 'Chapter 1',
   tokens: ['5'],
-  votingDuration: 10
+  votingDuration: 10,
+  prevVotingEndedAt: moment().startOf('hour')
 };
 
 const chapterTwo = {
   id: '3',
   title: 'Chapter 2',
   tokens: ['1', '2'],
-  votingDuration: 15
+  votingDuration: 15,
+  prevVotingEndedAt: moment().format()
 };
 
 const oldNovel = {
@@ -141,9 +146,4 @@ export const getVote = (id) => {
 
 export const getVocabulary = () => {
   return Object.keys(data.Token).map(k => data.Token[k]);
-};
-
-export const getMostRecentToken = (chapter) => {
-  const tokens = data.Chapter[3].tokens;
-  return data.Token[tokens[tokens.length - 1]];
 };

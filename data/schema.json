@@ -539,7 +539,7 @@
             },
             {
               "name": "votingDuration",
-              "description": "Length of voting round in seconds",
+              "description": "Length of voting round in seconds.",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -550,8 +550,8 @@
               "deprecationReason": null
             },
             {
-              "name": "tokenAddedAt",
-              "description": "The time the most recent token was appended.",
+              "name": "prevVotingEndedAt",
+              "description": "Timestamp when the previous voting round ended.",
               "args": [],
               "type": {
                 "kind": "SCALAR",

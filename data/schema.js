@@ -28,8 +28,7 @@ import {
   getMostRecentChapter,
   getToken,
   getViewer,
-  getVote,
-  getMostRecentToken
+  getVote
 } from './anovelmousDatabase';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
@@ -98,12 +97,11 @@ const GraphQLChapter = new GraphQLObjectType({
     },
     votingDuration: {
       type: GraphQLInt,
-      description: 'Length of voting round in seconds'
+      description: 'Length of voting round in seconds.'
     },
-    tokenAddedAt: {
+    prevVotingEndedAt: {
       type: GraphQLString,
-      description: 'The time the most recent token was appended.',
-      resolve: (chapter) => getMostRecentToken(chapter).addedAt
+      description: 'Timestamp when the previous voting round ended.'
     }
   }),
   interfaces: [nodeInterface]

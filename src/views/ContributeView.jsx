@@ -7,6 +7,7 @@ import NavView from './NavView';
 import VocabularyView from './VocabularyView';
 import Progress from 'components/Progress';
 import Novel from 'components/Novel';
+import { getRemainingVotingTime, getVotingRoundPercentage } from 'utils';
 
 const styles = {
   base: {
@@ -22,6 +23,28 @@ class ContributeView extends React.Component {
       contributor: PropTypes.object.isRequired
     };
 
+    constructor(props) {
+      super(props);
+      const chapter = props.contributor.novel.chapter;
+      this.state = {
+        votingRoundPercent: getVotingRoundPercentage(
+          chapter.prevVotingEndedAt, chapter.votingDuration
+        )
+      };
+    }
+
+    componentDidMount() {
+      const self = this;
+      setInterval(() => {
+        const chapter = self.props.contributor.novel.chapter;
+        self.setState({
+          votingRoundPercent: getVotingRoundPercentage(
+            chapter.prevVotingEndedAt, chapter.votingDuration
+          )
+        });
+      }, 1000);
+    }
+
     renderNavView() {
       return (<NavView contributor={this.props.contributor}/>);
     }
@@ -30,7 +53,7 @@ class ContributeView extends React.Component {
       const { contributor } = this.props;
       return (
         <div style={styles.base}>
-          <Progress percent={30}/>
+          <Progress percent={this.state.votingRoundPercent}/>
           <Novel novel={contributor.novel}/>
           <VoteCaster tokens={contributor.vocabulary}/>
         </div>
@@ -63,8 +86,8 @@ export default Relay.createContainer(ContributeView, {
         name
         novel(id: $novelId) {
           chapter(mostRecent: true) {
-            votingDuration,
-            tokenAddedAt
+            prevVotingEndedAt
+            votingDuration
           }
           ${Novel.getFragment('novel')}
         }
