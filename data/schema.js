@@ -11,8 +11,10 @@ import {
   connectionArgs,
   connectionDefinitions,
   connectionFromArray,
+  cursorForObjectInConnection,
   fromGlobalId,
   globalIdField,
+  mutationWithClientMutationId,
   nodeDefinitions
 } from 'graphql-relay';
 
@@ -28,7 +30,9 @@ import {
   getMostRecentChapter,
   getToken,
   getViewer,
-  getVote
+  getVote,
+  getVotes,
+  castVote
 } from './anovelmousDatabase';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
@@ -165,7 +169,8 @@ const GraphQLNovel = new GraphQLObjectType({
 const { connectionType: novelConnection } =
   connectionDefinitions({ name: 'Novel', nodeType: GraphQLNovel });
 
-const { connectionType: voteConnection } =
+const { connectionType: voteConnection,
+        edgeType: GraphQLVoteEdge } =
   connectionDefinitions({ name: 'Vote', nodeType: GraphQLVote });
 
 const GraphQLContributor = new GraphQLObjectType({
@@ -217,6 +222,35 @@ const GraphQLContributor = new GraphQLObjectType({
   interfaces: [nodeInterface]
 });
 
+const GraphQLCastVoteMutation = mutationWithClientMutationId({
+  name: 'CastVote',
+  inputFields: {
+    tokenId: { type: new GraphQLNonNull(GraphQLString) },
+    chapterId: { type: new GraphQLNonNull(GraphQLString) },
+    ordinalId: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    voteEdge: {
+      type: GraphQLVoteEdge,
+      resolve: ({localVoteId}) => {
+        const vote = getVote(localVoteId);
+        return {
+          cursor: cursorForObjectInConnection(getVotes, vote),
+          node: vote
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
+    }
+  },
+  mutateAndGetPayload: ({tokenId, chapterId, ordinalId}) => {
+    const localVoteId = castVote(tokenId, chapterId, ordinalId);
+    return {localVoteId};
+  }
+});
+
 const Root = new GraphQLObjectType({
   name: 'Root',
   fields: {
@@ -228,6 +262,14 @@ const Root = new GraphQLObjectType({
   }
 });
 
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    castVote: GraphQLCastVoteMutation
+  }
+});
+
 export const Schema = new GraphQLSchema({
-  query: Root
+  query: Root,
+  mutation: Mutation
 });

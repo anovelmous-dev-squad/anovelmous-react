@@ -1,12 +1,12 @@
-import React        from 'react';
-import { Router }   from 'react-router';
-import routes       from '../routes';
+import React from 'react';
+import { Router } from 'react-router';
+import routes from '../routes';
 import ReactRouterRelay from 'react-router-relay';
 
 export default class Root extends React.Component {
 
   static propTypes = {
-    routerHistory  : React.PropTypes.object
+    routerHistory: React.PropTypes.object
   }
 
   constructor () {

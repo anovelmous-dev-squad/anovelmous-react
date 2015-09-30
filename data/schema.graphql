@@ -1,3 +1,16 @@
+input CastVoteInput {
+  tokenId: String!
+  chapterId: String!
+  ordinalId: String!
+  clientMutationId: String!
+}
+
+type CastVotePayload {
+  voteEdge: VoteEdge
+  viewer: Contributor
+  clientMutationId: String!
+}
+
 type Chapter implements Node {
   id: ID!
   title: String
@@ -23,6 +36,10 @@ type Contributor implements Node {
   novels(before: String, after: String, first: Int, last: Int): NovelConnection
   vocabulary(before: String, after: String, first: Int, last: Int): TokenConnection
   votes(before: String, after: String, first: Int, last: Int): VoteConnection
+}
+
+type Mutation {
+  castVote(input: CastVoteInput!): CastVotePayload
 }
 
 interface Node {

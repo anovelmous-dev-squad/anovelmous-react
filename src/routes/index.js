@@ -10,11 +10,11 @@ const viewerQueries = {
 };
 
 export default (
-  <Route path='/' component={CoreLayout}>
+  <Route path="/" component={CoreLayout}>
     <IndexRoute component={HomeView}/>
     <Route
-      name='contribute'
-      path='contribute/:novelId'
+      name="contribute"
+      path="contribute/:novelId"
       component={ContributeView}
       queries={viewerQueries}
     />

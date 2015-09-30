@@ -1,10 +1,10 @@
-import React  from 'react';
+import React from 'react';
 import Header from 'components/Header';
 import { Grid, Row, Cell } from 'react-inline-grid';
 
 export default class CoreLayout extends React.Component {
   static propTypes = {
-    children : React.PropTypes.element
+    children: React.PropTypes.element
   }
 
   constructor () {

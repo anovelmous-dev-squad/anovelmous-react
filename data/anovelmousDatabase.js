@@ -88,7 +88,7 @@ const firstVote = {
   token: '1',
   ordinal: 0,
   selected: false,
-  createdAt: 'a while ago'
+  createdAt: moment().startOf('day')
 };
 
 const data = {
@@ -144,6 +144,30 @@ export const getVote = (id) => {
   return data.Vote[id];
 };
 
+export const getVotes = () => {
+  return Object.keys(data.Vote).map(k => data.Vote[k]);
+};
+
 export const getVocabulary = () => {
   return Object.keys(data.Token).map(k => data.Token[k]);
+};
+
+
+/* Mutative */
+
+const addVote = (vote) => data.Vote[vote.id];
+
+export const castVote = (token, chapter, ordinal) => {
+  const voteIds = Object.keys(data.Vote);
+  const newId = voteIds.sort()[voteIds.length - 1] + 1;
+  const newVote = {
+    id: newId,
+    token,
+    contributor: getViewer(),
+    chapter,
+    ordinal,
+    selected: false,
+    createdAt: moment()
+  };
+  addVote(newVote);
 };
