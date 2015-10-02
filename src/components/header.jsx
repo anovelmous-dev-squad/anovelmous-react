@@ -3,7 +3,10 @@ import Radium from 'radium';
 
 const styles = {
   base: {
-    background: 'rgba(185, 42, 63, 0.95)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: '#BE1E2D',
     border: 0,
     borderRadius: 4,
     color: 'rgb(212, 208, 208)',
@@ -12,6 +15,9 @@ const styles = {
     height: 80
   },
   brand: {
+    maxHeight: '100%',
+    maxWidth: '100%',
+
     ':hover': {
       color: 'rgb(234, 234, 237)'
     }
@@ -29,9 +35,7 @@ export default class Header extends React.Component {
 
     return (
       <div style={styles.base}>
-        <div style={styles.brand}>
-          <h3>{title}</h3>
-        </div>
+        <img style={styles.brand} src="/assets/AnovelmousHeaderLogoLarge.png"></img>
       </div>
     );
   }
