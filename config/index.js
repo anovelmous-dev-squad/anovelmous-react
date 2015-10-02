@@ -82,6 +82,7 @@ config.set('utils_aliases', [
   'dispatchers',
   'layouts',
   'models',
+  'mutations',
   'reducers',
   'routes',
   'services',

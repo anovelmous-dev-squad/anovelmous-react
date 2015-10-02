@@ -26,13 +26,7 @@ const styles = {
 
 @Radium
 export default class Header extends React.Component {
-  static propTypes = {
-    title: React.PropTypes.string.isRequired
-  };
-
   render() {
-    const { title } = this.props;
-
     return (
       <div style={styles.base}>
         <img style={styles.brand} src="/assets/AnovelmousHeaderLogoLarge.png"></img>

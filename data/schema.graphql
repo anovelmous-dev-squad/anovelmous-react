@@ -17,6 +17,7 @@ type Chapter implements Node {
   tokens(before: String, after: String, first: Int, last: Int): TokenConnection
   votingDuration: Int
   prevVotingEndedAt: String
+  tokenCount: Int
 }
 
 type ChapterConnection {

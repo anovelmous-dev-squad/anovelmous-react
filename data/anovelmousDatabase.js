@@ -136,6 +136,11 @@ export const getToken = (id) => {
   return data.Token[id];
 };
 
+export const getTokensForChapter = (chapterId) => {
+  const tokenIds = data.Chapter[chapterId].tokens;
+  return tokenIds.map(id => data.Token[parseInt(id, 10)]);
+};
+
 export const getViewer = () => {
   return data.Contributor[VIEWER_ID];
 };

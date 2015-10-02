@@ -29,6 +29,7 @@ import {
   getChapter,
   getMostRecentChapter,
   getToken,
+  getTokensForChapter,
   getViewer,
   getVote,
   getVotes,
@@ -106,6 +107,10 @@ const GraphQLChapter = new GraphQLObjectType({
     prevVotingEndedAt: {
       type: GraphQLString,
       description: 'Timestamp when the previous voting round ended.'
+    },
+    tokenCount: {
+      type: GraphQLInt,
+      resolve: (chapter) => getTokensForChapter(chapter.id).length
     }
   }),
   interfaces: [nodeInterface]
