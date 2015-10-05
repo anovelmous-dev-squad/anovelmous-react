@@ -36,10 +36,14 @@ import {
   castVote
 } from './anovelmousDatabase';
 
+const getObjectFromGlobalId = (globalId) => {
+  const { type, id } = fromGlobalId(globalId);
+  return data[type][id];
+};
+
 const { nodeInterface, nodeField } = nodeDefinitions(
   (globalId) => {
-    const { type, id } = fromGlobalId(globalId);
-    return data[type][id];
+    return getObjectFromGlobalId(globalId);
   },
   (obj) => {
     if (obj instanceof Novel) {
@@ -53,6 +57,7 @@ const { nodeInterface, nodeField } = nodeDefinitions(
     } else if (obj instanceof Contributor) {
       return GraphQLContributor;
     }
+    return null;
   }
 );
 
@@ -240,7 +245,7 @@ const GraphQLCastVoteMutation = mutationWithClientMutationId({
       resolve: ({localVoteId}) => {
         const vote = getVote(localVoteId);
         return {
-          cursor: cursorForObjectInConnection(getVotes, vote),
+          cursor: cursorForObjectInConnection(getVotes(), vote),
           node: vote
         };
       }
@@ -251,7 +256,11 @@ const GraphQLCastVoteMutation = mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: ({tokenId, chapterId, ordinal}) => {
-    const localVoteId = castVote(tokenId, chapterId, ordinal);
+    const token = getObjectFromGlobalId(tokenId);
+    const chapter = getObjectFromGlobalId(chapterId);
+    console.log(token)
+    console.log(chapter)
+    const localVoteId = castVote(token, chapter, ordinal);
     return {localVoteId};
   }
 });

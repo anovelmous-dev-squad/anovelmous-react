@@ -51,13 +51,14 @@ class ContributeView extends React.Component {
       }, PROGRESS_BAR_UPDATE_INTERVAL);
     }
 
-    _handleTextInputSave(token) {
+    _handleTextInputSave = (token) => {
       const chapter = this.props.contributor.novel.chapter;
       Relay.Store.update(
         new CastVoteMutation({
           tokenId: token.id,
           chapterId: chapter.id,
-          ordinal: chapter.tokenCount
+          ordinal: chapter.tokenCount - 1,
+          viewer: this.props.contributor
         })
       );
     }
@@ -73,7 +74,8 @@ class ContributeView extends React.Component {
             <p>{this.state.votingRoundProgress.secondsRemaining} Seconds Left</p>
           </Progress>
           <Novel novel={contributor.novel}/>
-          <VoteCaster tokens={contributor.vocabulary}/>
+          <VoteCaster tokens={contributor.vocabulary}
+                      onSave={this._handleTextInputSave}/>
         </div>
       );
     }
@@ -111,6 +113,13 @@ export default Relay.createContainer(ContributeView, {
         }
         vocabulary(first: 5) {
           ${VoteCaster.getFragment('tokens')}
+        }
+        votes(first: 5) {
+          edges {
+            node {
+              token
+            }
+          }
         }
         ${VocabularyView.getFragment('contributor')}
         ${CastVoteMutation.getFragment('viewer')}

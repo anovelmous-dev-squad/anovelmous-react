@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Relay from 'react-relay';
 import Autocomplete from 'react-autocomplete';
 
@@ -18,10 +18,15 @@ const styles = {
 
 class VoteCaster extends React.Component {
   static propTypes = {
-    tokens: PropTypes.object.isRequired
+    tokens: React.PropTypes.object.isRequired,
+    onSave: React.PropTypes.func.isRequired
   }
 
-  render () {
+  _handleVoteCast = (tokenText, token) => {
+    this.props.onSave(token);
+  }
+
+  render() {
     const { tokens } = this.props;
     const tokenList = tokens.edges.map(edge => edge.node);
 
@@ -36,8 +41,11 @@ class VoteCaster extends React.Component {
             <div
               style={isHighlighted ? styles.highlightedToken : styles.token}
               key={token.id}
-            >{token.content}</div>
+              >
+              {token.content}
+            </div>
           )}
+          onSelect={this._handleVoteCast}
         />
       </div>
     );

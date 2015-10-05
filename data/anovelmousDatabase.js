@@ -162,17 +162,18 @@ export const getVocabulary = () => {
 
 const addVote = (vote) => data.Vote[vote.id];
 
-export const castVote = (tokenId, chapterId, ordinal) => {
+export const castVote = (token, chapter, ordinal) => {
   const voteIds = Object.keys(data.Vote);
   const newId = voteIds.sort()[voteIds.length - 1] + 1;
   const newVote = {
     id: newId,
-    token: tokenId,
+    token: token.id,
     contributor: getViewer(),
-    chapter: chapterId,
+    chapter: chapter.id,
     ordinal,
     selected: false,
     createdAt: moment()
   };
   addVote(newVote);
+  return newId;
 };
