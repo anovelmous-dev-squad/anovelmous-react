@@ -258,8 +258,6 @@ const GraphQLCastVoteMutation = mutationWithClientMutationId({
   mutateAndGetPayload: ({tokenId, chapterId, ordinal}) => {
     const token = getObjectFromGlobalId(tokenId);
     const chapter = getObjectFromGlobalId(chapterId);
-    console.log(token)
-    console.log(chapter)
     const localVoteId = castVote(token, chapter, ordinal);
     return {localVoteId};
   }

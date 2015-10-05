@@ -57,7 +57,7 @@ class ContributeView extends React.Component {
         new CastVoteMutation({
           tokenId: token.id,
           chapterId: chapter.id,
-          ordinal: chapter.tokenCount - 1,
+          ordinal: chapter.tokenCount,
           viewer: this.props.contributor
         })
       );
@@ -105,6 +105,7 @@ export default Relay.createContainer(ContributeView, {
         name
         novel(id: $novelId) {
           chapter(mostRecent: true) {
+            id
             prevVotingEndedAt
             votingDuration
             tokenCount

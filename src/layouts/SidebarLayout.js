@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Row, Cell } from 'react-inline-grid';
 
-export default class ThreePartLayout extends React.Component {
+export default class SidebarLayout extends React.Component {
   static propTypes = {
     content: React.PropTypes.element,
     sidebar: React.PropTypes.element
