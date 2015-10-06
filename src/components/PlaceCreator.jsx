@@ -18,6 +18,14 @@ export default class PlaceCreator extends React.Component {
     this.state = { name: '', description: '' };
   }
 
+  _handleNameChange = (event) => {
+    this.setState({ name: event.target.value });
+  }
+
+  _handleDescriptionChange = (event) => {
+    this.setState({ description: event.target.value });
+  }
+
   _handleOnCreate = () => {
     const { name, description } = this.state;
     this.props.onCreate({
@@ -26,11 +34,18 @@ export default class PlaceCreator extends React.Component {
   }
 
   render() {
+    const { name, description } = this.state;
     return (
       <div style={styles.base}>
         <h3>Create a place!</h3>
-        <input placeholder="New York City"></input>
-        <textarea placeholder="Description"></textarea>
+        <input placeholder="New York City"
+               value={name}
+               onChange={this._handleNameChange}
+        />
+        <textarea placeholder="A large American city with mass appeal"
+                  value={description}
+                  onChange={this._handleDescriptionChange}
+        />
         <button onClick={this._handleOnCreate}>Create!</button>
       </div>
     );
