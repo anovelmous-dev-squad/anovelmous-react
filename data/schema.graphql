@@ -56,6 +56,7 @@ type Contributor implements Node {
   votes(before: String, after: String, first: Int, last: Int): VoteConnection
   characters(before: String, after: String, first: Int, last: Int): CharacterConnection
   places(before: String, after: String, first: Int, last: Int): PlaceConnection
+  plotItems(before: String, after: String, first: Int, last: Int): PlotItemConnection
 }
 
 input CreateCharacterInput {
@@ -85,10 +86,24 @@ type CreatePlacePayload {
   clientMutationId: String!
 }
 
+input CreatePlotItemInput {
+  name: String!
+  description: String!
+  novelId: String!
+  clientMutationId: String!
+}
+
+type CreatePlotItemPayload {
+  placeEdge: PlotItemEdge
+  viewer: Contributor
+  clientMutationId: String!
+}
+
 type Mutation {
   castVote(input: CastVoteInput!): CastVotePayload
   createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
   createPlace(input: CreatePlaceInput!): CreatePlacePayload
+  createPlotItem(input: CreatePlotItemInput!): CreatePlotItemPayload
 }
 
 interface Node {
@@ -132,6 +147,22 @@ type PlaceConnection {
 
 type PlaceEdge {
   node: Place
+  cursor: String!
+}
+
+type PlotItem implements Node {
+  id: ID!
+  name: String
+  description: String
+}
+
+type PlotItemConnection {
+  pageInfo: PageInfo!
+  edges: [PlotItemEdge]
+}
+
+type PlotItemEdge {
+  node: PlotItem
   cursor: String!
 }
 

@@ -21,7 +21,7 @@ Constraints are a way to game-ify some aspect of communication.
 
 ### Prewriting
 
-Good literature needs prior thought
+Good literature needs prior thought.
 
 It also needs *characters*, *places*, and *plot items*.
 

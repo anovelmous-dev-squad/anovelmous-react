@@ -106,6 +106,13 @@ const nyc = {
   novel: '2'
 };
 
+const scepter = {
+  id: '1',
+  name: 'Abacaderon Scepter',
+  description: 'Transmogrifies foes',
+  novel: '2'
+};
+
 const data = {
   Novel: {
     1: oldNovel,
@@ -134,56 +141,50 @@ const data = {
   },
   Place: {
     1: nyc
+  },
+  PlotItem: {
+    1: scepter
   }
 };
 
-export const getNovel = (id) => {
-  return data.Novel[id];
+const getAllOfType = (type) => {
+  return Object.keys(data[type]).map(id => data[type][id]);
 };
 
-export const getNovels = () => {
-  return Object.keys(data.Novel).map(id => data.Novel[id]);
-};
+export const getNovel = (id) => data.Novel[id];
 
-export const getChapter = (id) => {
-  return data.Chapter[id];
-};
+export const getNovels = () => getAllOfType('Novel');
 
-export const getMostRecentChapter = () => {
-  return data.Chapter[3];
-};
+export const getChapter = (id) => data.Chapter[id];
 
-export const getToken = (id) => {
-  return data.Token[id];
-};
+export const getMostRecentChapter = () => data.Chapter[3];
+
+export const getToken = (id) => data.Token[id];
 
 export const getTokensForChapter = (chapterId) => {
   const tokenIds = data.Chapter[chapterId].tokens;
   return tokenIds.map(id => data.Token[parseInt(id, 10)]);
 };
 
-export const getViewer = () => {
-  return data.Contributor[VIEWER_ID];
-};
+export const getViewer = () => data.Contributor[VIEWER_ID];
 
-export const getVote = (id) => {
-  return data.Vote[id];
-};
+export const getVote = (id) => data.Vote[id];
 
-export const getVotes = () => {
-  return Object.keys(data.Vote).map(id => data.Vote[id]);
-};
+export const getVotes = () => getAllOfType('Vote');
 
-export const getVocabulary = () => {
-  return Object.keys(data.Token).map(id => data.Token[id]);
-};
+export const getVocabulary = () => getAllOfType('Token');
 
 export const getCharacter = (id) => data.Character[id];
 
-export const getCharacters = () => {
-  return Object.keys(data.Character).map(id => data.Character[id]);
-};
+export const getCharacters = () => getAllOfType('Character');
 
+export const getPlace = (id) => data.Place[id];
+
+export const getPlaces = () => getAllOfType('Place');
+
+export const getPlotItem = (id) => data.PlotItem[id];
+
+export const getPlotItems = () => getAllOfType('PlotItem');
 
 /* Mutative */
 
@@ -208,20 +209,29 @@ export const castVote = (token, chapter, ordinal) => {
 };
 
 export const createCharacter = (firstName, lastName, bio, novel) => {
-  const newCharacter = {
+  const character = {
     firstName,
     lastName,
     bio,
     novel: novel.id
   };
-  return addNewInstance('Character', newCharacter);
+  return addNewInstance('Character', character);
 };
 
 export const createPlace = (name, description, novel) => {
-  const newPlace = {
+  const place = {
     name,
     description,
     novel: novel.id
   };
-  return addNewInstance('Place', newPlace);
+  return addNewInstance('Place', place);
+};
+
+export const createPlotItem = (name, description, novel) => {
+  const plotItem = {
+    name,
+    description,
+    novel: novel.id
+  };
+  return addNewInstance('PlotItem', plotItem);
 };

@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class CreatePlaceMutation extends Relay.Mutation {
+export default class CreatePlotItemMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
       fragment on Contributor {
@@ -9,14 +9,14 @@ export default class CreatePlaceMutation extends Relay.Mutation {
     `
   };
   getMutation() {
-    return Relay.QL`mutation{createPlace}`;
+    return Relay.QL`mutation{createPlotItem}`;
   }
   getFatQuery() {
     return Relay.QL`
-      fragment on CreatePlacePayload {
-        placeEdge
+      fragment on CreatePlotItemPayload {
+        plotItemEdge
         viewer {
-          places
+          plotItems
         }
       }
     `;
@@ -26,8 +26,8 @@ export default class CreatePlaceMutation extends Relay.Mutation {
       type: 'RANGE_ADD',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'places',
-      edgeName: 'placeEdge',
+      connectionName: 'plotItems',
+      edgeName: 'plotItemEdge',
       rangeBehaviors: {
         '': 'append'
       }
@@ -44,7 +44,7 @@ export default class CreatePlaceMutation extends Relay.Mutation {
   getOptimisticResponse() {
     const { name, description, viewer } = this.props;
     return {
-      characterEdge: {
+      plotItemEdge: {
         node: {
           name,
           description

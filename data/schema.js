@@ -26,6 +26,7 @@ import {
   Contributor,
   Character,
   Place,
+  PlotItem,
   data,
   getNovel,
   getChapter,
@@ -41,7 +42,10 @@ import {
   createCharacter,
   getPlace,
   getPlaces,
-  createPlace
+  createPlace,
+  getPlotItem,
+  getPlotItems,
+  createPlotItem
 } from './anovelmousDatabase';
 
 const getObjectFromGlobalId = (globalId) => {
@@ -68,6 +72,8 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLCharacter;
     } else if (obj instanceof Place) {
       return GraphQLPlace;
+    } else if (obj instanceof PlotItem) {
+      return GraphQLPlotItem;
     }
     return null;
   }
@@ -205,7 +211,18 @@ const GraphQLPlace = new GraphQLObjectType({
   name: 'Place',
   description: 'A place in a particular novel',
   fields: () => ({
-    id: globalIdField('PLace'),
+    id: globalIdField('Place'),
+    name: { type: GraphQLString },
+    description: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const GraphQLPlotItem = new GraphQLObjectType({
+  name: 'PlotItem',
+  description: 'A plot item in a particular novel',
+  fields: () => ({
+    id: globalIdField('PlotItem'),
     name: { type: GraphQLString },
     description: { type: GraphQLString }
   }),
@@ -219,6 +236,10 @@ const { connectionType: characterConnection,
 const { connectionType: placesConnection,
         edgeType: GraphQLPlaceEdge } =
   connectionDefinitions({ name: 'Place', nodeType: GraphQLPlace });
+
+const { connectionType: plotItemsConnection,
+        edgeType: GraphQLPlotItemEdge } =
+  connectionDefinitions({ name: 'PlotItem', nodeType: GraphQLPlotItem });
 
 const { connectionType: novelConnection } =
   connectionDefinitions({ name: 'Novel', nodeType: GraphQLNovel });
@@ -274,7 +295,7 @@ const GraphQLContributor = new GraphQLObjectType({
     },
     characters: {
       type: characterConnection,
-      description: 'Characters this contributor has created',
+      description: 'Characters this contributor has imagined',
       args: connectionArgs,
       resolve: (contributor, args) => connectionFromArray(
         contributor.characters.map((id) => getCharacter(id)),
@@ -287,6 +308,15 @@ const GraphQLContributor = new GraphQLObjectType({
       args: connectionArgs,
       resolve: (contributor, args) => connectionFromArray(
         contributor.places.map((id) => getPlace(id)),
+        args
+      )
+    },
+    plotItems: {
+      type: plotItemsConnection,
+      description: 'Plot items this contributor has imagined',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.plotItems.map((id) => getPlotItem(id)),
         args
       )
     }
@@ -386,6 +416,36 @@ const GraphQLCreatePlaceMutation = mutationWithClientMutationId({
   }
 });
 
+const GraphQLCreatePlotItemMutation = mutationWithClientMutationId({
+  name: 'CreatePlotItem',
+  inputFields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    description: { type: new GraphQLNonNull(GraphQLString) },
+    novelId: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    placeEdge: {
+      type: GraphQLPlotItemEdge,
+      resolve: ({localPlotItemId}) => {
+        const plotItem = getPlotItem(localPlotItemId);
+        return {
+          cursor: cursorForObjectInConnection(getPlotItems(), plotItem),
+          node: plotItem
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
+    }
+  },
+  mutateAndGetPayload: ({name, description, novelId}) => {
+    const novel = getObjectFromGlobalId(novelId);
+    const localPlotItemId = createPlotItem(name, description, novel);
+    return {localPlotItemId};
+  }
+});
+
 const Root = new GraphQLObjectType({
   name: 'Root',
   fields: {
@@ -402,7 +462,8 @@ const Mutation = new GraphQLObjectType({
   fields: {
     castVote: GraphQLCastVoteMutation,
     createCharacter: GraphQLCreateCharacterMutation,
-    createPlace: GraphQLCreatePlaceMutation
+    createPlace: GraphQLCreatePlaceMutation,
+    createPlotItem: GraphQLCreatePlotItemMutation
   }
 });
 
