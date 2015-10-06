@@ -42,13 +42,10 @@ export default class CastVoteMutation extends Relay.Mutation {
     };
   }
   getOptimisticResponse() {
-    const { tokenId, chapterId, ordinal, viewer } = this.props;
+    const { ordinal, viewer } = this.props;
     return {
       voteEdge: {
         node: {
-          contributor: viewer.id,
-          chapter: chapterId,
-          token: tokenId,
           ordinal: ordinal
         }
       },
