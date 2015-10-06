@@ -99,6 +99,13 @@ const stan = {
   novel: '2'
 };
 
+const nyc = {
+  id: '1',
+  name: 'New York City',
+  description: 'The city that never sleeps.',
+  novel: '2'
+};
+
 const data = {
   Novel: {
     1: oldNovel,
@@ -124,6 +131,9 @@ const data = {
   },
   Character: {
     1: stan
+  },
+  Place: {
+    1: nyc
   }
 };
 
@@ -177,13 +187,16 @@ export const getCharacters = () => {
 
 /* Mutative */
 
-const addVote = (vote) => data.Vote[vote.id] = vote;
+const addNewInstance = (type, instance) => {
+  const typeIds = Object.keys(data[type]);
+  const newId = typeIds.sort()[typeIds.length - 1] + 1;
+  const instanceWithId = Object.assign(instance, {id: newId});
+  data[type][newId] = instanceWithId;
+  return newId;
+};
 
 export const castVote = (token, chapter, ordinal) => {
-  const voteIds = Object.keys(data.Vote);
-  const newId = voteIds.sort()[voteIds.length - 1] + 1;
   const newVote = {
-    id: newId,
     token: token.id,
     contributor: getViewer(),
     chapter: chapter.id,
@@ -191,22 +204,24 @@ export const castVote = (token, chapter, ordinal) => {
     selected: false,
     createdAt: moment()
   };
-  addVote(newVote);
-  return newId;
+  return addNewInstance('Vote', newVote);
 };
 
-const addCharacter = (character) => data.Character[character.id] = character;
-
 export const createCharacter = (firstName, lastName, bio, novel) => {
-  const characterIds = Object.keys(data.Character);
-  const newId = characterIds.sort()[characterIds.length - 1] + 1;
   const newCharacter = {
-    id: newId,
     firstName,
     lastName,
     bio,
     novel: novel.id
   };
-  addCharacter(newCharacter);
-  return newId;
+  return addNewInstance('Character', newCharacter);
+};
+
+export const createPlace = (name, description, novel) => {
+  const newPlace = {
+    name,
+    description,
+    novel: novel.id
+  };
+  return addNewInstance('Place', newPlace);
 };
