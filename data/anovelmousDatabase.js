@@ -91,6 +91,14 @@ const firstVote = {
   createdAt: moment().startOf('day')
 };
 
+const stan = {
+  id: '1',
+  firstName: 'Stan',
+  lastName: 'Lee',
+  bio: 'A cool guy from this book',
+  novel: '2'
+};
+
 const data = {
   Novel: {
     1: oldNovel,
@@ -113,6 +121,9 @@ const data = {
   },
   Contributor: {
     1: me
+  },
+  Character: {
+    1: stan
   }
 };
 
@@ -157,10 +168,16 @@ export const getVocabulary = () => {
   return Object.keys(data.Token).map(id => data.Token[id]);
 };
 
+export const getCharacter = (id) => data.Character[id];
+
+export const getCharacters = () => {
+  return Object.keys(data.Character).map(id => data.Character[id]);
+};
+
 
 /* Mutative */
 
-const addVote = (vote) => data.Vote[vote.id];
+const addVote = (vote) => data.Vote[vote.id] = vote;
 
 export const castVote = (token, chapter, ordinal) => {
   const voteIds = Object.keys(data.Vote);
@@ -175,5 +192,21 @@ export const castVote = (token, chapter, ordinal) => {
     createdAt: moment()
   };
   addVote(newVote);
+  return newId;
+};
+
+const addCharacter = (character) => data.Character[character.id] = character;
+
+export const createCharacter = (firstName, lastName, bio, novel) => {
+  const characterIds = Object.keys(data.Character);
+  const newId = characterIds.sort()[characterIds.length - 1] + 1;
+  const newCharacter = {
+    id: newId,
+    firstName,
+    lastName,
+    bio,
+    novel: novel.id
+  };
+  addCharacter(newCharacter);
   return newId;
 };

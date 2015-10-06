@@ -30,6 +30,23 @@ type ChapterEdge {
   cursor: String!
 }
 
+type Character implements Node {
+  id: ID!
+  firstName: String
+  lastName: String
+  bio: String
+}
+
+type CharacterConnection {
+  pageInfo: PageInfo!
+  edges: [CharacterEdge]
+}
+
+type CharacterEdge {
+  node: Character
+  cursor: String!
+}
+
 type Contributor implements Node {
   id: ID!
   name: String
@@ -37,10 +54,26 @@ type Contributor implements Node {
   novels(before: String, after: String, first: Int, last: Int): NovelConnection
   vocabulary(before: String, after: String, first: Int, last: Int): TokenConnection
   votes(before: String, after: String, first: Int, last: Int): VoteConnection
+  characters(before: String, after: String, first: Int, last: Int): CharacterConnection
+}
+
+input CreateCharacterInput {
+  firstName: String!
+  lastName: String
+  bio: String!
+  novelId: String!
+  clientMutationId: String!
+}
+
+type CreateCharacterPayload {
+  characterEdge: CharacterEdge
+  viewer: Contributor
+  clientMutationId: String!
 }
 
 type Mutation {
   castVote(input: CastVoteInput!): CastVotePayload
+  createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
 }
 
 interface Node {
