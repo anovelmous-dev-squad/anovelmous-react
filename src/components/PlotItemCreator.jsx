@@ -18,12 +18,24 @@ export default class PlotItemCreator extends React.Component {
     this.state = { name: '', description: '' };
   }
 
+  _resetFormData = () => {
+    this.setState({ name: '', description: '' });
+  }
+
   _handleNameChange = (event) => {
     this.setState({ name: event.target.value });
   }
 
   _handleDescriptionChange = (event) => {
     this.setState({ description: event.target.value });
+  }
+
+  _handleOnCreate = () => {
+    const { name, description } = this.state;
+    this.props.onCreate({
+      name, description
+    });
+    this._resetFormData();
   }
 
   render() {

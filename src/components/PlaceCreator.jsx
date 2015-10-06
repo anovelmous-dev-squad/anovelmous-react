@@ -18,6 +18,10 @@ export default class PlaceCreator extends React.Component {
     this.state = { name: '', description: '' };
   }
 
+  _resetFormData = () => {
+    this.setState({ name: '', description: '' });
+  }
+
   _handleNameChange = (event) => {
     this.setState({ name: event.target.value });
   }
@@ -31,6 +35,7 @@ export default class PlaceCreator extends React.Component {
     this.props.onCreate({
       name, description
     });
+    this._resetFormData();
   }
 
   render() {

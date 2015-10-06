@@ -18,6 +18,10 @@ export default class CharacterCreator extends React.Component {
     this.state = { firstName: '', lastName: '', bio: '' };
   }
 
+  _resetFormData = () => {
+    this.setState({ firstName: '', lastName: '', bio: '' });
+  }
+
   _handleFirstNameChange = (event) => {
     this.setState({ firstName: event.target.value });
   }
@@ -35,6 +39,7 @@ export default class CharacterCreator extends React.Component {
     this.props.onCreate({
       firstName, lastName, bio
     });
+    this._resetFormData();
   }
 
   render() {
