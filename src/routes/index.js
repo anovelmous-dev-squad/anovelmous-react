@@ -4,6 +4,7 @@ import Relay from 'react-relay';
 import CoreLayout from 'layouts/CoreLayout';
 import ContributeView from 'views/ContributeView';
 import HomeView from 'views/HomeView';
+import StatsView from 'views/StatsView';
 
 const viewerQueries = {
   contributor: () => Relay.QL`query RootQuery { viewer }`
@@ -18,5 +19,11 @@ export default (
       component={ContributeView}
       queries={viewerQueries}
     />
-  </Route>
+    <Route
+      name="stats"
+      path="stats/"
+      component={StatsView}
+      queries={viewerQueries}
+    />
+    </Route>
 );

@@ -126,9 +126,10 @@ const GraphQLVote = new GraphQLObjectType({
   description: 'A contributor\'s vote for the next token in the novel',
   fields: () => ({
     id: globalIdField('Vote'),
-    chapter: globalIdField('Chapter'),
-    contributor: globalIdField('Contributor'),
-    token: globalIdField('Token'),
+    token: {
+      type: GraphQLToken,
+      resolve: (vote) => getToken(vote.token)
+    },
     ordinal: { type: GraphQLInt },
     selected: { type: GraphQLBoolean },
     createdAt: { type: GraphQLString }

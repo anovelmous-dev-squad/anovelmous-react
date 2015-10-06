@@ -10,7 +10,7 @@ const me = {
   votes: ['1']
 };
 
-const i = {
+const iToken = {
   id: '1',
   content: 'I',
   isPunctuation: false,
@@ -102,7 +102,7 @@ const data = {
     3: chapterTwo
   },
   Token: {
-    1: i,
+    1: iToken,
     2: am,
     3: finished,
     4: period,
@@ -121,7 +121,7 @@ export const getNovel = (id) => {
 };
 
 export const getNovels = () => {
-  return Object.keys(data.Novel).map(k => data.Novel[k]);
+  return Object.keys(data.Novel).map(id => data.Novel[id]);
 };
 
 export const getChapter = (id) => {
@@ -150,11 +150,11 @@ export const getVote = (id) => {
 };
 
 export const getVotes = () => {
-  return Object.keys(data.Vote).map(k => data.Vote[k]);
+  return Object.keys(data.Vote).map(id => data.Vote[id]);
 };
 
 export const getVocabulary = () => {
-  return Object.keys(data.Token).map(k => data.Token[k]);
+  return Object.keys(data.Token).map(id => data.Token[id]);
 };
 
 

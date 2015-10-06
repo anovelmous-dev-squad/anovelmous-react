@@ -96,9 +96,7 @@ type TokenEdge {
 
 type Vote implements Node {
   id: ID!
-  chapter: ID!
-  contributor: ID!
-  token: ID!
+  token: Token
   ordinal: Int
   selected: Boolean
   createdAt: String
