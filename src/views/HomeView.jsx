@@ -16,6 +16,7 @@ export default class HomeView extends React.Component {
         <h1>Welcome to Anovelmous!</h1>
         <Link to="/contribute/2"><button>Contribute to the current novel!</button></Link>
         <Link to="/stats/"><button>Check out stats</button></Link>
+        <Link to="/prewriting/2"><button>Prewrite for the novel</button></Link>
       </div>
     );
   }

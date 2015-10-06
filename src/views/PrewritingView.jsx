@@ -1,6 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import Radium from 'radium';
+import CharacterCreator from 'components/CharacterCreator';
 
 const styles = {
   base: {
@@ -11,16 +12,21 @@ const styles = {
 
 @Radium
 class PrewritingView extends React.Component {
+  static propTypes = {
+    contributor: React.PropTypes.object.isRequired
+  }
+
+  _handleCharacterCreation = ({ firstName, lastName, bio }) => {
+
+  }
+
   render() {
     return (
       <div style={styles.base}>
         <h3>Please vote on the following attributes of the new novel.</h3>
         <textarea placeholder="Enter a brief summary of the novel"></textarea>
 
-        <h3>Create a character!</h3>
-        <input placeholder="First Name"></input>
-        <input placeholder="Last Name"></input>
-        <textarea placeholder="Short bio"></textarea>
+        <CharacterCreator onSave={this._handleCharacterCreation} />
 
         <h3>Let's name it!</h3>
         <input placeholder="New novel title (i.e. Dracula)" />
