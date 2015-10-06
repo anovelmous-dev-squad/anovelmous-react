@@ -49,7 +49,7 @@ class PrewritingView extends React.Component {
     const needsSummary = true;
     return (
       <div style={styles.base}>
-        <CharacterCreator onSave={this._handleCharacterCreation} />
+        <CharacterCreator onCreate={this._handleCharacterCreation} />
         <PlaceCreator onCreate={this._handlePlaceCreation} />
         <NovelCrafter needsSummary={needsSummary} />
       </div>

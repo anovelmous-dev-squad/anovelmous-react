@@ -18,7 +18,7 @@ export default class PlaceCreator extends React.Component {
     this.state = { name: '', description: '' };
   }
 
-  _handleOnCreate() {
+  _handleOnCreate = () => {
     const { name, description } = this.state;
     this.props.onCreate({
       name, description
