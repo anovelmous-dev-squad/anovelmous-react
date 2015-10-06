@@ -14,9 +14,9 @@ export default class CreateCharacterMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on CreateCharacterPayload {
-        characterEdge
+        placeEdge
         viewer {
-          characters
+          places
         }
       }
     `;
@@ -26,30 +26,28 @@ export default class CreateCharacterMutation extends Relay.Mutation {
       type: 'RANGE_ADD',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'characters',
-      edgeName: 'characterEdge',
+      connectionName: 'places',
+      edgeName: 'placeEdge',
       rangeBehaviors: {
         '': 'append'
       }
     }];
   }
   getVariables() {
-    const { firstName, lastName, bio, novelId } = this.props;
+    const { name, description, novelId } = this.props;
     return {
-      firstName,
-      lastName,
-      bio,
+      name,
+      description,
       novelId
     };
   }
   getOptimisticResponse() {
-    const { firstName, lastName, bio, viewer } = this.props;
+    const { name, description, viewer } = this.props;
     return {
       characterEdge: {
         node: {
-          firstName,
-          lastName,
-          bio
+          name,
+          description
         }
       },
       viewer: {
