@@ -1,5 +1,6 @@
 # Anovelmous (web front-end)
 
+![Anovelmous X Large Logo](./src/assets/AnovelmousLogoXLarge.png)
 
 ## Concept
 
