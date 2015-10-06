@@ -38,7 +38,7 @@ export default class PlotItemCreator extends React.Component {
                   value={description}
                   onChange={this._handleDescriptionChange}
         />
-        <button>Create a plot item!</button>
+        <button onClick={this.props.onCreate}>Create a plot item!</button>
       </div>
     );
   }
