@@ -7,7 +7,10 @@ const me = {
   name: 'Me',
   novels: ['1', '2'],
   vocabulary: ['1', '2', '3', '4', '5'],
-  votes: ['1']
+  votes: ['1'],
+  characters: ['1'],
+  places: ['1'],
+  plotItems: ['1']
 };
 
 const iToken = {
@@ -215,7 +218,9 @@ export const createCharacter = (firstName, lastName, bio, novel) => {
     bio,
     novel: novel.id
   };
-  return addNewInstance('Character', character);
+  const characterId = addNewInstance('Character', character);
+  data.Contributor[VIEWER_ID].characters.push(characterId);
+  return characterId;
 };
 
 export const createPlace = (name, description, novel) => {
@@ -224,7 +229,9 @@ export const createPlace = (name, description, novel) => {
     description,
     novel: novel.id
   };
-  return addNewInstance('Place', place);
+  const placeId = addNewInstance('Place', place);
+  data.Contributor[VIEWER_ID].places.push(placeId);
+  return placeId;
 };
 
 export const createPlotItem = (name, description, novel) => {
@@ -233,5 +240,7 @@ export const createPlotItem = (name, description, novel) => {
     description,
     novel: novel.id
   };
-  return addNewInstance('PlotItem', plotItem);
+  const plotItemId = addNewInstance('PlotItem', plotItem);
+  data.Contributor[VIEWER_ID].plotItems.push(plotItemId);
+  return plotItemId;
 };

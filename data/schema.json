@@ -2363,7 +2363,7 @@
           "description": null,
           "fields": [
             {
-              "name": "placeEdge",
+              "name": "plotItemEdge",
               "description": null,
               "args": [],
               "type": {

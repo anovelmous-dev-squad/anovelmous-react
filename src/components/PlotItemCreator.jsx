@@ -30,6 +30,7 @@ export default class PlotItemCreator extends React.Component {
     const { name, description } = this.state;
     return (
       <div style={styles.base}>
+        <h3>Create a plot item!</h3>
         <input placeholder="Abacaderon Scepter"
                value={name}
                onChange={this._handleNameChange}

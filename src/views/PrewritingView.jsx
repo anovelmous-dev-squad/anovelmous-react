@@ -61,10 +61,10 @@ class PrewritingView extends React.Component {
     const needsSummary = true;
     return (
       <div style={styles.base}>
+        <NovelCrafter needsSummary={needsSummary} />
         <CharacterCreator onCreate={this._handleCharacterCreation} />
         <PlaceCreator onCreate={this._handlePlaceCreation} />
         <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
-        <NovelCrafter needsSummary={needsSummary} />
       </div>
     );
   }
@@ -81,6 +81,34 @@ export default Relay.createContainer(PrewritingView, {
         novel(id: $novelId) {
           title
         }
+        characters(first: 5) {
+          edges {
+            node {
+              firstName
+              lastName
+              bio
+            }
+          }
+        }
+        places(first: 5) {
+          edges {
+            node {
+              name
+              description
+            }
+          }
+        }
+        plotItems(first: 5) {
+          edges {
+            node {
+              name
+              description
+            }
+          }
+        }
+        ${CreateCharacterMutation.getFragment('viewer')}
+        ${CreatePlaceMutation.getFragment('viewer')}
+        ${CreatePlotItemMutation.getFragment('viewer')}
       }
     `
   }

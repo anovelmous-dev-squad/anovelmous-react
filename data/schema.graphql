@@ -94,7 +94,7 @@ input CreatePlotItemInput {
 }
 
 type CreatePlotItemPayload {
-  placeEdge: PlotItemEdge
+  plotItemEdge: PlotItemEdge
   viewer: Contributor
   clientMutationId: String!
 }

@@ -424,7 +424,7 @@ const GraphQLCreatePlotItemMutation = mutationWithClientMutationId({
     novelId: { type: new GraphQLNonNull(GraphQLString) }
   },
   outputFields: {
-    placeEdge: {
+    plotItemEdge: {
       type: GraphQLPlotItemEdge,
       resolve: ({localPlotItemId}) => {
         const plotItem = getPlotItem(localPlotItemId);
