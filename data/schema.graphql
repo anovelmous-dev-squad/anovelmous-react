@@ -54,6 +54,7 @@ type Contributor implements Node {
   novels(before: String, after: String, first: Int, last: Int): NovelConnection
   vocabulary(before: String, after: String, first: Int, last: Int): TokenConnection
   votes(before: String, after: String, first: Int, last: Int): VoteConnection
+  plots(before: String, after: String, first: Int, last: Int): PlotConnection
   characters(before: String, after: String, first: Int, last: Int): CharacterConnection
   places(before: String, after: String, first: Int, last: Int): PlaceConnection
   plotItems(before: String, after: String, first: Int, last: Int): PlotItemConnection
@@ -86,6 +87,12 @@ type CreatePlacePayload {
   clientMutationId: String!
 }
 
+input CreatePlotInput {
+  summary: String!
+  novelId: String!
+  clientMutationId: String!
+}
+
 input CreatePlotItemInput {
   name: String!
   description: String!
@@ -99,8 +106,15 @@ type CreatePlotItemPayload {
   clientMutationId: String!
 }
 
+type CreatePlotPayload {
+  plotEdge: PlotEdge
+  viewer: Contributor
+  clientMutationId: String!
+}
+
 type Mutation {
   castVote(input: CastVoteInput!): CastVotePayload
+  createPlot(input: CreatePlotInput!): CreatePlotPayload
   createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
   createPlace(input: CreatePlaceInput!): CreatePlacePayload
   createPlotItem(input: CreatePlotItemInput!): CreatePlotItemPayload
@@ -147,6 +161,21 @@ type PlaceConnection {
 
 type PlaceEdge {
   node: Place
+  cursor: String!
+}
+
+type Plot implements Node {
+  id: ID!
+  summary: String
+}
+
+type PlotConnection {
+  pageInfo: PageInfo!
+  edges: [PlotEdge]
+}
+
+type PlotEdge {
+  node: Plot
   cursor: String!
 }
 

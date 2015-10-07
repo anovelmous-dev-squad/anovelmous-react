@@ -8,6 +8,7 @@ const me = {
   novels: ['1', '2'],
   vocabulary: ['1', '2', '3', '4', '5'],
   votes: ['1'],
+  plots: ['1'],
   characters: ['1'],
   places: ['1'],
   plotItems: ['1']
@@ -116,6 +117,12 @@ const scepter = {
   novel: '2'
 };
 
+const magicianTale = {
+  id: '1',
+  summary: 'A magician turns a rat into a human friend.',
+  novel: '1'
+};
+
 const data = {
   Novel: {
     1: oldNovel,
@@ -147,6 +154,9 @@ const data = {
   },
   PlotItem: {
     1: scepter
+  },
+  Plot: {
+    1: magicianTale
   }
 };
 
@@ -176,6 +186,10 @@ export const getVote = (id) => data.Vote[id];
 export const getVotes = () => getAllOfType('Vote');
 
 export const getVocabulary = () => getAllOfType('Token');
+
+export const getPlot = (id) => data.Plot[id];
+
+export const getPlots = () => getAllOfType('Plot');
 
 export const getCharacter = (id) => data.Character[id];
 
@@ -243,4 +257,14 @@ export const createPlotItem = (name, description, novel) => {
   const plotItemId = addNewInstance('PlotItem', plotItem);
   data.Contributor[VIEWER_ID].plotItems.push(plotItemId);
   return plotItemId;
+};
+
+export const createPlot = (summary, novel) => {
+  const plot = {
+    summary,
+    novel: novel.id
+  };
+  const plotId = addNewInstance('Plot', plot);
+  data.Plot[VIEWER_ID].plots.push(plotId);
+  return plotId;
 };

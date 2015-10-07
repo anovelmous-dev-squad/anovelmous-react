@@ -4,10 +4,11 @@ import Radium from 'radium';
 import CharacterCreator from 'components/CharacterCreator';
 import PlaceCreator from 'components/PlaceCreator';
 import PlotItemCreator from 'components/PlotItemCreator';
-import NovelCrafter from 'components/NovelCrafter';
+import PlotCreator from 'components/PlotCreator';
 import CreateCharacterMutation from 'mutations/CreateCharacterMutation';
 import CreatePlaceMutation from 'mutations/CreatePlaceMutation';
 import CreatePlotItemMutation from 'mutations/CreatePlotItemMutation';
+import CreatePlotMutation from 'mutations/CreatePlotMutation';
 
 const styles = {
   base: {
@@ -21,6 +22,16 @@ class PrewritingView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
     novelId: React.PropTypes.string.isRequired
+  }
+
+  _handleNovelSummaryCreation = (summary) => {
+    Relay.Store.update(
+      new CreatePlotMutation({
+        summary,
+        novelId: this.props.novelId,
+        viewer: this.props.contributor
+      })
+    );
   }
 
   _handleCharacterCreation = ({ firstName, lastName, bio }) => {
@@ -58,10 +69,9 @@ class PrewritingView extends React.Component {
   }
 
   render() {
-    const needsSummary = true;
     return (
       <div style={styles.base}>
-        <NovelCrafter needsSummary={needsSummary} />
+        <PlotCreator onCreate={this._handleNovelSummaryCreation} />
         <CharacterCreator onCreate={this._handleCharacterCreation} />
         <PlaceCreator onCreate={this._handlePlaceCreation} />
         <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
@@ -80,6 +90,13 @@ export default Relay.createContainer(PrewritingView, {
         id
         novel(id: $novelId) {
           title
+        }
+        plots(first: 5) {
+          edges {
+            node {
+              summary
+            }
+          }
         }
         characters(first: 5) {
           edges {
@@ -106,6 +123,7 @@ export default Relay.createContainer(PrewritingView, {
             }
           }
         }
+        ${CreatePlotMutation.getFragment('viewer')}
         ${CreateCharacterMutation.getFragment('viewer')}
         ${CreatePlaceMutation.getFragment('viewer')}
         ${CreatePlotItemMutation.getFragment('viewer')}
