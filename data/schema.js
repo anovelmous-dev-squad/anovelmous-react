@@ -30,6 +30,7 @@ import {
   PlotItem,
   data,
   getNovel,
+  getStage,
   getChapter,
   getMostRecentChapter,
   getToken,
@@ -164,6 +165,22 @@ const GraphQLVote = new GraphQLObjectType({
 const { connectionType: chapterConnection } =
   connectionDefinitions({ name: 'Chapter', nodeType: GraphQLChapter });
 
+const GraphQLStage = new GraphQLObjectType({
+  name: 'Stage',
+  description: 'A stage of writing a novel',
+  fields: () => ({
+    id: globalIdField('Stage'),
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+    ordinal: { type: GraphQLInt },
+    duration: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const { connectionType: stagesConnection } =
+  connectionDefinitions({ name: 'Stage', nodeType: GraphQLStage });
+
 const GraphQLNovel = new GraphQLObjectType({
   name: 'Novel',
   description: 'A narrative masterpiece created by a community',
@@ -172,6 +189,20 @@ const GraphQLNovel = new GraphQLObjectType({
     title: {
       type: GraphQLString,
       description: 'The title of the novel.'
+    },
+    stage: {
+      type: GraphQLStage,
+      description: 'The current writing stage the novel is in.',
+      resolve: (novel) => novel.stage
+    },
+    stages: {
+      type: stagesConnection,
+      description: 'Possible stages of the novel\'s writing',
+      args: connectionArgs,
+      resolve: (novel, args) => connectionFromArray(
+        novel.stages.map((id) => getStage(id)),
+        args
+      )
     },
     chapter: {
       type: GraphQLChapter,

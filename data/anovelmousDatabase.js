@@ -123,10 +123,48 @@ const magicianTale = {
   novel: '1'
 };
 
+const brainstorming = {
+  id: '1',
+  name: 'BRAINSTORMING',
+  description: 'Period before producing plot summaries.',
+  ordinal: 0,
+  duration: '1 day'
+};
+
+const plotSummary = {
+  id: '2',
+  name: 'PLOT SUMMARY',
+  description: 'Submit and vote on your favorite plots.',
+  ordinal: 1,
+  duration: '1 day'
+};
+
+const structureCreation = {
+  id: '3',
+  name: 'STRUCTURE CREATION',
+  description: 'Submit and vote on your favorite people, places, and things.',
+  ordinal: 2,
+  duration: '1 day'
+};
+
+const titleDecision = {
+  id: '4',
+  name: 'TITLE DECISION',
+  description: 'Submit and vote on a title for the novel.',
+  ordinal: 3,
+  duration: '6 hours'
+};
+
 const data = {
   Novel: {
     1: oldNovel,
     2: liveNovel
+  },
+  Stage: {
+    1: brainstorming,
+    2: plotSummary,
+    3: structureCreation,
+    4: titleDecision
   },
   Chapter: {
     1: chapterOne,
@@ -167,6 +205,8 @@ const getAllOfType = (type) => {
 export const getNovel = (id) => data.Novel[id];
 
 export const getNovels = () => getAllOfType('Novel');
+
+export const getStage = (id) => data.Stage[id];
 
 export const getChapter = (id) => data.Chapter[id];
 
