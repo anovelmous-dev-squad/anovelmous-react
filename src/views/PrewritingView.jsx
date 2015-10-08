@@ -24,7 +24,7 @@ class PrewritingView extends React.Component {
     novelId: React.PropTypes.string.isRequired
   }
 
-  _handleNovelSummaryCreation = (summary) => {
+  _handlePlotCreation = (summary) => {
     Relay.Store.update(
       new CreatePlotMutation({
         summary,
@@ -71,7 +71,7 @@ class PrewritingView extends React.Component {
   render() {
     return (
       <div style={styles.base}>
-        <PlotCreator onCreate={this._handleNovelSummaryCreation} />
+        <PlotCreator onCreate={this._handlePlotCreation} />
         <CharacterCreator onCreate={this._handleCharacterCreation} />
         <PlaceCreator onCreate={this._handlePlaceCreation} />
         <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
