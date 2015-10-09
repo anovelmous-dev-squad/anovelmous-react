@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Relay from 'react-relay';
 import VoteCaster from 'components/VoteCaster';
 import Radium from 'radium';
@@ -8,6 +8,7 @@ import Progress from 'components/Progress';
 import Novel from 'components/Novel';
 import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
+import NovelSelect from 'containers/NovelSelect';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 2000; // in ms
 
@@ -22,7 +23,7 @@ const styles = {
 @Radium
 class ContributeView extends React.Component {
     static propTypes = {
-      contributor: PropTypes.object.isRequired
+      contributor: React.PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -63,6 +64,10 @@ class ContributeView extends React.Component {
       );
     }
 
+    _handleNovelChange = (novelId) => {
+      console.log(novelId)
+    }
+
     renderReader() {
       const { contributor } = this.props;
       return (
@@ -73,6 +78,11 @@ class ContributeView extends React.Component {
                     >
             <p>{this.state.votingRoundProgress.secondsRemaining} Seconds Left</p>
           </Progress>
+          <NovelSelect
+            currentNovelId={contributor.novel.id}
+            novels={contributor.novels}
+            onChange={this._handleNovelChange}
+          />
           <Novel novel={contributor.novel}/>
           <VoteCaster tokens={contributor.vocabulary}
                       onSave={this._handleTextInputSave}/>
@@ -104,6 +114,7 @@ export default Relay.createContainer(ContributeView, {
         id
         name
         novel(id: $novelId) {
+          id
           chapter(mostRecent: true) {
             id
             prevVotingEndedAt
@@ -111,6 +122,9 @@ export default Relay.createContainer(ContributeView, {
             tokenCount
           }
           ${Novel.getFragment('novel')}
+        }
+        novels(first: 5) {
+          ${NovelSelect.getFragment('novels')}
         }
         vocabulary(first: 5) {
           ${VoteCaster.getFragment('tokens')}
