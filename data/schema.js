@@ -215,9 +215,14 @@ const GraphQLNovel = new GraphQLObjectType({
           defaultValue: false
         }
       },
-      resolve: (novel, {id, mostRecent}) => (
-        mostRecent ? getMostRecentChapter() : getChapter(id)
-      )
+      resolve: (novel, {id, mostRecent}) => {
+        if (id !== null && id !== undefined) {
+          return getChapter(id);
+        } else if (mostRecent) {
+          return getMostRecentChapter();
+        }
+        return null;
+      }
     },
     chapters: {
       type: chapterConnection,
