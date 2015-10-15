@@ -20,6 +20,7 @@ import {
 
 import {
   Novel,
+  Stage,
   Chapter,
   Token,
   Vote,
@@ -81,6 +82,8 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLPlace;
     } else if (obj instanceof PlotItem) {
       return GraphQLPlotItem;
+    } else if (obj instanceof Stage) {
+      return GraphQLStage;
     }
     return null;
   }
@@ -193,7 +196,7 @@ const GraphQLNovel = new GraphQLObjectType({
     stage: {
       type: GraphQLStage,
       description: 'The current writing stage the novel is in.',
-      resolve: (novel) => novel.stage
+      resolve: (novel) => getStage(novel.stage)
     },
     stages: {
       type: stagesConnection,

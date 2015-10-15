@@ -68,13 +68,58 @@ class PrewritingView extends React.Component {
     );
   }
 
-  render() {
+  _getCurrentStageView = (stage) => {
+    switch (stage.name) {
+    case 'BRAINSTORMING':
+      return this.renderBrainstormingStage();
+    case 'PLOT SUMMARY':
+      return this.renderPlotSummaryStage();
+    case 'STRUCTURE CREATION':
+      return this.renderStructureCreationStage();
+    case 'TITLE DECISION':
+      return this.renderTitleDecisionStage();
+    case 'WRITING':
+      return this.renderWritingStage();
+    default:
+      return this.renderFinishedStage();
+    }
+  }
+
+  renderBrainstormingStage() {
+    return <div>Think about the upcoming novel.</div>;
+  }
+
+  renderPlotSummaryStage() {
+    return <PlotCreator onCreate={this._handlePlotCreation} />;
+  }
+
+  renderStructureCreationStage() {
     return (
-      <div style={styles.base}>
-        <PlotCreator onCreate={this._handlePlotCreation} />
+      <div>
         <CharacterCreator onCreate={this._handleCharacterCreation} />
         <PlaceCreator onCreate={this._handlePlaceCreation} />
         <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
+      </div>
+    );
+  }
+
+  renderTitleDecisionStage() {
+    return <div>Vote on novel title</div>;
+  }
+
+  renderWritingStage() {
+    return <div>Currently writing!</div>;
+  }
+
+  renderFinishedStage() {
+    return <div>Novel is finished!</div>;
+  }
+
+  render() {
+    const { contributor } = this.props;
+    return (
+      <div style={styles.base}>
+        {this._getCurrentStageView(contributor.novel.stage)}
       </div>
     );
   }
@@ -90,6 +135,9 @@ export default Relay.createContainer(PrewritingView, {
         id
         novel(id: $novelId) {
           title
+          stage {
+            name
+          }
         }
         plots(first: 5) {
           edges {

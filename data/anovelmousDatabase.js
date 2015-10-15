@@ -76,13 +76,15 @@ const chapterTwo = {
 const oldNovel = {
   id: '1',
   title: 'Old Novel',
-  chapters: ['1']
+  chapters: ['1'],
+  stage: '6'
 };
 
 const liveNovel = {
   id: '2',
   title: 'Live Novel',
-  chapters: ['2', '3']
+  chapters: ['2', '3'],
+  stage: '5'
 };
 
 const firstVote = {
@@ -155,6 +157,22 @@ const titleDecision = {
   duration: '6 hours'
 };
 
+const writing = {
+  id: '5',
+  name: 'WRITING',
+  description: 'Word-by-word contributing stage',
+  ordinal: 4,
+  duration: '2 weeks'
+};
+
+const finishedStage = {
+  id: '6',
+  name: 'FINISHED',
+  description: 'Novel is a finished creation',
+  ordinal: 5,
+  duration: 'N/A'
+};
+
 const data = {
   Novel: {
     1: oldNovel,
@@ -164,7 +182,9 @@ const data = {
     1: brainstorming,
     2: plotSummary,
     3: structureCreation,
-    4: titleDecision
+    4: titleDecision,
+    5: writing,
+    6: finishedStage
   },
   Chapter: {
     1: chapterOne,
@@ -206,7 +226,7 @@ export const getNovel = (id) => data.Novel[id];
 
 export const getNovels = () => getAllOfType('Novel');
 
-export const getStage = (id) => data.Stage[id];
+export const getStage = (id) => data.Stage[parseInt(id, 10)];
 
 export const getChapter = (id) => data.Chapter[id];
 
