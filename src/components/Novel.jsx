@@ -3,6 +3,7 @@ import Relay from 'react-relay';
 import Chapter from './Chapter';
 import Radium from 'radium';
 import ChapterSelect from 'containers/ChapterSelect';
+import { Tabs, Tab } from 'material-ui';
 
 @Radium
 class Novel extends React.Component {
@@ -11,39 +12,51 @@ class Novel extends React.Component {
     relay: React.PropTypes.object.isRequired
   }
 
+  constructor(props) {
+    super(props);
+    this.state = { tabsValue: props.novel.chapter.id };
+  }
+
   _handleChapterChange = (chapterId) => {
-    this.props.relay.setVariables({ chapterId });
+    this.setState({tabsValue: chapterId});
   }
 
   render () {
     const { novel } = this.props;
-    const { chapterId } = this.props.relay.variables;
     return (
       <div>
-        <ChapterSelect
-          onSelect={this._handleChapterChange}
-          chapters={novel.chapters}
-          currentChapterId={chapterId || novel.chapter.id} />
-        <Chapter chapter={novel.chapter} />
+        <Tabs
+          valueLink={{value: this.state.tabsValue,
+                      requestChange: this._handleChapterChange.bind(this)}}
+          >
+          {novel.chapters.edges.map(edge => (
+            <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
+              <Chapter chapter={edge.node} />
+            </Tab>
+          ))}
+        </Tabs>
       </div>
     );
   }
 }
 
 export default Relay.createContainer(Novel, {
-  initialVariables: {
-    chapterId: null
-  },
   fragments: {
     novel: () => Relay.QL`
       fragment on Novel {
         id
         title
-        chapter(id: $chapterId, mostRecent: true) {
+        chapter(mostRecent: true) {
           id
-          ${Chapter.getFragment('chapter')}
         }
-        chapters(first: 10) {
+        chapters(last: 10) {
+          edges {
+            node {
+              id
+              title
+              ${Chapter.getFragment('chapter')}
+            }
+          }
           ${ChapterSelect.getFragment('chapters')}
         }
       }
