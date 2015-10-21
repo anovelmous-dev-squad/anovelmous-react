@@ -4,13 +4,13 @@ import VoteCaster from 'components/VoteCaster';
 import Radium from 'radium';
 import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
-import Progress from 'components/Progress';
 import Novel from 'components/Novel';
 import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
 import NovelSelect from 'containers/NovelSelect';
+import { LinearProgress } from 'material-ui';
 
-const PROGRESS_BAR_UPDATE_INTERVAL = 2000; // in ms
+const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
 const styles = {
   base: {
@@ -72,12 +72,8 @@ class ContributeView extends React.Component {
       const { contributor } = this.props;
       return (
         <div style={styles.base}>
-          <Progress percent={this.state.votingRoundProgress.percentComplete}
-                    transition={PROGRESS_BAR_UPDATE_INTERVAL}
-                    height={20}
-                    >
-            <p>{this.state.votingRoundProgress.secondsRemaining} Seconds Left</p>
-          </Progress>
+          <LinearProgress mode="determinate"
+                          value={this.state.votingRoundProgress.percentComplete} />
           <NovelSelect
             currentNovelId={contributor.novel.id}
             novels={contributor.novels}
