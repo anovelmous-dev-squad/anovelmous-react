@@ -8,7 +8,7 @@ import Novel from 'components/Novel';
 import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
 import NovelSelect from 'containers/NovelSelect';
-import { LinearProgress } from 'material-ui';
+import { LinearProgress, Card, CardHeader, CardText } from 'material-ui';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
@@ -71,18 +71,22 @@ class ContributeView extends React.Component {
     renderReader() {
       const { contributor } = this.props;
       return (
-        <div style={styles.base}>
-          <LinearProgress mode="determinate"
-                          value={this.state.votingRoundProgress.percentComplete} />
-          <NovelSelect
-            currentNovelId={contributor.novel.id}
-            novels={contributor.novels}
-            onChange={this._handleNovelChange}
-          />
-          <Novel novel={contributor.novel}/>
-          <VoteCaster tokens={contributor.vocabulary}
-                      onSave={this._handleTextInputSave}/>
-        </div>
+        <Card>
+          <CardHeader>
+            <NovelSelect
+              currentNovelId={contributor.novel.id}
+              novels={contributor.novels}
+              onChange={this._handleNovelChange}
+            />
+          </CardHeader>
+          <CardText>
+            <LinearProgress mode="determinate"
+                            value={this.state.votingRoundProgress.percentComplete} />
+            <Novel novel={contributor.novel}/>
+            <VoteCaster tokens={contributor.vocabulary}
+                        onSave={this._handleTextInputSave}/>
+          </CardText>
+        </Card>
       );
     }
 
