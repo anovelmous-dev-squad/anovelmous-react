@@ -10,7 +10,6 @@ class Chapter extends React.Component {
     const { chapter } = this.props;
     return (
       <div>
-        <h3>{chapter.title}</h3>
         <p>
           {chapter.tokens.edges.map(edge => (
             edge.node.content + ' '
@@ -26,7 +25,6 @@ export default Relay.createContainer(Chapter, {
     chapter: () => Relay.QL`
       fragment on Chapter {
         id
-        title
         tokens(first: 3) {
           edges {
             node {
