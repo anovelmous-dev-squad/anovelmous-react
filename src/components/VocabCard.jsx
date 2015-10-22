@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardText } from 'material-ui';
+import { Avatar, Card, CardActions, CardHeader, CardText, FlatButton, FontIcon } from 'material-ui';
 
 
 export default (props) => {
@@ -8,14 +8,30 @@ export default (props) => {
     props.onSubmit(props.term);
   };
 
+  const avatar = (
+    <Avatar
+      icon={<FontIcon className="material-icons">accessibility</FontIcon>} />
+  );
+
   return (
-    <Card>
-      <CardText>
-        <p>{props.term}</p>
+    <Card initiallyExpanded={false}>
+      <CardHeader
+        title={props.term}
+        subtitle={props.tag}
+        avatar={avatar}
+        actAsExpander
+        showExpandableButton />
+      <CardActions>
+        <form onSubmit={_submitTerm}>
+          <FlatButton label="Select" primary>
+            <input type="submit" hidden/>
+          </FlatButton>
+        </form>
+        <FlatButton />
+      </CardActions>
+      <CardText expandable>
+        {props.description || 'Lorem ipsum blah blah blah...'}
       </CardText>
-      <form onSubmit={_submitTerm}>
-        <input type="submit" value="Select" />
-      </form>
     </Card>
   );
 };
