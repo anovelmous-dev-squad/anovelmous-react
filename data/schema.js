@@ -124,6 +124,7 @@ const GraphQLChapter = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The title of the chapter.'
     },
+    isComplete: { type: GraphQLBoolean },
     tokens: {
       type: tokenConnection,
       description: 'The tokens that make up the chapter.',

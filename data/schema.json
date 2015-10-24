@@ -724,6 +724,18 @@
               "deprecationReason": null
             },
             {
+              "name": "isComplete",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "tokens",
               "description": "The tokens that make up the chapter.",
               "args": [

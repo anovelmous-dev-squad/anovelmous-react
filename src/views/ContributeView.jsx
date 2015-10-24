@@ -5,7 +5,7 @@ import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
 import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
-import Reader from 'containers/Reader';
+import Notebook from 'containers/Notebook';
 import { LinearProgress, Paper } from 'material-ui';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
@@ -57,20 +57,28 @@ class ContributeView extends React.Component {
       console.log(novelId)
     }
 
-    renderReader() {
+    _handleVoteChange = () => {
+
+    }
+
+    _handleVoteCast = () => {
+
+    }
+
+    renderNotebook() {
       const { contributor } = this.props;
       return (
         <Paper>
-          <Reader
+          <Notebook
             novel={contributor.novel}
             novels={contributor.novels}
-            onNovelChange={this._handleNovelChange} />
+            onNovelChange={this._handleNovelChange}
+            onVoteChange={this._handleVoteChange}
+            onVoteCast={this._handleVoteCast}
+            />
           <LinearProgress
             mode="determinate"
             value={this.state.votingRoundProgress.percentComplete} />
-          <VoteCaster
-            tokens={contributor.vocabulary}
-            onSave={this._handleTextInputSave} />
         </Paper>
       );
     }
@@ -82,7 +90,7 @@ class ContributeView extends React.Component {
     render () {
       return (
         <SidebarLayout
-          content={this.renderReader()}
+          content={this.renderNotebook()}
           sidebar={this.renderVocabularyView()}
           />
       );
@@ -106,10 +114,10 @@ export default Relay.createContainer(ContributeView, {
             votingDuration
             tokenCount
           }
-          ${Reader.getFragment('novel')}
+          ${Notebook.getFragment('novel')}
         }
         novels(first: 5) {
-          ${Reader.getFragment('novels')}
+          ${Notebook.getFragment('novels')}
         }
         vocabulary(first: 5) {
           ${VoteCaster.getFragment('tokens')}

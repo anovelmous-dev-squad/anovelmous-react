@@ -54,7 +54,8 @@ const chapterOne = {
   title: 'Chapter One',
   tokens: ['1', '2', '3', '4'],
   votingDuration: 10,
-  prevVotingEndedAt: moment().startOf('day')
+  prevVotingEndedAt: moment().startOf('day'),
+  isComplete: true
 };
 
 const chapterOneDos = {
@@ -62,7 +63,8 @@ const chapterOneDos = {
   title: 'Chapter 1',
   tokens: ['5'],
   votingDuration: 10,
-  prevVotingEndedAt: moment().startOf('hour')
+  prevVotingEndedAt: moment().startOf('hour'),
+  isComplete: true
 };
 
 const chapterTwo = {
@@ -70,7 +72,8 @@ const chapterTwo = {
   title: 'Chapter 2',
   tokens: ['1', '2'],
   votingDuration: 15,
-  prevVotingEndedAt: moment().format()
+  prevVotingEndedAt: moment().format(),
+  isComplete: false
 };
 
 const oldNovel = {
