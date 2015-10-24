@@ -1,11 +1,8 @@
 import React from 'react';
 import Relay from 'react-relay';
 import Chapter from './Chapter';
-import Radium from 'radium';
-import ChapterSelect from 'containers/ChapterSelect';
 import { Tabs, Tab } from 'material-ui';
 
-@Radium
 class Novel extends React.Component {
   static propTypes = {
     novel: React.PropTypes.object.isRequired,
@@ -57,7 +54,6 @@ export default Relay.createContainer(Novel, {
               ${Chapter.getFragment('chapter')}
             }
           }
-          ${ChapterSelect.getFragment('chapters')}
         }
       }
     `

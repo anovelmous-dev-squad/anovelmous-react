@@ -1,26 +1,15 @@
 import React from 'react';
 import Relay from 'react-relay';
 import VoteCaster from 'components/VoteCaster';
-import Radium from 'radium';
 import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
-import Novel from 'components/Novel';
 import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
-import NovelSelect from 'containers/NovelSelect';
-import { LinearProgress, Card, CardHeader, CardText } from 'material-ui';
+import Reader from 'containers/Reader';
+import { LinearProgress, Paper } from 'material-ui';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
-const styles = {
-  base: {
-    background: 'rgb(204, 193, 155)',
-    border: 0,
-    borderRadius: 4
-  }
-};
-
-@Radium
 class ContributeView extends React.Component {
     static propTypes = {
       contributor: React.PropTypes.object.isRequired
@@ -71,22 +60,18 @@ class ContributeView extends React.Component {
     renderReader() {
       const { contributor } = this.props;
       return (
-        <Card>
-          <CardHeader>
-            <NovelSelect
-              currentNovelId={contributor.novel.id}
-              novels={contributor.novels}
-              onChange={this._handleNovelChange}
-            />
-          </CardHeader>
-          <CardText>
-            <LinearProgress mode="determinate"
-                            value={this.state.votingRoundProgress.percentComplete} />
-            <Novel novel={contributor.novel}/>
-            <VoteCaster tokens={contributor.vocabulary}
-                        onSave={this._handleTextInputSave}/>
-          </CardText>
-        </Card>
+        <Paper>
+          <Reader
+            novel={contributor.novel}
+            novels={contributor.novels}
+            onNovelChange={this._handleNovelChange} />
+          <LinearProgress
+            mode="determinate"
+            value={this.state.votingRoundProgress.percentComplete} />
+          <VoteCaster
+            tokens={contributor.vocabulary}
+            onSave={this._handleTextInputSave} />
+        </Paper>
       );
     }
 
@@ -121,10 +106,10 @@ export default Relay.createContainer(ContributeView, {
             votingDuration
             tokenCount
           }
-          ${Novel.getFragment('novel')}
+          ${Reader.getFragment('novel')}
         }
         novels(first: 5) {
-          ${NovelSelect.getFragment('novels')}
+          ${Reader.getFragment('novels')}
         }
         vocabulary(first: 5) {
           ${VoteCaster.getFragment('tokens')}
