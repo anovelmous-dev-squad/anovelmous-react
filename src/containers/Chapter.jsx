@@ -1,21 +1,26 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
+import { TextField } from 'material-ui';
 
 class Chapter extends React.Component {
   static propTypes = {
-    chapter: PropTypes.object.isRequired
+    chapter: PropTypes.object.isRequired,
+    allowContribute: PropTypes.bool.isRequired
   }
 
   render () {
-    const { chapter } = this.props;
+    const { chapter, allowContribute } = this.props;
+    const chapterText = chapter.tokens.edges.map(edge => edge.node.content).join(' ');
     return (
       <div>
-        <h3>{chapter.title}</h3>
-        <p>
-          {chapter.tokens.edges.map(edge => (
-            edge.node.content + ' '
-          ))}
-        </p>
+        <span>{chapterText} </span>
+        <span>
+          {allowContribute &&
+            <TextField
+              hintText="..."
+              underlineFocusStyle={{borderColor: 'red'}} />
+          }
+        </span>
       </div>
     );
   }
@@ -26,7 +31,6 @@ export default Relay.createContainer(Chapter, {
     chapter: () => Relay.QL`
       fragment on Chapter {
         id
-        title
         tokens(first: 3) {
           edges {
             node {

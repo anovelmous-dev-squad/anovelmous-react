@@ -1,28 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Relay from 'react-relay';
 import VoteCaster from 'components/VoteCaster';
-import Radium from 'radium';
 import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
-import Progress from 'components/Progress';
-import Novel from 'components/Novel';
 import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
+import Notebook from 'containers/Notebook';
+import { LinearProgress, Paper } from 'material-ui';
 
-const PROGRESS_BAR_UPDATE_INTERVAL = 2000; // in ms
+const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
-const styles = {
-  base: {
-    background: 'rgb(204, 193, 155)',
-    border: 0,
-    borderRadius: 4
-  }
-};
-
-@Radium
 class ContributeView extends React.Component {
     static propTypes = {
-      contributor: PropTypes.object.isRequired
+      contributor: React.PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -63,20 +53,33 @@ class ContributeView extends React.Component {
       );
     }
 
-    renderReader() {
+    _handleNovelChange = (novelId) => {
+      console.log(novelId)
+    }
+
+    _handleVoteChange = () => {
+
+    }
+
+    _handleVoteCast = () => {
+
+    }
+
+    renderNotebook() {
       const { contributor } = this.props;
       return (
-        <div style={styles.base}>
-          <Progress percent={this.state.votingRoundProgress.percentComplete}
-                    transition={PROGRESS_BAR_UPDATE_INTERVAL}
-                    height={20}
-                    >
-            <p>{this.state.votingRoundProgress.secondsRemaining} Seconds Left</p>
-          </Progress>
-          <Novel novel={contributor.novel}/>
-          <VoteCaster tokens={contributor.vocabulary}
-                      onSave={this._handleTextInputSave}/>
-        </div>
+        <Paper>
+          <Notebook
+            novel={contributor.novel}
+            novels={contributor.novels}
+            onNovelChange={this._handleNovelChange}
+            onVoteChange={this._handleVoteChange}
+            onVoteCast={this._handleVoteCast}
+            />
+          <LinearProgress
+            mode="determinate"
+            value={this.state.votingRoundProgress.percentComplete} />
+        </Paper>
       );
     }
 
@@ -87,7 +90,7 @@ class ContributeView extends React.Component {
     render () {
       return (
         <SidebarLayout
-          content={this.renderReader()}
+          content={this.renderNotebook()}
           sidebar={this.renderVocabularyView()}
           />
       );
@@ -104,13 +107,17 @@ export default Relay.createContainer(ContributeView, {
         id
         name
         novel(id: $novelId) {
+          id
           chapter(mostRecent: true) {
             id
             prevVotingEndedAt
             votingDuration
             tokenCount
           }
-          ${Novel.getFragment('novel')}
+          ${Notebook.getFragment('novel')}
+        }
+        novels(first: 5) {
+          ${Notebook.getFragment('novels')}
         }
         vocabulary(first: 5) {
           ${VoteCaster.getFragment('tokens')}

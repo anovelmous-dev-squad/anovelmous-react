@@ -20,12 +20,18 @@ import {
 
 import {
   Novel,
+  Stage,
   Chapter,
   Token,
   Vote,
   Contributor,
+  Plot,
+  Character,
+  Place,
+  PlotItem,
   data,
   getNovel,
+  getStage,
   getChapter,
   getMostRecentChapter,
   getToken,
@@ -33,7 +39,19 @@ import {
   getViewer,
   getVote,
   getVotes,
-  castVote
+  castVote,
+  getPlot,
+  getPlots,
+  createPlot,
+  getCharacter,
+  getCharacters,
+  createCharacter,
+  getPlace,
+  getPlaces,
+  createPlace,
+  getPlotItem,
+  getPlotItems,
+  createPlotItem
 } from './anovelmousDatabase';
 
 const getObjectFromGlobalId = (globalId) => {
@@ -56,6 +74,16 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return GraphQLVote;
     } else if (obj instanceof Contributor) {
       return GraphQLContributor;
+    } else if (obj instanceof Plot) {
+      return GraphQLPlot;
+    }else if (obj instanceof Character) {
+      return GraphQLCharacter;
+    } else if (obj instanceof Place) {
+      return GraphQLPlace;
+    } else if (obj instanceof PlotItem) {
+      return GraphQLPlotItem;
+    } else if (obj instanceof Stage) {
+      return GraphQLStage;
     }
     return null;
   }
@@ -96,6 +124,7 @@ const GraphQLChapter = new GraphQLObjectType({
       type: GraphQLString,
       description: 'The title of the chapter.'
     },
+    isComplete: { type: GraphQLBoolean },
     tokens: {
       type: tokenConnection,
       description: 'The tokens that make up the chapter.',
@@ -126,9 +155,10 @@ const GraphQLVote = new GraphQLObjectType({
   description: 'A contributor\'s vote for the next token in the novel',
   fields: () => ({
     id: globalIdField('Vote'),
-    chapter: globalIdField('Chapter'),
-    contributor: globalIdField('Contributor'),
-    token: globalIdField('Token'),
+    token: {
+      type: GraphQLToken,
+      resolve: (vote) => getToken(vote.token)
+    },
     ordinal: { type: GraphQLInt },
     selected: { type: GraphQLBoolean },
     createdAt: { type: GraphQLString }
@@ -139,6 +169,22 @@ const GraphQLVote = new GraphQLObjectType({
 const { connectionType: chapterConnection } =
   connectionDefinitions({ name: 'Chapter', nodeType: GraphQLChapter });
 
+const GraphQLStage = new GraphQLObjectType({
+  name: 'Stage',
+  description: 'A stage of writing a novel',
+  fields: () => ({
+    id: globalIdField('Stage'),
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+    ordinal: { type: GraphQLInt },
+    duration: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const { connectionType: stagesConnection } =
+  connectionDefinitions({ name: 'Stage', nodeType: GraphQLStage });
+
 const GraphQLNovel = new GraphQLObjectType({
   name: 'Novel',
   description: 'A narrative masterpiece created by a community',
@@ -147,6 +193,20 @@ const GraphQLNovel = new GraphQLObjectType({
     title: {
       type: GraphQLString,
       description: 'The title of the novel.'
+    },
+    stage: {
+      type: GraphQLStage,
+      description: 'The current writing stage the novel is in.',
+      resolve: (novel) => getStage(novel.stage)
+    },
+    stages: {
+      type: stagesConnection,
+      description: 'Possible stages of the novel\'s writing',
+      args: connectionArgs,
+      resolve: (novel, args) => connectionFromArray(
+        novel.stages.map((id) => getStage(id)),
+        args
+      )
     },
     chapter: {
       type: GraphQLChapter,
@@ -159,9 +219,14 @@ const GraphQLNovel = new GraphQLObjectType({
           defaultValue: false
         }
       },
-      resolve: (novel, {id, mostRecent}) => (
-        mostRecent ? getMostRecentChapter() : getChapter(id)
-      )
+      resolve: (novel, {id, mostRecent}) => {
+        if (id !== null && id !== undefined) {
+          return getChapter(id);
+        } else if (mostRecent) {
+          return getMostRecentChapter();
+        }
+        return null;
+      }
     },
     chapters: {
       type: chapterConnection,
@@ -176,12 +241,72 @@ const GraphQLNovel = new GraphQLObjectType({
   interfaces: [nodeInterface]
 });
 
-const { connectionType: novelConnection } =
-  connectionDefinitions({ name: 'Novel', nodeType: GraphQLNovel });
+const GraphQLPlot = new GraphQLObjectType({
+  name: 'Plot',
+  description: 'A novel\'s hopeful plot',
+  fields: () => ({
+    id: globalIdField('Plot'),
+    summary: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const GraphQLCharacter = new GraphQLObjectType({
+  name: 'Character',
+  description: 'A character in a particular novel',
+  fields: () => ({
+    id: globalIdField('Character'),
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    bio: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const GraphQLPlace = new GraphQLObjectType({
+  name: 'Place',
+  description: 'A place in a particular novel',
+  fields: () => ({
+    id: globalIdField('Place'),
+    name: { type: GraphQLString },
+    description: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
+
+const GraphQLPlotItem = new GraphQLObjectType({
+  name: 'PlotItem',
+  description: 'A plot item in a particular novel',
+  fields: () => ({
+    id: globalIdField('PlotItem'),
+    name: { type: GraphQLString },
+    description: { type: GraphQLString }
+  }),
+  interfaces: [nodeInterface]
+});
 
 const { connectionType: voteConnection,
         edgeType: GraphQLVoteEdge } =
   connectionDefinitions({ name: 'Vote', nodeType: GraphQLVote });
+
+const { connectionType: plotsConnection,
+        edgeType: GraphQLPlotEdge } =
+  connectionDefinitions({ name: 'Plot', nodeType: GraphQLPlot });
+
+const { connectionType: characterConnection,
+        edgeType: GraphQLCharacterEdge } =
+  connectionDefinitions({ name: 'Character', nodeType: GraphQLCharacter });
+
+const { connectionType: placesConnection,
+        edgeType: GraphQLPlaceEdge } =
+  connectionDefinitions({ name: 'Place', nodeType: GraphQLPlace });
+
+const { connectionType: plotItemsConnection,
+        edgeType: GraphQLPlotItemEdge } =
+  connectionDefinitions({ name: 'PlotItem', nodeType: GraphQLPlotItem });
+
+const { connectionType: novelConnection } =
+  connectionDefinitions({ name: 'Novel', nodeType: GraphQLNovel });
 
 const GraphQLContributor = new GraphQLObjectType({
   name: 'Contributor',
@@ -227,6 +352,42 @@ const GraphQLContributor = new GraphQLObjectType({
         contributor.votes.map((id) => getVote(id)),
         args
       )
+    },
+    plots: {
+      type: plotsConnection,
+      description: 'Novel plots this contributor has imagined',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.plots.map((id) => getPlot(id)),
+        args
+      )
+    },
+    characters: {
+      type: characterConnection,
+      description: 'Characters this contributor has imagined',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.characters.map((id) => getCharacter(id)),
+        args
+      )
+    },
+    places: {
+      type: placesConnection,
+      description: 'Places this contributor has imagined',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.places.map((id) => getPlace(id)),
+        args
+      )
+    },
+    plotItems: {
+      type: plotItemsConnection,
+      description: 'Plot items this contributor has imagined',
+      args: connectionArgs,
+      resolve: (contributor, args) => connectionFromArray(
+        contributor.plotItems.map((id) => getPlotItem(id)),
+        args
+      )
     }
   }),
   interfaces: [nodeInterface]
@@ -263,6 +424,126 @@ const GraphQLCastVoteMutation = mutationWithClientMutationId({
   }
 });
 
+const GraphQLCreatePlotMutation = mutationWithClientMutationId({
+  name: 'CreatePlot',
+  inputFields: {
+    summary: { type: new GraphQLNonNull(GraphQLString) },
+    novelId: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    plotEdge: {
+      type: GraphQLPlotEdge,
+      resolve: ({localPlotId}) => {
+        const plot = getPlot(localPlotId);
+        return {
+          cursor: cursorForObjectInConnection(getPlots(), plot),
+          node: plot
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
+    }
+  },
+  mutateAndGetPayload: ({summary, novelId}) => {
+    const novel = getObjectFromGlobalId(novelId);
+    const localPlotId = createPlot(summary, novel);
+    return {localPlotId};
+  }
+});
+
+const GraphQLCreateCharacterMutation = mutationWithClientMutationId({
+  name: 'CreateCharacter',
+  inputFields: {
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: GraphQLString },
+    bio: { type: new GraphQLNonNull(GraphQLString) },
+    novelId: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    characterEdge: {
+      type: GraphQLCharacterEdge,
+      resolve: ({localCharacterId}) => {
+        const character = getCharacter(localCharacterId);
+        return {
+          cursor: cursorForObjectInConnection(getCharacters(), character),
+          node: character
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
+    }
+  },
+  mutateAndGetPayload: ({firstName, lastName, bio, novelId}) => {
+    const novel = getObjectFromGlobalId(novelId);
+    const localCharacterId = createCharacter(firstName, lastName, bio, novel);
+    return {localCharacterId};
+  }
+});
+
+const GraphQLCreatePlaceMutation = mutationWithClientMutationId({
+  name: 'CreatePlace',
+  inputFields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    description: { type: new GraphQLNonNull(GraphQLString) },
+    novelId: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    placeEdge: {
+      type: GraphQLPlaceEdge,
+      resolve: ({localPlaceId}) => {
+        const place = getPlace(localPlaceId);
+        return {
+          cursor: cursorForObjectInConnection(getPlaces(), place),
+          node: place
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
+    }
+  },
+  mutateAndGetPayload: ({name, description, novelId}) => {
+    const novel = getObjectFromGlobalId(novelId);
+    const localPlaceId = createPlace(name, description, novel);
+    return {localPlaceId};
+  }
+});
+
+const GraphQLCreatePlotItemMutation = mutationWithClientMutationId({
+  name: 'CreatePlotItem',
+  inputFields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    description: { type: new GraphQLNonNull(GraphQLString) },
+    novelId: { type: new GraphQLNonNull(GraphQLString) }
+  },
+  outputFields: {
+    plotItemEdge: {
+      type: GraphQLPlotItemEdge,
+      resolve: ({localPlotItemId}) => {
+        const plotItem = getPlotItem(localPlotItemId);
+        return {
+          cursor: cursorForObjectInConnection(getPlotItems(), plotItem),
+          node: plotItem
+        };
+      }
+    },
+    viewer: {
+      type: GraphQLContributor,
+      resolve: () => getViewer()
+    }
+  },
+  mutateAndGetPayload: ({name, description, novelId}) => {
+    const novel = getObjectFromGlobalId(novelId);
+    const localPlotItemId = createPlotItem(name, description, novel);
+    return {localPlotItemId};
+  }
+});
+
 const Root = new GraphQLObjectType({
   name: 'Root',
   fields: {
@@ -277,7 +558,11 @@ const Root = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    castVote: GraphQLCastVoteMutation
+    castVote: GraphQLCastVoteMutation,
+    createPlot: GraphQLCreatePlotMutation,
+    createCharacter: GraphQLCreateCharacterMutation,
+    createPlace: GraphQLCreatePlaceMutation,
+    createPlotItem: GraphQLCreatePlotItemMutation
   }
 });
 

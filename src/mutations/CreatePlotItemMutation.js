@@ -1,6 +1,6 @@
 import Relay from 'react-relay';
 
-export default class CastVoteMutation extends Relay.Mutation {
+export default class CreatePlotItemMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
       fragment on Contributor {
@@ -9,14 +9,14 @@ export default class CastVoteMutation extends Relay.Mutation {
     `
   };
   getMutation() {
-    return Relay.QL`mutation{castVote}`;
+    return Relay.QL`mutation{createPlotItem}`;
   }
   getFatQuery() {
     return Relay.QL`
-      fragment on CastVotePayload {
-        voteEdge
+      fragment on CreatePlotItemPayload {
+        plotItemEdge
         viewer {
-          votes
+          plotItems
         }
       }
     `;
@@ -26,27 +26,28 @@ export default class CastVoteMutation extends Relay.Mutation {
       type: 'RANGE_ADD',
       parentName: 'viewer',
       parentID: this.props.viewer.id,
-      connectionName: 'votes',
-      edgeName: 'voteEdge',
+      connectionName: 'plotItems',
+      edgeName: 'plotItemEdge',
       rangeBehaviors: {
         '': 'append'
       }
     }];
   }
   getVariables() {
-    const { tokenId, chapterId, ordinal } = this.props;
+    const { name, description, novelId } = this.props;
     return {
-      tokenId,
-      chapterId,
-      ordinal
+      name,
+      description,
+      novelId
     };
   }
   getOptimisticResponse() {
-    const { ordinal, viewer } = this.props;
+    const { name, description, viewer } = this.props;
     return {
-      voteEdge: {
+      plotItemEdge: {
         node: {
-          ordinal: ordinal
+          name,
+          description
         }
       },
       viewer: {

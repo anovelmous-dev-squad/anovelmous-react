@@ -26,7 +26,7 @@ export default class Root extends React.Component {
 
   render () {
     return (
-      <div style={{fontFamily: ['Open Sans', 'sans-serif']}}>
+      <div>
         {this.renderRouter()}
       </div>
     );

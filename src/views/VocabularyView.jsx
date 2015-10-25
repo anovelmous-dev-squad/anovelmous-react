@@ -1,20 +1,27 @@
 import React from 'react';
 import Relay from 'react-relay';
+import VocabCard from 'components/VocabCard';
 
 class VocabularyView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired
   }
 
+  _handleVoteCast = (term) => {
+    console.log(term)
+  }
+
   render() {
     const { contributor } = this.props;
 
     return (
-      <ul>
+      <div>
         {contributor.vocabulary.edges.map(edge => (
-          <li key={edge.node.id}>{edge.node.content}</li>
+          <VocabCard key={edge.node.id}
+                     term={edge.node.content}
+                     onSubmit={this._handleVoteCast} />
         ))}
-      </ul>
+      </div>
     );
   }
 }
