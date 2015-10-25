@@ -90,6 +90,13 @@ const liveNovel = {
   stage: '5'
 };
 
+const structureWritingNovel = {
+  id: '3',
+  title: 'Structural Testing',
+  chapters: [],
+  stage: '3'
+};
+
 const firstVote = {
   id: '1',
   chapter: '1',
@@ -179,7 +186,8 @@ const finishedStage = {
 const data = {
   Novel: {
     1: oldNovel,
-    2: liveNovel
+    2: liveNovel,
+    3: structureWritingNovel
   },
   Stage: {
     1: brainstorming,

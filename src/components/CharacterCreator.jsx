@@ -1,13 +1,6 @@
 import React from 'react';
-import Radium from 'radium';
+import { Paper } from 'material-ui';
 
-const styles = {
-  base: {
-    background: 'rgb(121, 121, 121)'
-  }
-};
-
-@Radium
 export default class CharacterCreator extends React.Component {
   static propTypes = {
     onCreate: React.PropTypes.func.isRequired
@@ -45,7 +38,7 @@ export default class CharacterCreator extends React.Component {
   render() {
     const { firstName, lastName, bio } = this.state;
     return (
-      <div style={styles.base}>
+      <Paper>
         <h3>Create a character!</h3>
         <input placeholder="First Name"
                value={firstName}
@@ -60,7 +53,7 @@ export default class CharacterCreator extends React.Component {
                   onChange={this._handleBioChange}
         />
         <button onClick={this._handleOnCreate}>Create!</button>
-      </div>
+      </Paper>
     );
   }
 }
