@@ -13,17 +13,19 @@ class VocabularyView extends React.Component {
 
   renderVocabCard(token) {
     return (
-      <VocabCard key={token.id}
-                 term={token.content}
-                 onSubmit={this._handleVoteCast} />
+      <div style={ {width: 150, padding: 5} }>
+        <VocabCard
+          key={token.id}
+          term={token.content}
+          onSubmit={this._handleVoteCast} />
+      </div>
     );
   }
 
   render() {
     const { contributor } = this.props;
-
     return (
-      <div>
+      <div style={{display: 'flex', flexFlow: 'row wrap'}}>
         {contributor.vocabulary.edges.map(edge => (
           this.renderVocabCard(edge.node)
         ))}
