@@ -25,7 +25,7 @@ export default (props) => {
       <CardActions>
         <form onSubmit={_submitTerm}>
           <FlatButton label="Select" primary>
-            <input type="submit" hidden/>
+            <input type="submit" hidden />
           </FlatButton>
         </form>
         <FlatButton />
