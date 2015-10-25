@@ -1,5 +1,6 @@
 import React from 'react';
-import { Avatar, Card, CardActions, CardHeader, CardText, FlatButton, FontIcon } from 'material-ui';
+import { Avatar, Card, CardActions, CardHeader,
+         CardText, FlatButton, FontIcon } from 'material-ui';
 
 
 export default (props) => {

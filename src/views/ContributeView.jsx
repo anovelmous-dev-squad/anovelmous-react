@@ -1,6 +1,5 @@
 import React from 'react';
 import Relay from 'react-relay';
-import VoteCaster from 'components/VoteCaster';
 import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
 import { getVotingRoundProgress } from 'utils';
@@ -118,9 +117,6 @@ export default Relay.createContainer(ContributeView, {
         }
         novels(first: 5) {
           ${Notebook.getFragment('novels')}
-        }
-        vocabulary(first: 5) {
-          ${VoteCaster.getFragment('tokens')}
         }
         votes(first: 5) {
           edges {
