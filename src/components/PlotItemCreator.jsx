@@ -1,13 +1,5 @@
 import React from 'react';
-import Radium from 'radium';
 
-const styles = {
-  base: {
-
-  }
-};
-
-@Radium
 export default class PlotItemCreator extends React.Component {
   static propTypes = {
     onCreate: React.PropTypes.func.isRequired
@@ -41,7 +33,7 @@ export default class PlotItemCreator extends React.Component {
   render() {
     const { name, description } = this.state;
     return (
-      <div style={styles.base}>
+      <div>
         <h3>Create a plot item!</h3>
         <input placeholder="Abacaderon Scepter"
                value={name}

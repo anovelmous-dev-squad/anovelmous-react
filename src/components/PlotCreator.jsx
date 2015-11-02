@@ -1,13 +1,5 @@
 import React from 'react';
-import Radium from 'radium';
 
-const styles = {
-  base: {
-    background: 'rgb(181, 181, 181)'
-  }
-};
-
-@Radium
 export default class PlotCreator extends React.Component {
   static propTypes = {
     onCreate: React.PropTypes.func.isRequired
@@ -36,7 +28,7 @@ export default class PlotCreator extends React.Component {
   render() {
     const { summary } = this.state;
     return (
-      <div style={styles.base}>
+      <div>
         <form onSubmit={this._handleOnSubmit}>
           <textarea placeholder="Enter a brief summary of the novel's plot"
                     value={summary}

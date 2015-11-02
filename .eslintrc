@@ -7,7 +7,7 @@
     "__DEBUG_NW__" : false
   },
   "rules": {
-    "comma-dangle": [1, "never"],
+    "comma-dangle": [0, "never"],
     "space-before-function-paren": [0, "always"],
     "react/jsx-quotes": [0, "single"],
     "no-use-before-define": 0
