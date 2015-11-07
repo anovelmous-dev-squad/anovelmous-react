@@ -9,6 +9,7 @@ import CreateCharacterMutation from 'mutations/CreateCharacterMutation';
 import CreatePlaceMutation from 'mutations/CreatePlaceMutation';
 import CreatePlotItemMutation from 'mutations/CreatePlotItemMutation';
 import CreatePlotMutation from 'mutations/CreatePlotMutation';
+import { Tabs, Tab, Paper } from 'material-ui';
 
 const styles = {
   base: {
@@ -26,62 +27,62 @@ class PrewritingView extends React.Component {
 
   _handlePlotCreation = (summary) => {
     Relay.Store.update(
-      new CreatePlotMutation({
-        summary,
-        novelId: this.props.novelId,
-        viewer: this.props.contributor
-      })
+        new CreatePlotMutation({
+          summary,
+          novelId: this.props.novelId,
+          viewer: this.props.contributor
+        })
     );
   }
 
   _handleCharacterCreation = ({ firstName, lastName, bio }) => {
     Relay.Store.update(
-      new CreateCharacterMutation({
-        firstName,
-        lastName,
-        bio,
-        novelId: this.props.novelId,
-        viewer: this.props.contributor
-      })
+        new CreateCharacterMutation({
+          firstName,
+          lastName,
+          bio,
+          novelId: this.props.novelId,
+          viewer: this.props.contributor
+        })
     );
   }
 
   _handlePlaceCreation = ({ name, description }) => {
     Relay.Store.update(
-      new CreatePlaceMutation({
-        name,
-        description,
-        novelId: this.props.novelId,
-        viewer: this.props.contributor
-      })
+        new CreatePlaceMutation({
+          name,
+          description,
+          novelId: this.props.novelId,
+          viewer: this.props.contributor
+        })
     );
   }
 
   _handlePlotItemCreation = ({ name, description }) => {
     Relay.Store.update(
-      new CreatePlotItemMutation({
-        name,
-        description,
-        novelId: this.props.novelId,
-        viewer: this.props.contributor
-      })
+        new CreatePlotItemMutation({
+          name,
+          description,
+          novelId: this.props.novelId,
+          viewer: this.props.contributor
+        })
     );
   }
 
   _getCurrentStageView = (stage) => {
     switch (stage.name) {
-    case 'BRAINSTORMING':
-      return this.renderBrainstormingStage();
-    case 'PLOT SUMMARY':
-      return this.renderPlotSummaryStage();
-    case 'STRUCTURE CREATION':
-      return this.renderStructureCreationStage();
-    case 'TITLE DECISION':
-      return this.renderTitleDecisionStage();
-    case 'WRITING':
-      return this.renderWritingStage();
-    default:
-      return this.renderFinishedStage();
+      case 'BRAINSTORMING':
+        return this.renderBrainstormingStage();
+      case 'PLOT SUMMARY':
+        return this.renderPlotSummaryStage();
+      case 'STRUCTURE CREATION':
+        return this.renderStructureCreationStage();
+      case 'TITLE DECISION':
+        return this.renderTitleDecisionStage();
+      case 'WRITING':
+        return this.renderWritingStage();
+      default:
+        return this.renderFinishedStage();
     }
   }
 
@@ -95,11 +96,13 @@ class PrewritingView extends React.Component {
 
   renderStructureCreationStage() {
     return (
-      <div>
-        <CharacterCreator onCreate={this._handleCharacterCreation} />
-        <PlaceCreator onCreate={this._handlePlaceCreation} />
-        <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
-      </div>
+        <Paper>
+          <Tabs>
+            <Tab label="Create a Character"> <CharacterCreator onCreate={this._handleCharacterCreation}/> </Tab>
+            <Tab label="Create a Place"> <PlaceCreator onCreate={this._handlePlaceCreation} /> </Tab>
+            <Tab label="Create a Plot Item"> <PlotItemCreator onCreate={this._handlePlotItemCreation}/> </Tab>
+          </Tabs>
+        </Paper>
     );
   }
 
@@ -118,9 +121,9 @@ class PrewritingView extends React.Component {
   render() {
     const { contributor } = this.props;
     return (
-      <div style={styles.base}>
-        {this._getCurrentStageView(contributor.novel.stage)}
-      </div>
+        <div style={styles.base}>
+          {this._getCurrentStageView(contributor.novel.stage)}
+        </div>
     );
   }
 }

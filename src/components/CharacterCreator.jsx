@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper } from 'material-ui';
+import { Paper, TextField, Tab, RaisedButton } from 'material-ui';
 
 export default class CharacterCreator extends React.Component {
   static propTypes = {
@@ -16,15 +16,15 @@ export default class CharacterCreator extends React.Component {
   }
 
   _handleFirstNameChange = (event) => {
-    this.setState({ firstName: event.target.value });
+    this.setState({ firstName: event.target.getValue() });
   }
 
   _handleLastNameChange = (event) => {
-    this.setState({ lastName: event.target.value });
+    this.setState({ lastName: event.target.getValue() });
   }
 
   _handleBioChange = (event) => {
-    this.setState({ bio: event.target.value });
+    this.setState({ bio: event.target.getValue() });
   }
 
   _handleOnCreate = () => {
@@ -38,22 +38,26 @@ export default class CharacterCreator extends React.Component {
   render() {
     const { firstName, lastName, bio } = this.state;
     return (
-      <Paper>
-        <h3>Create a character!</h3>
-        <input placeholder="First Name"
-               value={firstName}
-               onChange={this._handleFirstNameChange}
-        />
-        <input placeholder="Last Name"
-               value={lastName}
-               onChange={this._handleLastNameChange}
-        />
-        <textarea placeholder="Short bio"
-                  value={bio}
-                  onChange={this._handleBioChange}
-        />
-        <button onClick={this._handleOnCreate}>Create!</button>
-      </Paper>
+
+        <div>
+
+          <TextField hintText="First Name"
+                     onChange={this._handleFirstNameChange}/>
+
+          <TextField hintText="Last Name"
+                     onChange={this._handleLastNameChange}/>
+
+          <TextField hintText="Biography"
+                     onChange={this._handleBioChange}
+                     multiLine="true"
+                     fullWidth="true"
+                     rows="6"/>
+
+          <RaisedButton label="Create"
+                        onClick={this._handleOnCreate}/>
+
+          </div>
+
     );
   }
 }

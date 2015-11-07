@@ -1,5 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
+import { Tab,  TextField, RaisedButton } from 'material-ui';
 
 const styles = {
   base: {
@@ -41,18 +42,23 @@ export default class PlaceCreator extends React.Component {
   render() {
     const { name, description } = this.state;
     return (
-      <div style={styles.base}>
-        <h3>Create a place!</h3>
-        <input placeholder="New York City"
-               value={name}
-               onChange={this._handleNameChange}
-        />
-        <textarea placeholder="A large American city with mass appeal"
-                  value={description}
-                  onChange={this._handleDescriptionChange}
-        />
-        <button onClick={this._handleOnCreate}>Create!</button>
-      </div>
+
+        <div>
+
+          <TextField hintText="Place Name"
+                     onChange={this._handleNameChange}/>
+
+          <TextField hintText="Description"
+                     onChange={this._handleDescriptionChange}
+                     multiline="true"
+                     fullWidth="true"
+                     rows="6"/>
+
+          <RaisedButton label="Create"
+                        onClick={this._handleOnCreate}/>
+          </div>
+
+
     );
   }
 }
