@@ -7,9 +7,31 @@ import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
 import PrewritingView from 'views/PrewritingView';
 
-const viewerQueries = {
-  contributor: () => Relay.QL`query RootQuery { viewer }`
-};
+const CONTRIBUTOR_ID = 'Q29udHJpYnV0b3I6MQ==';
+
+const viewerQueryConfig = () => ({
+  queries: {
+    viewer: () => Relay.QL`query { viewer }`
+  },
+  name: 'ViewerQueryConfig'
+});
+
+const contributorQueryConfig = (id) => ({
+  queries: {
+    contributor: () => Relay.QL`query { contributor(id: $contributorId) }`
+  },
+  name: 'ContributorQueryConfig',
+  params: { contributorId: id }
+});
+
+const contributeQueryConfig = (id) => ({
+  queries: {
+    contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
+    viewer: () => Relay.QL`query { viewer }`
+  },
+  name: 'ContributeQueryConfig',
+  params: { contributorId: id }
+});
 
 export default (
   <Route path="/" component={CoreLayout}>
@@ -18,19 +40,19 @@ export default (
       name="contribute"
       path="contribute/:novelId"
       component={ContributeView}
-      queries={viewerQueries}
+      queries={contributeQueryConfig(CONTRIBUTOR_ID)}
     />
     <Route
       name="stats"
       path="stats/"
       component={StatsView}
-      queries={viewerQueries}
+      queries={viewerQueryConfig}
     />
     <Route
       name="prewriting"
       path="prewriting/:novelId"
       component={PrewritingView}
-      queries={viewerQueries}
+      queries={viewerQueryConfig}
       />
   </Route>
 );

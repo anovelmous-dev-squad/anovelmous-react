@@ -11,7 +11,8 @@ const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
 class ContributeView extends React.Component {
     static propTypes = {
-      contributor: React.PropTypes.object.isRequired
+      contributor: React.PropTypes.object.isRequired,
+      viewer: React.PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -53,7 +54,7 @@ class ContributeView extends React.Component {
     }
 
     _handleNovelChange = (novelId) => {
-      console.log(novelId)
+      console.log(novelId);
     }
 
     _handleVoteChange = () => {
@@ -83,7 +84,7 @@ class ContributeView extends React.Component {
     }
 
     renderVocabularyView() {
-      return (<VocabularyView contributor={this.props.contributor}/>);
+      return (<VocabularyView viewer={this.props.viewer}/>);
     }
 
     render () {
@@ -104,7 +105,19 @@ export default Relay.createContainer(ContributeView, {
     contributor: () => Relay.QL`
       fragment on Contributor {
         id
-        name
+        votes(first: 5) {
+          edges {
+            node {
+              token
+            }
+          }
+        }
+        ${CastVoteMutation.getFragment('contributor')}
+      }
+    `,
+    viewer: () => Relay.QL`
+      fragment on Query {
+        id
         novel(id: $novelId) {
           id
           chapter(mostRecent: true) {
@@ -118,15 +131,7 @@ export default Relay.createContainer(ContributeView, {
         novels(first: 5) {
           ${Notebook.getFragment('novels')}
         }
-        votes(first: 5) {
-          edges {
-            node {
-              token
-            }
-          }
-        }
-        ${VocabularyView.getFragment('contributor')}
-        ${CastVoteMutation.getFragment('viewer')}
+        ${VocabularyView.getFragment('viewer')}
       }
     `
   }
