@@ -5,7 +5,8 @@ import { Tabs, Tab } from 'material-ui';
 
 class Novel extends React.Component {
   static propTypes = {
-    novel: React.PropTypes.object.isRequired
+    novel: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -37,6 +38,9 @@ class Novel extends React.Component {
 }
 
 export default Relay.createContainer(Novel, {
+  initialVariables: {
+    chapterId: null
+  },
   fragments: {
     novel: () => Relay.QL`
       fragment on Novel {
@@ -53,6 +57,14 @@ export default Relay.createContainer(Novel, {
               ${Chapter.getFragment('chapter')}
             }
           }
+        }
+      }
+    `,
+    viewer: () => Relay.QL`
+      fragment on Query {
+        chapter(id: $chapterId) {
+          id
+          title
         }
       }
     `
