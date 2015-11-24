@@ -20,10 +20,6 @@ const contributeQueryConfig = {
   viewer: () => Relay.QL`query { viewer }`
 };
 
-const novelQueryConfig = {
-  novel: () => Relay.QL`query { novel(id: $novelId) }`,
-};
-
 const chapterQueryConfig = {
   chapter: () => Relay.QL`query { chapter(id: $chapterId) }`
 };
@@ -31,7 +27,7 @@ const chapterQueryConfig = {
 const prepareContributeParams = (params, route) => {
   return {
     ...params,
-    contributorId: CONTRIBUTOR_ID
+    contributorId: CONTRIBUTOR_ID,
   };
 };
 
@@ -47,27 +43,20 @@ export default (
     <IndexRoute component={HomeView}/>
     <Route
       name="contribute"
-      path="contribute/"
+      path="contribute/novel/:novelId"
       queries={contributeQueryConfig}
       stateParams={['contributorId']}
       prepareParams={prepareContributeParams}
       component={ContributeView}
       >
       <Route
-        name="novel"
-        path="novel/:novelId"
-        queries={novelQueryConfig}
-        component={Novel}
-        >
-        <Route
-          name="chapter"
-          path="chapter/:chapterId"
-          queries={chapterQueryConfig}
-          stateParams={['allowContribute']}
-          prepareParams={prepareChapterParams}
-          component={Chapter}
-          />
-      </Route>
+        name="chapter"
+        path="chapter/:chapterId"
+        queries={chapterQueryConfig}
+        stateParams={['allowContribute']}
+        prepareParams={prepareChapterParams}
+        component={Chapter}
+        />
     </Route>
     <Route
       name="stats"

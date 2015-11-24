@@ -17,7 +17,8 @@ class Chapter extends React.Component {
     this.state = {
       votingRoundProgress: getVotingRoundProgress(
         chapter.novel.prevVotingEnded, chapter.votingDuration
-      )
+      ),
+      intervalId: null
     };
   }
 
@@ -25,9 +26,13 @@ class Chapter extends React.Component {
     this._updateVotingRoundProgress();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
+  }
+
   _updateVotingRoundProgress() {
     const self = this;
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       const { chapter } = self.props;
       self.setState({
         votingRoundProgress: getVotingRoundProgress(
@@ -35,6 +40,7 @@ class Chapter extends React.Component {
         )
       });
     }, PROGRESS_BAR_UPDATE_INTERVAL);
+    this.setState({ intervalId });
   }
 
   render () {

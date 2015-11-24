@@ -4,6 +4,7 @@ import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
 import CastVoteMutation from 'mutations/CastVoteMutation';
 import NovelSelect from 'containers/NovelSelect';
+import Novel from 'containers/Novel';
 import { Paper } from 'material-ui';
 
 
@@ -45,15 +46,16 @@ class ContributeView extends React.Component {
 
     renderNotebook() {
       const { viewer } = this.props;
-      const latestNovelId = viewer.novels.edges[0].node.id;
       return (
         <Paper>
           <NovelSelect
-            currentNovelId={latestNovelId}
+            currentNovelId={viewer.novel.id}
             novels={viewer.novels}
             onChange={this._handleNovelChange}
             />
-          {this.props.children}
+          <Novel novel={viewer.novel}>
+            {this.props.children}
+          </Novel>
         </Paper>
       );
     }
@@ -73,6 +75,9 @@ class ContributeView extends React.Component {
 }
 
 export default Relay.createContainer(ContributeView, {
+  initialVariables: {
+    novelId: null
+  },
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
@@ -89,6 +94,10 @@ export default Relay.createContainer(ContributeView, {
     `,
     viewer: () => Relay.QL`
       fragment on Query {
+        novel(id: $novelId) {
+          id
+          ${Novel.getFragment('novel')}
+        }
         novels(last: 5) {
           edges {
             node {
