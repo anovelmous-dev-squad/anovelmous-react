@@ -28,7 +28,6 @@ export default (props) => {
             <input type="submit" hidden />
           </FlatButton>
         </form>
-        <FlatButton />
       </CardActions>
       <CardText expandable>
         {props.description || 'Lorem ipsum blah blah blah...'}

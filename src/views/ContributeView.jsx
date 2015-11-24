@@ -17,10 +17,11 @@ class ContributeView extends React.Component {
 
     constructor(props) {
       super(props);
-      const chapter = props.contributor.novel.chapter;
+      const { novel } = props.viewer;
+      const { chapter } = novel;
       this.state = {
         votingRoundProgress: getVotingRoundProgress(
-          chapter.prevVotingEndedAt, chapter.votingDuration
+          novel.prevVotingEnded, chapter.votingDuration
         )
       };
     }
@@ -32,7 +33,7 @@ class ContributeView extends React.Component {
     _updateVotingRoundProgress() {
       const self = this;
       setInterval(() => {
-        const chapter = self.props.contributor.novel.chapter;
+        const chapter = self.props.viewer.novel.chapter;
         self.setState({
           votingRoundProgress: getVotingRoundProgress(
             chapter.prevVotingEndedAt, chapter.votingDuration
@@ -42,12 +43,12 @@ class ContributeView extends React.Component {
     }
 
     _handleTextInputSave = (token) => {
-      const chapter = this.props.contributor.novel.chapter;
+      const chapter = this.props.viewer.novel.chapter;
       Relay.Store.update(
         new CastVoteMutation({
           tokenId: token.id,
           chapterId: chapter.id,
-          ordinal: chapter.tokenCount,
+          ordinal: chapter.tokens.totalCount,
           viewer: this.props.contributor
         })
       );
@@ -66,12 +67,12 @@ class ContributeView extends React.Component {
     }
 
     renderNotebook() {
-      const { contributor } = this.props;
+      const { viewer } = this.props;
       return (
         <Paper>
           <Notebook
-            novel={contributor.novel}
-            novels={contributor.novels}
+            novel={viewer.novel}
+            novels={viewer.novels}
             onNovelChange={this._handleNovelChange}
             onVoteChange={this._handleVoteChange}
             onVoteCast={this._handleVoteCast}
@@ -117,14 +118,15 @@ export default Relay.createContainer(ContributeView, {
     `,
     viewer: () => Relay.QL`
       fragment on Query {
-        id
         novel(id: $novelId) {
           id
-          chapter(mostRecent: true) {
+          prevVotingEnded
+          chapter: latestChapter {
             id
-            prevVotingEndedAt
             votingDuration
-            tokenCount
+            tokens(first: 1) {
+              totalCount
+            }
           }
           ${Notebook.getFragment('novel')}
         }

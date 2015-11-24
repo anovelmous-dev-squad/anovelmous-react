@@ -10,7 +10,7 @@ class Chapter extends React.Component {
 
   render () {
     const { chapter, allowContribute } = this.props;
-    const chapterText = chapter.tokens.edges.map(edge => edge.node.content).join(' ');
+    const chapterText = chapter.tokens.edges.map(edge => edge.node.token.content).join(' ');
     return (
       <div>
         <span>{chapterText} </span>
@@ -35,7 +35,9 @@ export default Relay.createContainer(Chapter, {
           edges {
             node {
               id
-              content
+              token {
+                content
+              }
             }
           }
         }

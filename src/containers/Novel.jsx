@@ -5,8 +5,7 @@ import { Tabs, Tab } from 'material-ui';
 
 class Novel extends React.Component {
   static propTypes = {
-    novel: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired
+    novel: React.PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -28,7 +27,7 @@ class Novel extends React.Component {
           >
           {novel.chapters.edges.map(edge => (
             <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
-              <Chapter chapter={edge.node} />
+              <Chapter chapter={edge.node} allowContribute={false} />
             </Tab>
           ))}
         </Tabs>
@@ -46,7 +45,7 @@ export default Relay.createContainer(Novel, {
       fragment on Novel {
         id
         title
-        chapter(mostRecent: true) {
+        chapter: latestChapter {
           id
         }
         chapters(last: 10) {
@@ -57,14 +56,6 @@ export default Relay.createContainer(Novel, {
               ${Chapter.getFragment('chapter')}
             }
           }
-        }
-      }
-    `,
-    viewer: () => Relay.QL`
-      fragment on Query {
-        chapter(id: $chapterId) {
-          id
-          title
         }
       }
     `

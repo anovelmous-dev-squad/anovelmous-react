@@ -9,29 +9,25 @@ import PrewritingView from 'views/PrewritingView';
 
 const CONTRIBUTOR_ID = 'Q29udHJpYnV0b3I6MQ==';
 
-const viewerQueryConfig = () => ({
-  queries: {
-    viewer: () => Relay.QL`query { viewer }`
-  },
-  name: 'ViewerQueryConfig'
-});
+const viewerQueryConfig = {
+  viewer: () => Relay.QL`query { viewer }`
+};
 
-const contributorQueryConfig = (id) => ({
-  queries: {
-    contributor: () => Relay.QL`query { contributor(id: $contributorId) }`
-  },
-  name: 'ContributorQueryConfig',
-  params: { contributorId: id }
-});
+const contributorQueryConfig = {
+  contributor: () => Relay.QL`query { contributor(id: $contributorId) }`
+};
 
-const contributeQueryConfig = (id) => ({
-  queries: {
-    contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
-    viewer: () => Relay.QL`query { viewer }`
-  },
-  name: 'ContributeQueryConfig',
-  params: { contributorId: id }
-});
+const contributeQueryConfig = {
+  contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
+  viewer: () => Relay.QL`query { viewer }`
+};
+
+const prepareContributeParams = (params, route) => {
+  return {
+    ...params,
+    contributorId: CONTRIBUTOR_ID
+  };
+};
 
 export default (
   <Route path="/" component={CoreLayout}>
@@ -40,7 +36,9 @@ export default (
       name="contribute"
       path="contribute/:novelId"
       component={ContributeView}
-      queries={contributeQueryConfig(CONTRIBUTOR_ID)}
+      queries={contributeQueryConfig}
+      stateParams={['contributorId']}
+      prepareParams={prepareContributeParams}
     />
     <Route
       name="stats"
