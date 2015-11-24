@@ -31,7 +31,7 @@ export default Relay.createContainer(Chapter, {
     chapter: () => Relay.QL`
       fragment on Chapter {
         id
-        tokens(first: 3) {
+        tokens(first: 500) {
           edges {
             node {
               id

@@ -48,7 +48,7 @@ export default Relay.createContainer(Novel, {
         chapter: latestChapter {
           id
         }
-        chapters(last: 10) {
+        chapters(last: 4) {
           edges {
             node {
               id
