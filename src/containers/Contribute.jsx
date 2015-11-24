@@ -63,12 +63,10 @@ export default Relay.createContainer(Contribute, {
         }
       }
     `,
-    viewer: () => Relay.QL`
-      fragment on Query {
-        chapter(id: chapterId) {
-          id
-          title
-        }
+    chapter: () => Relay.QL`
+      fragment on Chapter {
+        id
+        title
       }
     `
   }

@@ -6,6 +6,8 @@ import ContributeView from 'views/ContributeView';
 import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
 import PrewritingView from 'views/PrewritingView';
+import Novel from 'containers/Novel';
+import Chapter from 'containers/Chapter';
 
 const CONTRIBUTOR_ID = 'Q29udHJpYnV0b3I6MQ==';
 
@@ -13,13 +15,17 @@ const viewerQueryConfig = {
   viewer: () => Relay.QL`query { viewer }`
 };
 
-const contributorQueryConfig = {
-  contributor: () => Relay.QL`query { contributor(id: $contributorId) }`
-};
-
 const contributeQueryConfig = {
   contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
   viewer: () => Relay.QL`query { viewer }`
+};
+
+const novelQueryConfig = {
+  novel: () => Relay.QL`query { novel(id: $novelId) }`,
+};
+
+const chapterQueryConfig = {
+  chapter: () => Relay.QL`query { chapter(id: $chapterId) }`
 };
 
 const prepareContributeParams = (params, route) => {
@@ -29,17 +35,40 @@ const prepareContributeParams = (params, route) => {
   };
 };
 
+const prepareChapterParams = (params, route) => {
+  return {
+    ...params,
+    allowContribute: true
+  };
+};
+
 export default (
   <Route path="/" component={CoreLayout}>
     <IndexRoute component={HomeView}/>
     <Route
       name="contribute"
-      path="contribute/:novelId"
-      component={ContributeView}
+      path="contribute/"
       queries={contributeQueryConfig}
       stateParams={['contributorId']}
       prepareParams={prepareContributeParams}
-    />
+      component={ContributeView}
+      >
+      <Route
+        name="novel"
+        path="novel/:novelId"
+        queries={novelQueryConfig}
+        component={Novel}
+        >
+        <Route
+          name="chapter"
+          path="chapter/:chapterId"
+          queries={chapterQueryConfig}
+          stateParams={['allowContribute']}
+          prepareParams={prepareChapterParams}
+          component={Chapter}
+          />
+      </Route>
+    </Route>
     <Route
       name="stats"
       path="stats/"

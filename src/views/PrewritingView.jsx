@@ -1,6 +1,5 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Radium from 'radium';
 import CharacterCreator from 'components/CharacterCreator';
 import PlaceCreator from 'components/PlaceCreator';
 import PlotItemCreator from 'components/PlotItemCreator';
@@ -10,14 +9,6 @@ import CreatePlaceMutation from 'mutations/CreatePlaceMutation';
 import CreatePlotItemMutation from 'mutations/CreatePlotItemMutation';
 import CreatePlotMutation from 'mutations/CreatePlotMutation';
 
-const styles = {
-  base: {
-    border: 1,
-    borderRadius: 3
-  }
-};
-
-@Radium
 class PrewritingView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
@@ -118,7 +109,7 @@ class PrewritingView extends React.Component {
   render() {
     const { contributor } = this.props;
     return (
-      <div style={styles.base}>
+      <div>
         {this._getCurrentStageView(contributor.novel.stage)}
       </div>
     );

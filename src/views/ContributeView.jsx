@@ -2,45 +2,18 @@ import React from 'react';
 import Relay from 'react-relay';
 import SidebarLayout from 'layouts/SidebarLayout';
 import VocabularyView from './VocabularyView';
-import { getVotingRoundProgress } from 'utils';
 import CastVoteMutation from 'mutations/CastVoteMutation';
-import Notebook from 'containers/Notebook';
-import { LinearProgress, Paper } from 'material-ui';
+import NovelSelect from 'containers/NovelSelect';
+import { Paper } from 'material-ui';
 
-const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
 class ContributeView extends React.Component {
     static propTypes = {
+      relay: React.PropTypes.object.isRequired,
       contributor: React.PropTypes.object.isRequired,
-      viewer: React.PropTypes.object.isRequired
+      viewer: React.PropTypes.object.isRequired,
+      children: React.PropTypes.element.isRequired
     };
-
-    constructor(props) {
-      super(props);
-      const { novel } = props.viewer;
-      const { chapter } = novel;
-      this.state = {
-        votingRoundProgress: getVotingRoundProgress(
-          novel.prevVotingEnded, chapter.votingDuration
-        )
-      };
-    }
-
-    componentDidMount() {
-      this._updateVotingRoundProgress();
-    }
-
-    _updateVotingRoundProgress() {
-      const self = this;
-      setInterval(() => {
-        const chapter = self.props.viewer.novel.chapter;
-        self.setState({
-          votingRoundProgress: getVotingRoundProgress(
-            chapter.prevVotingEndedAt, chapter.votingDuration
-          )
-        });
-      }, PROGRESS_BAR_UPDATE_INTERVAL);
-    }
 
     _handleTextInputSave = (token) => {
       const chapter = this.props.viewer.novel.chapter;
@@ -55,7 +28,7 @@ class ContributeView extends React.Component {
     }
 
     _handleNovelChange = (novelId) => {
-      console.log(novelId);
+      this.history.goTo(`novel/${novelId}`);
     }
 
     _handleVoteChange = () => {
@@ -68,18 +41,15 @@ class ContributeView extends React.Component {
 
     renderNotebook() {
       const { viewer } = this.props;
+      const latestNovelId = viewer.novels.edges[0].node.id;
       return (
         <Paper>
-          <Notebook
-            novel={viewer.novel}
+          <NovelSelect
+            currentNovelId={latestNovelId}
             novels={viewer.novels}
-            onNovelChange={this._handleNovelChange}
-            onVoteChange={this._handleVoteChange}
-            onVoteCast={this._handleVoteCast}
+            onChange={this._handleNovelChange}
             />
-          <LinearProgress
-            mode="determinate"
-            value={this.state.votingRoundProgress.percentComplete} />
+          {this.props.children}
         </Paper>
       );
     }
@@ -99,9 +69,6 @@ class ContributeView extends React.Component {
 }
 
 export default Relay.createContainer(ContributeView, {
-  initialVariables: {
-    novelId: null
-  },
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
@@ -118,20 +85,13 @@ export default Relay.createContainer(ContributeView, {
     `,
     viewer: () => Relay.QL`
       fragment on Query {
-        novel(id: $novelId) {
-          id
-          prevVotingEnded
-          chapter: latestChapter {
-            id
-            votingDuration
-            tokens(first: 1) {
-              totalCount
+        novels(last: 5) {
+          edges {
+            node {
+              id
             }
           }
-          ${Notebook.getFragment('novel')}
-        }
-        novels(first: 5) {
-          ${Notebook.getFragment('novels')}
+          ${NovelSelect.getFragment('novels')}
         }
         ${VocabularyView.getFragment('viewer')}
       }

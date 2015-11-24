@@ -1,16 +1,16 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Chapter from './Chapter';
 import { Tabs, Tab } from 'material-ui';
 
 class Novel extends React.Component {
   static propTypes = {
-    novel: React.PropTypes.object.isRequired
+    novel: React.PropTypes.object.isRequired,
+    children: React.PropTypes.element.isRequired
   }
 
   constructor(props) {
     super(props);
-    this.state = { tabsValue: props.novel.chapter.id };
+    this.state = { tabsValue: props.novel.latestChapter.id };
   }
 
   _handleChapterChange = (chapterId) => {
@@ -27,7 +27,7 @@ class Novel extends React.Component {
           >
           {novel.chapters.edges.map(edge => (
             <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
-              <Chapter chapter={edge.node} allowContribute={false} />
+              {this.props.children}
             </Tab>
           ))}
         </Tabs>
@@ -37,15 +37,12 @@ class Novel extends React.Component {
 }
 
 export default Relay.createContainer(Novel, {
-  initialVariables: {
-    chapterId: null
-  },
   fragments: {
     novel: () => Relay.QL`
       fragment on Novel {
         id
         title
-        chapter: latestChapter {
+        latestChapter {
           id
         }
         chapters(last: 4) {
@@ -53,7 +50,6 @@ export default Relay.createContainer(Novel, {
             node {
               id
               title
-              ${Chapter.getFragment('chapter')}
             }
           }
         }
