@@ -10,6 +10,7 @@ import { Paper } from 'material-ui';
 class ContributeView extends React.Component {
     static propTypes = {
       relay: React.PropTypes.object.isRequired,
+      history: React.PropTypes.object.isRequired,
       contributor: React.PropTypes.object.isRequired,
       viewer: React.PropTypes.object.isRequired,
       children: React.PropTypes.element.isRequired
@@ -28,7 +29,10 @@ class ContributeView extends React.Component {
     }
 
     _handleNovelChange = (novelId) => {
-      this.history.goTo(`novel/${novelId}`);
+      const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
+      const chapterId = novel.latestChapter.id;
+      const novelContributeUrl = `/contribute/novel/${novelId}/chapter/${chapterId}`;
+      this.props.history.replaceState({'allowContribute': true}, novelContributeUrl);
     }
 
     _handleVoteChange = () => {
@@ -89,6 +93,9 @@ export default Relay.createContainer(ContributeView, {
           edges {
             node {
               id
+              latestChapter {
+                id
+              }
             }
           }
           ${NovelSelect.getFragment('novels')}
