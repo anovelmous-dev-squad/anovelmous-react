@@ -50,12 +50,7 @@ The word-by-word contribution will begin once the prewriting rounds are complete
 
 ## Development
 
+Follow the [Anovelmous Development Instructions](https://github.com/anovelmous-dev-squad/anovelmous/blob/master/README.md#development) in order to set up a local backend.
+
     npm install
     npm start
-
-## Working on
-
-- [X] Migrate from Redux/REST to Relay/GraphQL  ([see my post about why](https://medium.com/@gregoryziegan/how-graphql-taught-me-to-code-client-apps-1c631a9953bd))
-- [X] Style the Live Novel view
-- [X] Support Voting mutations
-- [X] Migrate the GraphQL implementation to Python for the existing [backend](https://github.com/anovelmous-dev-squad/anovelmous)

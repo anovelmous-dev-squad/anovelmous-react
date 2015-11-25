@@ -56,9 +56,9 @@ class Chapter extends React.Component {
               underlineFocusStyle={{borderColor: 'red'}} />
           }
         </span>
-          <LinearProgress
-            mode="determinate"
-            value={this.state.votingRoundProgress.percentComplete} />
+        <LinearProgress
+          mode="determinate"
+          value={this.state.votingRoundProgress.percentComplete} />
       </div>
     );
   }
