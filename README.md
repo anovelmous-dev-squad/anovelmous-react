@@ -56,6 +56,6 @@ The word-by-word contribution will begin once the prewriting rounds are complete
 ## Working on
 
 - [X] Migrate from Redux/REST to Relay/GraphQL  ([see my post about why](https://medium.com/@gregoryziegan/how-graphql-taught-me-to-code-client-apps-1c631a9953bd))
-- [ ] Style the Live Novel view
+- [X] Style the Live Novel view
 - [X] Support Voting mutations
-- [ ] Migrate the GraphQL implementation to Python for the existing [backend](https://github.com/anovelmous-dev-squad/anovelmous)
+- [X] Migrate the GraphQL implementation to Python for the existing [backend](https://github.com/anovelmous-dev-squad/anovelmous)
