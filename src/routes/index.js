@@ -59,7 +59,9 @@ export default (
       name="prewriting"
       path="prewriting/:novelId"
       component={PrewritingView}
-      queries={viewerQueryConfig}
+      queries={contributeQueryConfig}
+      stateParams={['contributorId']}
+      prepareParams={prepareContributeParams}
       />
   </Route>
 );
