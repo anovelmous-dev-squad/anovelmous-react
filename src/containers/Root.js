@@ -1,7 +1,6 @@
 import React from 'react';
-import { Router } from 'react-router';
 import routes from '../routes';
-import ReactRouterRelay from 'react-router-relay';
+import { RelayRouter } from 'react-router-relay';
 
 export default class Root extends React.Component {
 
@@ -9,18 +8,11 @@ export default class Root extends React.Component {
     routerHistory: React.PropTypes.object
   }
 
-  constructor () {
-    super();
-  }
-
   renderRouter () {
     return (
-      <Router
+      <RelayRouter
         history={this.props.routerHistory}
-        createElement={ReactRouterRelay.createElement}
-        >
-        {routes}
-      </Router>
+        routes={routes} />
     );
   }
 

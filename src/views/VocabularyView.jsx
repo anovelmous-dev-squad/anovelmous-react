@@ -4,18 +4,17 @@ import VocabCard from 'components/VocabCard';
 
 class VocabularyView extends React.Component {
   static propTypes = {
-    contributor: React.PropTypes.object.isRequired
+    viewer: React.PropTypes.object.isRequired
   }
 
   _handleVoteCast = (term) => {
-    console.log(term)
+    console.log(term);
   }
 
   renderVocabCard(token) {
     return (
-      <div style={ {width: 150, padding: 5} }>
+      <div key={token.id} style={{width: 150, padding: 5}}>
         <VocabCard
-          key={token.id}
           term={token.content}
           onSubmit={this._handleVoteCast} />
       </div>
@@ -23,10 +22,10 @@ class VocabularyView extends React.Component {
   }
 
   render() {
-    const { contributor } = this.props;
+    const { viewer } = this.props;
     return (
       <div style={{display: 'flex', flexFlow: 'row wrap'}}>
-        {contributor.vocabulary.edges.map(edge => (
+        {viewer.vocabulary.edges.map(edge => (
           this.renderVocabCard(edge.node)
         ))}
       </div>
@@ -36,9 +35,8 @@ class VocabularyView extends React.Component {
 
 export default Relay.createContainer(VocabularyView, {
   fragments: {
-    contributor: () => Relay.QL`
-      fragment on Contributor {
-        id
+    viewer: () => Relay.QL`
+      fragment on Query {
         vocabulary(first: 4) {
           edges {
             node {

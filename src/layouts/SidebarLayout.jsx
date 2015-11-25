@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Row, Cell } from 'react-inline-grid';
 
-export default (props) => {
+const SidebarLayout = (props) => {
   return (
     <Grid>
       <Row is="around tablet-start phone-start">
@@ -15,3 +15,10 @@ export default (props) => {
     </Grid>
   );
 };
+
+SidebarLayout.propTypes = {
+  content: React.PropTypes.element.isRequired,
+  sidebar: React.PropTypes.element.isRequired,
+};
+
+export default SidebarLayout;

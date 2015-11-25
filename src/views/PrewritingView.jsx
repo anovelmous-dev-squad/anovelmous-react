@@ -1,6 +1,5 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Radium from 'radium';
 import CharacterCreator from 'components/CharacterCreator';
 import PlaceCreator from 'components/PlaceCreator';
 import PlotItemCreator from 'components/PlotItemCreator';
@@ -11,17 +10,10 @@ import CreatePlotItemMutation from 'mutations/CreatePlotItemMutation';
 import CreatePlotMutation from 'mutations/CreatePlotMutation';
 import { Tabs, Tab, Paper } from 'material-ui';
 
-const styles = {
-  base: {
-    border: 1,
-    borderRadius: 3
-  }
-};
-
-@Radium
 class PrewritingView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object.isRequired,
     novelId: React.PropTypes.string.isRequired
   }
 
@@ -119,11 +111,11 @@ class PrewritingView extends React.Component {
   }
 
   render() {
-    const { contributor } = this.props;
+    const { viewer } = this.props;
     return (
-        <div style={styles.base}>
-          {this._getCurrentStageView(contributor.novel.stage)}
-        </div>
+      <div>
+        {this._getCurrentStageView(viewer.novel.stage)}
+      </div>
     );
   }
 }
@@ -136,12 +128,6 @@ export default Relay.createContainer(PrewritingView, {
     contributor: () => Relay.QL`
       fragment on Contributor {
         id
-        novel(id: $novelId) {
-          title
-          stage {
-            name
-          }
-        }
         plots(first: 5) {
           edges {
             node {
@@ -178,6 +164,16 @@ export default Relay.createContainer(PrewritingView, {
         ${CreateCharacterMutation.getFragment('viewer')}
         ${CreatePlaceMutation.getFragment('viewer')}
         ${CreatePlotItemMutation.getFragment('viewer')}
+      }
+    `,
+    viewer: () => Relay.QL`
+      fragment on Query {
+        novel(id: $novelId) {
+          title
+          stage {
+            name
+          }
+        }
       }
     `
   }

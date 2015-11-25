@@ -2,7 +2,7 @@ import Relay from 'react-relay';
 
 export default class CastVoteMutation extends Relay.Mutation {
   static fragments = {
-    viewer: () => Relay.QL`
+    contributor: () => Relay.QL`
       fragment on Contributor {
         id
       }
@@ -42,15 +42,15 @@ export default class CastVoteMutation extends Relay.Mutation {
     };
   }
   getOptimisticResponse() {
-    const { ordinal, viewer } = this.props;
+    const { ordinal, contributor } = this.props;
     return {
       voteEdge: {
         node: {
           ordinal: ordinal
         }
       },
-      viewer: {
-        id: viewer.id
+      contributor: {
+        id: contributor.id
       }
     };
   }

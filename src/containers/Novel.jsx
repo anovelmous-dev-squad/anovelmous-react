@@ -1,19 +1,25 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Chapter from './Chapter';
 import { Tabs, Tab } from 'material-ui';
 
 class Novel extends React.Component {
   static propTypes = {
-    novel: React.PropTypes.object.isRequired
+    history: React.PropTypes.object.isRequired,
+    novel: React.PropTypes.object.isRequired,
+    children: React.PropTypes.element.isRequired
   }
 
   constructor(props) {
     super(props);
-    this.state = { tabsValue: props.novel.chapter.id };
+    this.state = { tabsValue: props.novel.latestChapter.id };
   }
 
   _handleChapterChange = (chapterId) => {
+    const { novel } = this.props;
+    const novelId = novel.id;
+    const chapter = novel.chapters.edges.filter(edge => edge.node.id === chapterId)[0].node;
+    const newState = { allowContribute: !chapter.isCompleted };
+    this.props.history.replaceState(newState, `/contribute/novel/${novelId}/chapter/${chapterId}`);
     this.setState({tabsValue: chapterId});
   }
 
@@ -27,7 +33,7 @@ class Novel extends React.Component {
           >
           {novel.chapters.edges.map(edge => (
             <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
-              <Chapter chapter={edge.node} />
+              {this.props.children}
             </Tab>
           ))}
         </Tabs>
@@ -42,15 +48,15 @@ export default Relay.createContainer(Novel, {
       fragment on Novel {
         id
         title
-        chapter(mostRecent: true) {
+        latestChapter {
           id
         }
-        chapters(last: 10) {
+        chapters(last: 4) {
           edges {
             node {
               id
               title
-              ${Chapter.getFragment('chapter')}
+              isCompleted
             }
           }
         }

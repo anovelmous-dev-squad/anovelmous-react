@@ -2,7 +2,7 @@ import React from 'react';
 import Header from 'components/Header';
 import { Grid, Row, Cell } from 'react-inline-grid';
 
-export default (props) => {
+const CoreLayout = (props) => {
   return (
     <Grid>
       <Row is="center">
@@ -14,3 +14,9 @@ export default (props) => {
     </Grid>
   );
 };
+
+CoreLayout.propTypes = {
+  children: React.PropTypes.element.isRequired
+};
+
+export default CoreLayout;
