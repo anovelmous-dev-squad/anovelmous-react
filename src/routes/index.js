@@ -6,7 +6,6 @@ import ContributeView from 'views/ContributeView';
 import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
 import PrewritingView from 'views/PrewritingView';
-import Novel from 'containers/Novel';
 import Chapter from 'containers/Chapter';
 
 const CONTRIBUTOR_ID = 'Q29udHJpYnV0b3I6MQ==';
@@ -24,14 +23,14 @@ const chapterQueryConfig = {
   chapter: () => Relay.QL`query { chapter(id: $chapterId) }`
 };
 
-const prepareContributeParams = (params, route) => {
+const prepareContributeParams = (params) => {
   return {
     ...params,
     contributorId: CONTRIBUTOR_ID,
   };
 };
 
-const prepareChapterParams = (params, route) => {
+const prepareChapterParams = (params) => {
   return {
     ...params,
     allowContribute: true

@@ -3,7 +3,7 @@ import { Avatar, Card, CardActions, CardHeader,
          CardText, FlatButton, FontIcon } from 'material-ui';
 
 
-export default (props) => {
+const VocabCard = (props) => {
   const _submitTerm = (event) => {
     event.preventDefault();
     props.onSubmit(props.term);
@@ -35,3 +35,11 @@ export default (props) => {
     </Card>
   );
 };
+
+VocabCard.propTypes = {
+  term: React.PropTypes.string.isRequired,
+  tag: React.PropTypes.string,
+  description: React.PropTypes.string
+};
+
+export default VocabCard;

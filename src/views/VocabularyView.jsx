@@ -8,7 +8,7 @@ class VocabularyView extends React.Component {
   }
 
   _handleVoteCast = (term) => {
-    console.log(term)
+    console.log(term);
   }
 
   renderVocabCard(token) {
