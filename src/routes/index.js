@@ -30,13 +30,6 @@ const prepareContributeParams = (params) => {
   };
 };
 
-const prepareChapterParams = (params) => {
-  return {
-    ...params,
-    allowContribute: true
-  };
-};
-
 export default (
   <Route path="/" component={CoreLayout}>
     <IndexRoute component={HomeView}/>
@@ -53,7 +46,6 @@ export default (
         path="chapter/:chapterId"
         queries={chapterQueryConfig}
         stateParams={['allowContribute']}
-        prepareParams={prepareChapterParams}
         component={Chapter}
         />
     </Route>

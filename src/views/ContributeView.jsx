@@ -45,7 +45,7 @@ class ContributeView extends React.Component {
     }
 
     renderNotebook() {
-      const { viewer } = this.props;
+      const { viewer, history } = this.props;
       return (
         <Paper>
           <NovelSelect
@@ -53,7 +53,7 @@ class ContributeView extends React.Component {
             novels={viewer.novels}
             onChange={this._handleNovelChange}
             />
-          <Novel novel={viewer.novel}>
+          <Novel novel={viewer.novel} history={history}>
             {this.props.children}
           </Novel>
         </Paper>

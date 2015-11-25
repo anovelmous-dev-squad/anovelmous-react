@@ -4,6 +4,7 @@ import { Tabs, Tab } from 'material-ui';
 
 class Novel extends React.Component {
   static propTypes = {
+    history: React.PropTypes.object.isRequired,
     novel: React.PropTypes.object.isRequired,
     children: React.PropTypes.element.isRequired
   }
@@ -14,6 +15,11 @@ class Novel extends React.Component {
   }
 
   _handleChapterChange = (chapterId) => {
+    const { novel } = this.props;
+    const novelId = novel.id;
+    const chapter = novel.chapters.edges.filter(edge => edge.node.id === chapterId)[0].node;
+    const newState = { allowContribute: !chapter.isCompleted };
+    this.props.history.replaceState(newState, `/contribute/novel/${novelId}/chapter/${chapterId}`);
     this.setState({tabsValue: chapterId});
   }
 
@@ -50,6 +56,7 @@ export default Relay.createContainer(Novel, {
             node {
               id
               title
+              isCompleted
             }
           }
         }
