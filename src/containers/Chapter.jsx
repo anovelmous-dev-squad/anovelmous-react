@@ -13,11 +13,19 @@ class Chapter extends React.Component {
   constructor(props) {
     super(props);
     const { chapter } = this.props;
+    const vocabTerms = chapter.vocabulary.edges.map(edge => edge.node);
+    let dataSource = {};
+    for (var i = 0; i < vocabTerms.length; i++) {
+      const vocabTerm = vocabTerms[i];
+      const autoCompleteItem = <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="&#9786;" />;
+      dataSource[vocabTerm.content] = autoCompleteItem;
+    }
     this.state = {
       votingRoundProgress: getVotingRoundProgress(
         chapter.novel.prevVotingEnded, chapter.votingDuration
       ),
-      intervalId: null
+      intervalId: null,
+      dataSource
     };
   }
 
@@ -44,22 +52,16 @@ class Chapter extends React.Component {
 
   render () {
     const { chapter } = this.props;
-    const vocabTerms = chapter.vocabulary.edges.map(edge => edge.node);
-    let dataSource = {};
-    for (var i = 0; i < vocabTerms.length; i++) {
-      const vocabTerm = vocabTerms[i];
-      const autoCompleteItem = <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="&#9786;" />;
-      dataSource[vocabTerm.content] = autoCompleteItem;
-    }
-
     return (
       <div>
         <span>{chapter.text} </span>
         <span>
           {!chapter.isCompleted &&
             <AutoComplete
-              dataSource={dataSource}
-              onUpdateInput={(t) => console.log(t)} />
+              dataSource={this.state.dataSource}
+              menuProps={{maxHeight: 200}}
+              onUpdateInput={(t) => console.log(t)}
+              filter={(searchText, key) => (key.startsWith(searchText))} />
           }
         </span>
         <LinearProgress
@@ -86,16 +88,6 @@ export default Relay.createContainer(Chapter, {
             node {
               id
               content
-            }
-          }
-        }
-        tokens(first: 500) {
-          edges {
-            node {
-              id
-              token {
-                content
-              }
             }
           }
         }
