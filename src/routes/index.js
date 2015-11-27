@@ -45,7 +45,6 @@ export default (
         name="chapter"
         path="chapter/:chapterId"
         queries={chapterQueryConfig}
-        stateParams={['allowContribute']}
         component={Chapter}
         />
     </Route>

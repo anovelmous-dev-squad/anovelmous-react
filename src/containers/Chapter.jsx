@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { LinearProgress, TextField } from 'material-ui';
+import { LinearProgress, AutoComplete } from 'material-ui';
 import { getVotingRoundProgress } from 'utils';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
 class Chapter extends React.Component {
   static propTypes = {
-    chapter: PropTypes.object.isRequired,
-    allowContribute: PropTypes.bool.isRequired
+    chapter: PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -44,16 +43,23 @@ class Chapter extends React.Component {
   }
 
   render () {
-    const { chapter, allowContribute } = this.props;
-    const chapterText = chapter.tokens.edges.map(edge => edge.node.token.content).join(' ');
+    const { chapter } = this.props;
+    const vocabTerms = chapter.vocabulary.edges.map(edge => edge.node);
+    let dataSource = {};
+    for (var i = 0; i < vocabTerms.length; i++) {
+      const vocabTerm = vocabTerms[i];
+      const autoCompleteItem = <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="&#9786;" />;
+      dataSource[vocabTerm.content] = autoCompleteItem;
+    }
+
     return (
       <div>
-        <span>{chapterText} </span>
+        <span>{chapter.text} </span>
         <span>
-          {allowContribute &&
-            <TextField
-              hintText="..."
-              underlineFocusStyle={{borderColor: 'red'}} />
+          {!chapter.isCompleted &&
+            <AutoComplete
+              dataSource={dataSource}
+              onUpdateInput={(t) => console.log(t)} />
           }
         </span>
         <LinearProgress
@@ -69,9 +75,19 @@ export default Relay.createContainer(Chapter, {
     chapter: () => Relay.QL`
       fragment on Chapter {
         id
+        isCompleted
         votingDuration
         novel {
           prevVotingEnded
+        }
+        text
+        vocabulary(first: 5000) {
+          edges {
+            node {
+              id
+              content
+            }
+          }
         }
         tokens(first: 500) {
           edges {
