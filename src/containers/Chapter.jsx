@@ -15,11 +15,10 @@ class Chapter extends React.Component {
     const { chapter } = this.props;
     const vocabTerms = chapter.vocabulary.edges.map(edge => edge.node);
     let dataSource = {};
-    for (var i = 0; i < vocabTerms.length; i++) {
-      const vocabTerm = vocabTerms[i];
-      const autoCompleteItem = <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="&#9786;" />;
-      dataSource[vocabTerm.content] = autoCompleteItem;
-    }
+    vocabTerms.map(term => {
+      dataSource[term.content] = this._getAutoCompleteItem(term);
+      return term;
+    });
     this.state = {
       votingRoundProgress: getVotingRoundProgress(
         chapter.novel.prevVotingEnded, chapter.votingDuration
@@ -37,6 +36,10 @@ class Chapter extends React.Component {
     clearInterval(this.state.intervalId);
   }
 
+  _getAutoCompleteItem(vocabTerm) {
+    return <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="&#9786;" />;
+  }
+
   _updateVotingRoundProgress() {
     const self = this;
     const intervalId = setInterval(() => {
@@ -50,6 +53,16 @@ class Chapter extends React.Component {
     this.setState({ intervalId });
   }
 
+  _autoCompleteFilter(searchText, key) {
+    if (searchText.length > 2) {
+      return key.startsWith(searchText);
+    }
+    if (searchText === key) {
+      return true;
+    }
+    return false;
+  }
+
   render () {
     const { chapter } = this.props;
     return (
@@ -59,9 +72,7 @@ class Chapter extends React.Component {
           {!chapter.isCompleted &&
             <AutoComplete
               dataSource={this.state.dataSource}
-              menuProps={{maxHeight: 200}}
-              onUpdateInput={(t) => console.log(t)}
-              filter={(searchText, key) => (key.startsWith(searchText))} />
+              filter={this._autoCompleteFilter} />
           }
         </span>
         <LinearProgress
