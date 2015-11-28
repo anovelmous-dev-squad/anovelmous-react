@@ -8,6 +8,7 @@ const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 class Chapter extends React.Component {
   static propTypes = {
     chapter: PropTypes.object.isRequired,
+    readingHeight: PropTypes.number,
     onVoteChange: PropTypes.func
   }
 
@@ -15,7 +16,7 @@ class Chapter extends React.Component {
     super(props);
     const { chapter } = this.props;
     const vocabTerms = chapter.vocabulary.edges.map(edge => edge.node);
-    let dataSource = {};
+    const dataSource = {};
     vocabTerms.map(term => {
       dataSource[term.content] = this._getAutoCompleteItem(term);
       return term;
@@ -65,19 +66,21 @@ class Chapter extends React.Component {
   }
 
   render () {
-    const { chapter } = this.props;
+    const { chapter, readingHeight } = this.props;
     return (
       <div>
-        <span>{chapter.text} </span>
-        {!chapter.isCompleted &&
-          <span>
-            <AutoComplete
-              dataSource={this.state.dataSource}
-              floatingLabelText={'your contribution here'}
-              onUpdateInput={(text) => this.props.onVoteChange(text)}
-              filter={this._autoCompleteFilter} />
-          </span>
-        }
+        <div style={{height: readingHeight || 500, overflowY: 'scroll'}}>
+          <span>{chapter.text} </span>
+            {!chapter.isCompleted &&
+              <span>
+                <AutoComplete
+                  dataSource={this.state.dataSource}
+                  floatingLabelText={'your contribution here'}
+                  onUpdateInput={(text) => this.props.onVoteChange(text)}
+                  filter={this._autoCompleteFilter} />
+              </span>
+            }
+        </div>
         {!chapter.isCompleted &&
           <LinearProgress
             mode="determinate"
