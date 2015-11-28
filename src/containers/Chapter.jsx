@@ -18,13 +18,21 @@ class Chapter extends React.Component {
 
   constructor(props) {
     super(props);
-    const { chapter, vocabulary } = this.props;
-    const vocabTerms = vocabulary.edges.map(edge => edge.node);
+    const { chapter, vocabulary, places, characters, plotItems } = this.props;
     const dataSource = {};
-    vocabTerms.map(term => {
-      dataSource[term.content] = this._getAutoCompleteItem(term);
-      return term;
-    });
+    vocabulary.edges.map(edge => (
+      dataSource[edge.node.content] = this._getAutoCompleteItem(edge.node.content)
+    ));
+    places.edges.map(edge => (
+      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.name)
+    ));
+    characters.edges.map(edge => (
+      dataSource[edge.node.firstName] = this._getAutoCompleteItem(edge.node.firstName)
+    ));
+    plotItems.edges.map(edge => (
+      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.name)
+    ));
+
     this.state = {
       votingRoundProgress: getVotingRoundProgress(
         chapter.novel.prevVotingEnded, chapter.votingDuration
@@ -42,8 +50,8 @@ class Chapter extends React.Component {
     clearInterval(this.state.intervalId);
   }
 
-  _getAutoCompleteItem(vocabTerm) {
-    return <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="&#9786;" />;
+  _getAutoCompleteItem(text) {
+    return <AutoComplete.Item primaryText={text} secondaryText="&#9786;" />;
   }
 
   _updateVotingRoundProgress() {
