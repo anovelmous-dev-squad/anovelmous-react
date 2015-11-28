@@ -65,7 +65,7 @@ class ContributeView extends React.Component {
                 />
             </ToolbarGroup>
           </Toolbar>
-          <Novel novel={viewer.novel} history={history}>
+          <Novel novel={viewer.novel} history={history} vocabulary={viewer.novel.vocabulary}>
             {this.props.children && React.cloneElement(this.props.children, {
               onVoteChange: this._handleVoteChange
             })}
@@ -78,7 +78,7 @@ class ContributeView extends React.Component {
       return (
         <VocabularyView
           voteText={this.state.voteText}
-          chapter={this.props.viewer.novel.latestChapter} />
+          vocabulary={this.props.viewer.novel.vocabulary} />
       );
     }
 
@@ -115,8 +115,9 @@ export default Relay.createContainer(ContributeView, {
         novel(id: $novelId) {
           id
           ${Novel.getFragment('novel')}
-          latestChapter {
-            ${VocabularyView.getFragment('chapter')}
+          vocabulary(first: 10000) {
+            ${Novel.getFragment('vocabulary')}
+            ${VocabularyView.getFragment('vocabulary')}
           }
         }
         novels(last: 5) {

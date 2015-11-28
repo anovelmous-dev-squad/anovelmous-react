@@ -8,14 +8,15 @@ const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 class Chapter extends React.Component {
   static propTypes = {
     chapter: PropTypes.object.isRequired,
+    vocabulary: PropTypes.object.isRequired,
     readingHeight: PropTypes.number,
     onVoteChange: PropTypes.func
   }
 
   constructor(props) {
     super(props);
-    const { chapter } = this.props;
-    const vocabTerms = chapter.vocabulary.edges.map(edge => edge.node);
+    const { chapter, vocabulary } = this.props;
+    const vocabTerms = vocabulary.edges.map(edge => edge.node);
     const dataSource = {};
     vocabTerms.map(term => {
       dataSource[term.content] = this._getAutoCompleteItem(term);
@@ -102,12 +103,13 @@ export default Relay.createContainer(Chapter, {
           prevVotingEnded
         }
         text
-        vocabulary(first: 5000) {
-          edges {
-            node {
-              id
-              content
-            }
+      }
+    `,
+    vocabulary: () => Relay.QL`
+      fragment on VocabTermConnection {
+        edges {
+          node {
+            content
           }
         }
       }

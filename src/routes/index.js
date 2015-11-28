@@ -48,6 +48,7 @@ export default (
         path="chapter/:chapterId"
         queries={chapterQueryConfig}
         component={Chapter}
+        renderLoading={() => <LoadingLarge />}
         />
     </Route>
     <Route

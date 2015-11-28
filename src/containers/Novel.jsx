@@ -24,7 +24,7 @@ class Novel extends React.Component {
   }
 
   render () {
-    const { novel } = this.props;
+    const { novel, vocabulary } = this.props;
     return (
       <div>
         <Tabs
@@ -33,7 +33,9 @@ class Novel extends React.Component {
           >
           {novel.chapters.edges.map(edge => (
             <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
-              {this.props.children}
+              {this.props.children, React.cloneElement(this.props.children, {
+                vocabulary
+              })}
             </Tab>
           ))}
         </Tabs>
@@ -58,6 +60,15 @@ export default Relay.createContainer(Novel, {
               title
               isCompleted
             }
+          }
+        }
+      }
+    `,
+    vocabulary: () => Relay.QL`
+      fragment on VocabTermConnection {
+        edges {
+          node {
+            content
           }
         }
       }
