@@ -9,6 +9,9 @@ class Chapter extends React.Component {
   static propTypes = {
     chapter: PropTypes.object.isRequired,
     vocabulary: PropTypes.object.isRequired,
+    places: PropTypes.object.isRequired,
+    characters: PropTypes.object.isRequired,
+    plotItems: PropTypes.object.isRequired,
     readingHeight: PropTypes.number,
     onVoteChange: PropTypes.func
   }
@@ -110,6 +113,33 @@ export default Relay.createContainer(Chapter, {
         edges {
           node {
             content
+          }
+        }
+      }
+    `,
+    places: () => Relay.QL`
+      fragment on PlaceConnection {
+        edges {
+          node {
+            name
+          }
+        }
+      }
+    `,
+    characters: () => Relay.QL`
+      fragment on CharacterConnection {
+        edges {
+          node {
+            firstName
+          }
+        }
+      }
+    `,
+    plotItems: () => Relay.QL`
+      fragment on PlotItemConnection {
+        edges {
+          node {
+            name
           }
         }
       }

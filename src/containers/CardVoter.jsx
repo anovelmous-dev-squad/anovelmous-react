@@ -2,9 +2,12 @@ import React from 'react';
 import Relay from 'react-relay';
 import VocabCard from 'components/VocabCard';
 
-class VocabularyView extends React.Component {
+class CardVoter extends React.Component {
   static propTypes = {
     vocabulary: React.PropTypes.object.isRequired,
+    places: React.PropTypes.object.isRequired,
+    characters: React.PropTypes.object.isRequired,
+    plotItems: React.PropTypes.object.isRequired,
     voteText: React.PropTypes.string.isRequired
   }
 
@@ -42,7 +45,7 @@ class VocabularyView extends React.Component {
   }
 }
 
-export default Relay.createContainer(VocabularyView, {
+export default Relay.createContainer(CardVoter, {
   fragments: {
     vocabulary: () => Relay.QL`
       fragment on VocabTermConnection {
@@ -50,6 +53,33 @@ export default Relay.createContainer(VocabularyView, {
           node {
             id
             content
+          }
+        }
+      }
+    `,
+    places: () => Relay.QL`
+      fragment on PlaceConnection {
+        edges {
+          node {
+            name
+          }
+        }
+      }
+    `,
+    characters: () => Relay.QL`
+      fragment on CharacterConnection {
+        edges {
+          node {
+            firstName
+          }
+        }
+      }
+    `,
+    plotItems: () => Relay.QL`
+      fragment on PlotItemConnection {
+        edges {
+          node {
+            name
           }
         }
       }

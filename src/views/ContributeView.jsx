@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import SidebarLayout from 'layouts/SidebarLayout';
-import VocabularyView from './VocabularyView';
+import CardVoter from 'containers/CardVoter';
 import CastVoteMutation from 'mutations/CastVoteMutation';
 import NovelSelect from 'containers/NovelSelect';
 import Novel from 'containers/Novel';
@@ -65,7 +65,14 @@ class ContributeView extends React.Component {
                 />
             </ToolbarGroup>
           </Toolbar>
-          <Novel novel={viewer.novel} history={history} vocabulary={viewer.novel.vocabulary}>
+          <Novel
+            history={history}
+            novel={viewer.novel}
+            vocabulary={viewer.novel.vocabulary}
+            places={viewer.novel.places}
+            characters={viewer.novel.characters}
+            plotItems={viewer.novel.plotItems}
+            >
             {this.props.children && React.cloneElement(this.props.children, {
               onVoteChange: this._handleVoteChange
             })}
@@ -74,11 +81,16 @@ class ContributeView extends React.Component {
       );
     }
 
-    renderVocabularyView() {
+    renderCardVoter() {
+      const { viewer } = this.props;
       return (
-        <VocabularyView
+        <CardVoter
           voteText={this.state.voteText}
-          vocabulary={this.props.viewer.novel.vocabulary} />
+          vocabulary={viewer.novel.vocabulary}
+          places={viewer.novel.places}
+          characters={viewer.novel.characters}
+          plotItems={viewer.novel.plotItems}
+          />
       );
     }
 
@@ -86,7 +98,7 @@ class ContributeView extends React.Component {
       return (
         <SidebarLayout
           content={this.renderNotebook()}
-          sidebar={this.renderVocabularyView()}
+          sidebar={this.renderCardVoter()}
           />
       );
     }
@@ -117,7 +129,19 @@ export default Relay.createContainer(ContributeView, {
           ${Novel.getFragment('novel')}
           vocabulary(first: 10000) {
             ${Novel.getFragment('vocabulary')}
-            ${VocabularyView.getFragment('vocabulary')}
+            ${CardVoter.getFragment('vocabulary')}
+          }
+          places(first: 50) {
+            ${Novel.getFragment('places')}
+            ${CardVoter.getFragment('places')}
+          }
+          characters(first: 50) {
+            ${Novel.getFragment('characters')}
+            ${CardVoter.getFragment('characters')}
+          }
+          plotItems(first: 50) {
+            ${Novel.getFragment('plotItems')}
+            ${CardVoter.getFragment('plotItems')}
           }
         }
         novels(last: 5) {

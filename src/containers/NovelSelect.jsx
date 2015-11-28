@@ -22,9 +22,11 @@ class NovelSelect extends React.Component {
       novelIndices[novel.payload] = index;
     });
     return (
-      <DropDownMenu menuItems={novels}
-                    onChange={this._updateValue}
-                    selectedIndex={novelIndices[this.props.currentNovelId]} />
+      <DropDownMenu
+        labelStyle={{color: 'white'}}
+        menuItems={novels}
+        onChange={this._updateValue}
+        selectedIndex={novelIndices[this.props.currentNovelId]} />
     );
   }
 }

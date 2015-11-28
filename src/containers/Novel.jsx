@@ -8,6 +8,9 @@ class Novel extends React.Component {
   static propTypes = {
     history: React.PropTypes.object.isRequired,
     vocabulary: React.PropTypes.object.isRequired,
+    places: React.PropTypes.object.isRequired,
+    characters: React.PropTypes.object.isRequired,
+    plotItems: React.PropTypes.object.isRequired,
     novel: React.PropTypes.object.isRequired,
     children: React.PropTypes.element.isRequired
   }
@@ -27,7 +30,7 @@ class Novel extends React.Component {
   }
 
   render () {
-    const { novel, vocabulary } = this.props;
+    const { novel, vocabulary, places, characters, plotItems } = this.props;
     return (
       <div>
         <Tabs
@@ -37,7 +40,10 @@ class Novel extends React.Component {
           {novel.chapters.edges.map(edge => (
             <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
               {this.props.children && React.cloneElement(this.props.children, {
-                vocabulary
+                vocabulary,
+                places,
+                characters,
+                plotItems
               })}
             </Tab>
           ))}
@@ -70,6 +76,21 @@ export default Relay.createContainer(Novel, {
     vocabulary: () => Relay.QL`
       fragment on VocabTermConnection {
         ${Chapter.getFragment('vocabulary')}
+      }
+    `,
+    places: () => Relay.QL`
+      fragment on PlaceConnection {
+        ${Chapter.getFragment('places')}
+      }
+    `,
+    characters: () => Relay.QL`
+      fragment on CharacterConnection {
+        ${Chapter.getFragment('characters')}
+      }
+    `,
+    plotItems: () => Relay.QL`
+      fragment on PlotItemConnection {
+        ${Chapter.getFragment('plotItems')}
       }
     `
   }
