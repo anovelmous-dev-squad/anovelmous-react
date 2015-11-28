@@ -7,6 +7,7 @@ import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
 import PrewritingView from 'views/PrewritingView';
 import Chapter from 'containers/Chapter';
+import LoadingLarge from 'components/LoadingLarge';
 
 const CONTRIBUTOR_ID = 'Q29udHJpYnV0b3I6MQ==';
 
@@ -40,6 +41,7 @@ export default (
       stateParams={['contributorId']}
       prepareParams={prepareContributeParams}
       component={ContributeView}
+      renderLoading={() => <LoadingLarge />}
       >
       <Route
         name="chapter"
