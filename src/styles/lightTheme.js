@@ -9,7 +9,7 @@ export default {
     primary1Color: Colors.red900,
     primary2Color: Colors.red700,
     primary3Color: Colors.red200,
-    accent1Color: Colors.grey700,
+    accent1Color: Colors.grey400,
     accent2Color: Colors.grey400,
     accent3Color: Colors.grey300,
     textColor: Colors.darkBlack,

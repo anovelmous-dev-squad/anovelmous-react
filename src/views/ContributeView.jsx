@@ -40,7 +40,7 @@ class ContributeView extends React.Component {
       const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
       const chapterId = novel.latestChapter.id;
       const novelContributeUrl = `/contribute/novel/${novelId}/chapter/${chapterId}`;
-      this.props.history.replaceState({'allowContribute': true}, novelContributeUrl);
+      this.props.history.replace(novelContributeUrl);
     }
 
     _handleVoteChange = (voteText) => {
