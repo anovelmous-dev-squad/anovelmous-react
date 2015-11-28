@@ -68,16 +68,18 @@ class Chapter extends React.Component {
     return (
       <div>
         <span>{chapter.text} </span>
-        <span>
-          {!chapter.isCompleted &&
+        {!chapter.isCompleted &&
+          <span>
             <AutoComplete
               dataSource={this.state.dataSource}
               filter={this._autoCompleteFilter} />
-          }
-        </span>
-        <LinearProgress
-          mode="determinate"
-          value={this.state.votingRoundProgress.percentComplete} />
+          </span>
+        }
+        {!chapter.isCompleted &&
+          <LinearProgress
+            mode="determinate"
+            value={this.state.votingRoundProgress.percentComplete} />
+        }
       </div>
     );
   }
