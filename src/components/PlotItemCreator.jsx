@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tab, TextField, RaisedButton } from 'material-ui';
+import { TextField, RaisedButton } from 'material-ui';
 
 export default class PlotItemCreator extends React.Component {
   static propTypes = {
@@ -32,25 +32,21 @@ export default class PlotItemCreator extends React.Component {
   }
 
   render() {
-    const { name, description } = this.state;
     return (
-
-        <div>
-
-          <TextField hintText="Plot Item Name"
-                     onChange={this._handleNameChange}/>
-
-          <TextField hintText="Description"
-                     onChange={this._handleDescriptionChange}
-                     multiLine="true"
-                     fullWidth="true"
-                     rows="6"/>
-
-          <RaisedButton label="Create"
-                        onClick={this._handleOnCreate}/>
-
-          </div>
-
+      <div>
+        <TextField
+          hintText="Plot Item Name"
+          onChange={this._handleNameChange}/>
+        <TextField
+          hintText="Description"
+          onChange={this._handleDescriptionChange}
+          multiLine="true"
+          fullWidth="true"
+          rows="6"/>
+        <RaisedButton
+          label="Create"
+          onClick={this._handleOnCreate}/>
+      </div>
     );
   }
 }

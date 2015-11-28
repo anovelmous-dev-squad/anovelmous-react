@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, TextField, Tab, RaisedButton } from 'material-ui';
+import { TextField, RaisedButton } from 'material-ui';
 
 export default class CharacterCreator extends React.Component {
   static propTypes = {
@@ -36,28 +36,28 @@ export default class CharacterCreator extends React.Component {
   }
 
   render() {
-    const { firstName, lastName, bio } = this.state;
     return (
-
-        <div>
-
-          <TextField hintText="First Name"
-                     onChange={this._handleFirstNameChange}/>
-
-          <TextField hintText="Last Name"
-                     onChange={this._handleLastNameChange}/>
-
-          <TextField hintText="Biography"
-                     onChange={this._handleBioChange}
-                     multiLine="true"
-                     fullWidth="true"
-                     rows="6"/>
-
-          <RaisedButton label="Create"
-                        onClick={this._handleOnCreate}/>
-
-          </div>
-
+      <div>
+        <TextField
+          hintText="First Name"
+          onChange={this._handleFirstNameChange}
+          />
+        <TextField
+          hintText="Last Name"
+          onChange={this._handleLastNameChange}
+          />
+        <TextField
+          hintText="Biography"
+          onChange={this._handleBioChange}
+          multiLine="true"
+          fullWidth="true"
+          rows="6"
+          />
+        <RaisedButton
+          label="Create"
+          onClick={this._handleOnCreate}
+          />
+      </div>
     );
   }
 }

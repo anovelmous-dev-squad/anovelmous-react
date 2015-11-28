@@ -36,7 +36,7 @@ class Novel extends React.Component {
           >
           {novel.chapters.edges.map(edge => (
             <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
-              {this.props.children, React.cloneElement(this.props.children, {
+              {this.props.children && React.cloneElement(this.props.children, {
                 vocabulary
               })}
             </Tab>

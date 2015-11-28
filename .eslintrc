@@ -11,6 +11,7 @@
     "space-before-function-paren": [0, "always"],
     "react/jsx-quotes": [0, "single"],
     "react/no-multi-comp": [0, "never"],
-    "no-use-before-define": 0
+    "no-use-before-define": 0,
+    "new-cap": 0
   }
 }

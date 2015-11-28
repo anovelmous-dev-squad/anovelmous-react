@@ -1,14 +1,6 @@
 import React from 'react';
-import Radium from 'radium';
-import { Tab,  TextField, RaisedButton } from 'material-ui';
+import { TextField, RaisedButton } from 'material-ui';
 
-const styles = {
-  base: {
-
-  }
-};
-
-@Radium
 export default class PlaceCreator extends React.Component {
   static propTypes = {
     onCreate: React.PropTypes.func.isRequired
@@ -40,25 +32,23 @@ export default class PlaceCreator extends React.Component {
   }
 
   render() {
-    const { name, description } = this.state;
     return (
-
-        <div>
-
-          <TextField hintText="Place Name"
-                     onChange={this._handleNameChange}/>
-
-          <TextField hintText="Description"
-                     onChange={this._handleDescriptionChange}
-                     multiline="true"
-                     fullWidth="true"
-                     rows="6"/>
-
-          <RaisedButton label="Create"
-                        onClick={this._handleOnCreate}/>
-          </div>
-
-
+      <div>
+        <TextField
+          hintText="Place Name"
+          onChange={this._handleNameChange}/>
+        <TextField
+          hintText="Description"
+          onChange={this._handleDescriptionChange}
+          multiline="true"
+          fullWidth="true"
+          rows="6"
+          />
+        <RaisedButton
+          label="Create"
+          onClick={this._handleOnCreate}
+          />
+      </div>
     );
   }
 }

@@ -63,18 +63,18 @@ class PrewritingView extends React.Component {
 
   _getCurrentStageView = (stage) => {
     switch (stage.name) {
-      case 'BRAINSTORMING':
-        return this.renderBrainstormingStage();
-      case 'PLOT SUMMARY':
-        return this.renderPlotSummaryStage();
-      case 'STRUCTURE CREATION':
-        return this.renderStructureCreationStage();
-      case 'TITLE DECISION':
-        return this.renderTitleDecisionStage();
-      case 'WRITING':
-        return this.renderWritingStage();
-      default:
-        return this.renderFinishedStage();
+    case 'BRAINSTORMING':
+      return this.renderBrainstormingStage();
+    case 'PLOT SUMMARY':
+      return this.renderPlotSummaryStage();
+    case 'STRUCTURE CREATION':
+      return this.renderStructureCreationStage();
+    case 'TITLE DECISION':
+      return this.renderTitleDecisionStage();
+    case 'WRITING':
+      return this.renderWritingStage();
+    default:
+      return this.renderFinishedStage();
     }
   }
 

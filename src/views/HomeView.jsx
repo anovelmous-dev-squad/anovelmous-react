@@ -1,9 +1,12 @@
 import React from 'react';
 import Relay from 'react-relay';
-import { Link } from 'react-router';
 import LoadingLarge from 'components/LoadingLarge';
 
 class HomeView extends React.Component {
+  static propTypes = {
+    viewer: React.PropTypes.object.isRequired,
+    history: React.PropTypes.object.isRequired
+  }
   componentWillMount() {
     const { viewer } = this.props;
     const novel = viewer.novels.edges[0].node;
@@ -13,7 +16,6 @@ class HomeView extends React.Component {
   }
 
   render() {
-    const { viewer } = this.props;
     return (
       <LoadingLarge />
     );
