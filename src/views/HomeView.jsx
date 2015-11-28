@@ -1,15 +1,40 @@
 import React from 'react';
+import Relay from 'react-relay';
 import { Link } from 'react-router';
+import LoadingLarge from 'components/LoadingLarge';
 
-export default class HomeView extends React.Component {
+class HomeView extends React.Component {
+  componentWillMount() {
+    const { viewer } = this.props;
+    const novel = viewer.novels.edges[0].node;
+    const chapter = novel.latestChapter;
+    const contributeUrl = `/contribute/novel/${novel.id}/chapter/${chapter.id}`;
+    this.props.history.replace(contributeUrl);
+  }
+
   render() {
+    const { viewer } = this.props;
     return (
-      <div>
-        <h1>Welcome to Anovelmous!</h1>
-        <Link to={"/contribute/novel/Tm92ZWw6Mg==/chapter/Q2hhcHRlcjoz"}><button>Contribute to the current novel!</button></Link>
-        <Link to="/stats/"><button>Check out stats</button></Link>
-        <Link to="/prewriting/Tm92ZWw6Mg==/"><button>Prewrite for the novel</button></Link>
-      </div>
+      <LoadingLarge />
     );
   }
 }
+
+export default Relay.createContainer(HomeView, {
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Query {
+        novels(first: 1) {
+          edges {
+            node {
+              id
+              latestChapter {
+                id
+              }
+            }
+          }
+        }
+      }
+    `
+  }
+});

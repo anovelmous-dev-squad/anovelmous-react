@@ -1,10 +1,13 @@
 import React from 'react';
 import Relay from 'react-relay';
 import { Tabs, Tab } from 'material-ui';
+import Chapter from './Chapter';
+
 
 class Novel extends React.Component {
   static propTypes = {
     history: React.PropTypes.object.isRequired,
+    vocabulary: React.PropTypes.object.isRequired,
     novel: React.PropTypes.object.isRequired,
     children: React.PropTypes.element.isRequired
   }
@@ -66,11 +69,7 @@ export default Relay.createContainer(Novel, {
     `,
     vocabulary: () => Relay.QL`
       fragment on VocabTermConnection {
-        edges {
-          node {
-            content
-          }
-        }
+        ${Chapter.getFragment('vocabulary')}
       }
     `
   }

@@ -33,7 +33,7 @@ const prepareContributeParams = (params) => {
 
 export default (
   <Route path="/" component={CoreLayout}>
-    <IndexRoute component={HomeView}/>
+    <IndexRoute component={HomeView} queries={viewerQueryConfig} />
     <Route
       name="contribute"
       path="contribute/novel/:novelId"
