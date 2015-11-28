@@ -5,8 +5,8 @@ import VocabularyView from './VocabularyView';
 import CastVoteMutation from 'mutations/CastVoteMutation';
 import NovelSelect from 'containers/NovelSelect';
 import Novel from 'containers/Novel';
-import { Paper } from 'material-ui';
-
+import { Paper, FontIcon, Toolbar, ToolbarGroup } from 'material-ui';
+import Colors from 'material-ui/lib/styles/colors';
 
 class ContributeView extends React.Component {
     static propTypes = {
@@ -55,11 +55,16 @@ class ContributeView extends React.Component {
       const { viewer, history } = this.props;
       return (
         <Paper>
-          <NovelSelect
-            currentNovelId={viewer.novel.id}
-            novels={viewer.novels}
-            onChange={this._handleNovelChange}
-            />
+          <Toolbar>
+            <ToolbarGroup key={0} float="left">
+              <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
+              <NovelSelect
+                currentNovelId={viewer.novel.id}
+                novels={viewer.novels}
+                onChange={this._handleNovelChange}
+                />
+            </ToolbarGroup>
+          </Toolbar>
           <Novel novel={viewer.novel} history={history}>
             {this.props.children && React.cloneElement(this.props.children, {
               onVoteChange: this._handleVoteChange
