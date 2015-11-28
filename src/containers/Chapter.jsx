@@ -7,7 +7,8 @@ const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
 class Chapter extends React.Component {
   static propTypes = {
-    chapter: PropTypes.object.isRequired
+    chapter: PropTypes.object.isRequired,
+    onVoteChange: PropTypes.func
   }
 
   constructor(props) {
@@ -72,6 +73,8 @@ class Chapter extends React.Component {
           <span>
             <AutoComplete
               dataSource={this.state.dataSource}
+              floatingLabelText={'your contribution here'}
+              onUpdateInput={(text) => this.props.onVoteChange(text)}
               filter={this._autoCompleteFilter} />
           </span>
         }

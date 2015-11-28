@@ -4,11 +4,16 @@ import VocabCard from 'components/VocabCard';
 
 class VocabularyView extends React.Component {
   static propTypes = {
-    viewer: React.PropTypes.object.isRequired
+    chapter: React.PropTypes.object.isRequired,
+    voteText: React.PropTypes.string.isRequired
   }
 
   _handleVoteCast = (term) => {
     console.log(term);
+  }
+
+  _filterTerm = (term) => {
+    return term.content.startsWith(this.props.voteText);
   }
 
   renderVocabCard(token) {
@@ -22,10 +27,14 @@ class VocabularyView extends React.Component {
   }
 
   render() {
-    const { viewer } = this.props;
+    const { chapter, voteText } = this.props;
+    const vocabulary = (voteText === '') ?
+      chapter.vocabulary.edges :
+      chapter.vocabulary.edges.filter(edge => this._filterTerm(edge.node));
+
     return (
       <div style={{display: 'flex', flexFlow: 'row wrap'}}>
-        {viewer.vocabulary.edges.map(edge => (
+        {vocabulary.slice(0, 6).map(edge => (
           this.renderVocabCard(edge.node)
         ))}
       </div>
@@ -35,9 +44,9 @@ class VocabularyView extends React.Component {
 
 export default Relay.createContainer(VocabularyView, {
   fragments: {
-    viewer: () => Relay.QL`
-      fragment on Query {
-        vocabulary(first: 4) {
+    chapter: () => Relay.QL`
+      fragment on Chapter {
+        vocabulary(first: 5000) {
           edges {
             node {
               id

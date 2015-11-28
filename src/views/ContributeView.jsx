@@ -17,6 +17,13 @@ class ContributeView extends React.Component {
       children: React.PropTypes.element.isRequired
     };
 
+    constructor(props) {
+      super(props);
+      this.state = {
+        voteText: ''
+      };
+    }
+
     _handleTextInputSave = (token) => {
       const chapter = this.props.viewer.novel.chapter;
       Relay.Store.update(
@@ -36,8 +43,8 @@ class ContributeView extends React.Component {
       this.props.history.replaceState({'allowContribute': true}, novelContributeUrl);
     }
 
-    _handleVoteChange = () => {
-
+    _handleVoteChange = (voteText) => {
+      this.setState({voteText});
     }
 
     _handleVoteCast = () => {
@@ -54,14 +61,20 @@ class ContributeView extends React.Component {
             onChange={this._handleNovelChange}
             />
           <Novel novel={viewer.novel} history={history}>
-            {this.props.children}
+            {this.props.children && React.cloneElement(this.props.children, {
+              onVoteChange: this._handleVoteChange
+            })}
           </Novel>
         </Paper>
       );
     }
 
     renderVocabularyView() {
-      return (<VocabularyView viewer={this.props.viewer}/>);
+      return (
+        <VocabularyView
+          voteText={this.state.voteText}
+          chapter={this.props.viewer.novel.latestChapter} />
+      );
     }
 
     render () {
@@ -97,6 +110,9 @@ export default Relay.createContainer(ContributeView, {
         novel(id: $novelId) {
           id
           ${Novel.getFragment('novel')}
+          latestChapter {
+            ${VocabularyView.getFragment('chapter')}
+          }
         }
         novels(last: 5) {
           edges {
@@ -109,7 +125,6 @@ export default Relay.createContainer(ContributeView, {
           }
           ${NovelSelect.getFragment('novels')}
         }
-        ${VocabularyView.getFragment('viewer')}
       }
     `
   }
