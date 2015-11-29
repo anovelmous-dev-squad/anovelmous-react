@@ -19,11 +19,12 @@ class CardVoter extends React.Component {
     return term.toLowerCase().startsWith(this.props.voteText);
   }
 
-  renderVocabCard(id, term) {
+  renderVocabCard(id, term, description) {
     return (
       <div key={id} style={{width: 150, padding: 5}}>
         <VocabCard
           term={term}
+          description={description}
           onSubmit={this._handleVoteCast}
           />
       </div>
@@ -35,13 +36,17 @@ class CardVoter extends React.Component {
     return (
       <div style={{display: 'flex', flexFlow: 'row wrap'}}>
         {characters.slice(0, 2).map(edge => (
-          this.renderVocabCard(edge.node.id, edge.node.firstName + ' ' + edge.node.lastName)
+          this.renderVocabCard(
+            edge.node.id,
+            edge.node.firstName + ' ' + edge.node.lastName,
+            edge.node.bio
+          )
         ))}
         {places.slice(0, 2).map(edge => (
-          this.renderVocabCard(edge.node.id, edge.node.name)
+          this.renderVocabCard(edge.node.id, edge.node.name, edge.node.description)
         ))}
         {plotItems.slice(0, 2).map(edge => (
-          this.renderVocabCard(edge.node.id, edge.node.name)
+          this.renderVocabCard(edge.node.id, edge.node.name, edge.node.description)
         ))}
         {vocabulary.slice(0, 8 - nonVocabLength).map(edge => (
           this.renderVocabCard(edge.node.id, edge.node.content)
@@ -81,6 +86,7 @@ export default Relay.createContainer(CardVoter, {
         edges {
           node {
             name
+            description
           }
         }
       }
@@ -91,6 +97,7 @@ export default Relay.createContainer(CardVoter, {
           node {
             firstName
             lastName
+            bio
           }
         }
       }
@@ -100,6 +107,7 @@ export default Relay.createContainer(CardVoter, {
         edges {
           node {
             name
+            description
           }
         }
       }
