@@ -26,7 +26,7 @@ class CardVoter extends React.Component {
           term={term}
           tag={tag}
           description={description}
-          onSubmit={this._handleVoteCast}
+          onSelectVote={this._handleVoteCast}
           />
       </div>
     );

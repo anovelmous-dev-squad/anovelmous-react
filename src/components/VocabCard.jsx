@@ -1,41 +1,55 @@
 import React from 'react';
 import { Card, CardActions, CardTitle,
-         CardText, RaisedButton } from 'material-ui';
+         CardText, RaisedButton, IconButton } from 'material-ui';
+import Colors from 'material-ui/lib/styles/colors';
 
-
-const VocabCard = (props) => {
-  const _submitTerm = (event) => {
-    event.preventDefault();
-    props.onSubmit(props.term);
+export default class VocabCard extends React.Component {
+  static propTypes = {
+    term: React.PropTypes.string.isRequired,
+    tag: React.PropTypes.string,
+    description: React.PropTypes.string,
+    onSelectVote: React.PropTypes.func.isRequired
   };
 
-  return (
-    <Card initiallyExpanded={false}>
-      <CardTitle
-        title={props.term}
-        subtitle={props.tag}
-        actAsExpander
-        />
-      <CardActions>
-        <form onSubmit={_submitTerm}>
-          <RaisedButton label="Select" primary>
-            <input type="submit" hidden />
-          </RaisedButton>
-        </form>
-      </CardActions>
-      {props.description &&
-        <CardText expandable>
-          {props.description}
-        </CardText>
-      }
-    </Card>
-  );
-};
+  constructor() {
+    super();
+    this.state = { detail: false };
+  }
 
-VocabCard.propTypes = {
-  term: React.PropTypes.string.isRequired,
-  tag: React.PropTypes.string,
-  description: React.PropTypes.string
-};
+  _submitTerm = (event) => {
+    event.preventDefault();
+    this.props.onSelectVote(this.props.term);
+  }
 
-export default VocabCard;
+  render() {
+    const { term, tag, description } = this.props;
+    return (
+      <Card>
+        {this.state.detail ? (
+          <CardText onClick={() => this.setState({detail: false})}>
+            {description}
+          </CardText>
+        ) : (
+          <CardTitle
+            title={term}
+            subtitle={tag}
+            onClick={() => this.setState({detail: true})}
+            />
+        )}
+          <div style={{
+          display: 'flex',
+          alignItems: 'center'}}>
+          <IconButton iconClassName="material-icons" onClick={this._submitTerm}>
+            done
+          </IconButton>
+          <IconButton iconClassName="material-icons" iconStyle={{color: Colors.red900}}>
+            favorite
+          </IconButton>
+          <IconButton iconClassName="material-icons">
+            more_horiz
+          </IconButton>
+        </div>
+      </Card>
+    );
+  }
+};
