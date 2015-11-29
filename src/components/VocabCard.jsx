@@ -1,6 +1,6 @@
 import React from 'react';
-import { Avatar, Card, CardActions, CardTitle,
-         CardText, RaisedButton, FontIcon } from 'material-ui';
+import { Card, CardActions, CardTitle,
+         CardText, RaisedButton } from 'material-ui';
 
 
 const VocabCard = (props) => {

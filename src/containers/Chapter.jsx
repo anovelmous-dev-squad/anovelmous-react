@@ -20,16 +20,16 @@ class Chapter extends React.Component {
     super(props);
     const { chapter, vocabulary, places, characters, plotItems } = this.props;
     const dataSource = {};
-    vocabulary.edges.map(edge => (
+    vocabulary.edges.forEach(edge => (
       dataSource[edge.node.content] = this._getAutoCompleteItem(edge.node.content)
     ));
-    places.edges.map(edge => (
+    places.edges.forEach(edge => (
       dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.name)
     ));
-    characters.edges.map(edge => (
+    characters.edges.forEach(edge => (
       dataSource[edge.node.firstName] = this._getAutoCompleteItem(edge.node.firstName)
     ));
-    plotItems.edges.map(edge => (
+    plotItems.edges.forEach(edge => (
       dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.name)
     ));
 

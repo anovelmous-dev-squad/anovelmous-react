@@ -33,7 +33,7 @@ class CardVoter extends React.Component {
   }
 
   renderVocabCards(vocabulary, places, characters, plotItems) {
-    const nonVocabLength = characters.slice(0, 2).length + places.slice(0, 2).length + plotItems.slice(0, 2).length
+    const nonVocabLength = characters.slice(0, 2).length + places.slice(0, 2).length + plotItems.slice(0, 2).length;
     return (
       <div style={{display: 'flex', flexFlow: 'row wrap'}}>
         {characters.slice(0, 2).map(edge => (
@@ -61,13 +61,13 @@ class CardVoter extends React.Component {
     const { voteText, vocabulary, places, characters, plotItems } = this.props;
     if (voteText === '') {
       return this.renderVocabCards(vocabulary.edges, places.edges, characters.edges, plotItems.edges);
-    } else {
-      const validPlaces = places.edges.filter(edge => this._filterTerm(edge.node.name));
-      const validCharacters = characters.edges.filter(edge => this._filterTerm(edge.node.firstName));
-      const validPlotItems = plotItems.edges.filter(edge => this._filterTerm(edge.node.name));
-      const validVocab = vocabulary.edges.filter(edge => this._filterTerm(edge.node.content));
-      return this.renderVocabCards(validVocab, validPlaces, validCharacters, validPlotItems);
     }
+
+    const validPlaces = places.edges.filter(edge => this._filterTerm(edge.node.name));
+    const validCharacters = characters.edges.filter(edge => this._filterTerm(edge.node.firstName));
+    const validPlotItems = plotItems.edges.filter(edge => this._filterTerm(edge.node.name));
+    const validVocab = vocabulary.edges.filter(edge => this._filterTerm(edge.node.content));
+    return this.renderVocabCards(validVocab, validPlaces, validCharacters, validPlotItems);
   }
 }
 

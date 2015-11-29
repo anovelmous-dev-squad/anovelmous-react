@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar } from 'material-ui';
+import { AppBar, FontIcon, IconButton } from 'material-ui';
 import { Grid, Row, Cell } from 'react-inline-grid';
 
 const CoreLayout = (props) => {
@@ -8,7 +8,15 @@ const CoreLayout = (props) => {
     <Grid>
       <Row is="center">
         <Cell is="10 tablet-8 phone-4">
-          <AppBar title={titleLogo} style={{maxHeight: 64}} />
+          <AppBar
+            title={titleLogo}
+            style={{maxHeight: 64}}
+            iconElementRight={
+              <IconButton tooltip="Statistics">
+                <FontIcon className="material-icons">poll</FontIcon>
+              </IconButton>
+            }
+            />
           {props.children}
         </Cell>
       </Row>
