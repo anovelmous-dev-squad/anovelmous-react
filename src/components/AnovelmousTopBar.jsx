@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { AppBar, FontIcon, IconButton } from 'material-ui';
 
 export default () => {
@@ -8,9 +9,11 @@ export default () => {
       title={titleLogo}
       style={{maxHeight: 64}}
       iconElementRight={
-        <IconButton tooltip="Statistics">
-          <FontIcon className="material-icons">poll</FontIcon>
-        </IconButton>
+        <Link to="/stats/">
+          <IconButton tooltip="Statistics">
+            <FontIcon className="material-icons" color="white">poll</FontIcon>
+          </IconButton>
+        </Link>
       }
       />
   );

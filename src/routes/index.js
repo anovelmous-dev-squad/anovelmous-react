@@ -55,7 +55,10 @@ export default (
       name="stats"
       path="stats/"
       component={StatsView}
-      queries={viewerQueryConfig}
+      queries={contributeQueryConfig}
+      stateParams={['contributorId']}
+      prepareParams={prepareContributeParams}
+      renderLoading={() => <LoadingLarge />}
     />
     <Route
       name="prewriting"
@@ -64,6 +67,7 @@ export default (
       queries={contributeQueryConfig}
       stateParams={['contributorId']}
       prepareParams={prepareContributeParams}
+      renderLoading={() => <LoadingLarge />}
       />
   </Route>
 );

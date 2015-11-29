@@ -3,7 +3,8 @@ import Relay from 'react-relay';
 
 class StatsView extends React.Component {
   static propTypes = {
-    contributor: React.PropTypes.object.isRequired
+    contributor: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object.isRequired
   }
 
   render() {
@@ -26,6 +27,20 @@ export default Relay.createContainer(StatsView, {
       fragment on Contributor {
         id
         votes(first: 5) {
+          edges {
+            node {
+              id
+              token {
+                content
+              }
+            }
+          }
+        }
+      }
+    `,
+    viewer: () => Relay.QL`
+      fragment on Query {
+        votes(first: 10) {
           edges {
             node {
               id
