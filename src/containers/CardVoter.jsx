@@ -16,32 +16,51 @@ class CardVoter extends React.Component {
   }
 
   _filterTerm = (term) => {
-    const textField = term.content || term.name || term.firstName
-    return textField.startsWith(this.props.voteText);
+    return term.toLowerCase().startsWith(this.props.voteText);
   }
 
-  renderVocabCard(term) {
+  renderVocabCard(id, term) {
     return (
-      <div key={term.id} style={{width: 150, padding: 5}}>
+      <div key={id} style={{width: 150, padding: 5}}>
         <VocabCard
-          term={term.content || term.name || term.firstName}
-          onSubmit={this._handleVoteCast} />
+          term={term}
+          onSubmit={this._handleVoteCast}
+          />
+      </div>
+    );
+  }
+
+  renderVocabCards(vocabulary, places, characters, plotItems) {
+    const nonVocabLength = characters.slice(0, 2).length + places.slice(0, 2).length + plotItems.slice(0, 2).length
+    return (
+      <div style={{display: 'flex', flexFlow: 'row wrap'}}>
+        {characters.slice(0, 2).map(edge => (
+          this.renderVocabCard(edge.node.id, edge.node.firstName + ' ' + edge.node.lastName)
+        ))}
+        {places.slice(0, 2).map(edge => (
+          this.renderVocabCard(edge.node.id, edge.node.name)
+        ))}
+        {plotItems.slice(0, 2).map(edge => (
+          this.renderVocabCard(edge.node.id, edge.node.name)
+        ))}
+        {vocabulary.slice(0, 8 - nonVocabLength).map(edge => (
+          this.renderVocabCard(edge.node.id, edge.node.content)
+        ))}
       </div>
     );
   }
 
   render() {
     const { voteText, vocabulary, places, characters, plotItems } = this.props;
-    const allTerms = characters.edges.concat(places.edges, plotItems.edges, vocabulary.edges);
-    const cardTexts = (voteText === '') ? allTerms : allTerms.filter(edge => this._filterTerm(edge.node));
-
-    return (
-      <div style={{display: 'flex', flexFlow: 'row wrap'}}>
-        {cardTexts.slice(0, 8).map(edge => (
-          this.renderVocabCard(edge.node)
-        ))}
-      </div>
-    );
+    if (voteText === '') {
+      return this.renderVocabCards(vocabulary.edges, places.edges, characters.edges, plotItems.edges);
+    } else {
+      const validPlaces = places.edges.filter(edge => this._filterTerm(edge.node.name));
+      const validCharacters = characters.edges.filter(edge => this._filterTerm(edge.node.firstName));
+      const validPlotItems = plotItems.edges.filter(edge => this._filterTerm(edge.node.name));
+      const validVocab = vocabulary.edges.filter(edge => this._filterTerm(edge.node.content));
+      return this.renderVocabCards(validVocab, validPlaces, validCharacters, validPlotItems);
+    }
   }
 }
 
@@ -71,6 +90,7 @@ export default Relay.createContainer(CardVoter, {
         edges {
           node {
             firstName
+            lastName
           }
         }
       }
