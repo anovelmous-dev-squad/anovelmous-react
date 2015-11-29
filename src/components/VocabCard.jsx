@@ -1,6 +1,6 @@
 import React from 'react';
-import { Avatar, Card, CardActions, CardHeader,
-         CardText, FlatButton, FontIcon } from 'material-ui';
+import { Avatar, Card, CardActions, CardTitle,
+         CardText, RaisedButton, FontIcon } from 'material-ui';
 
 
 const VocabCard = (props) => {
@@ -9,29 +9,25 @@ const VocabCard = (props) => {
     props.onSubmit(props.term);
   };
 
-  const avatar = (
-    <Avatar
-      icon={<FontIcon className="material-icons">accessibility</FontIcon>} />
-  );
-
   return (
     <Card initiallyExpanded={false}>
-      <CardHeader
+      <CardTitle
         title={props.term}
         subtitle={props.tag}
-        avatar={avatar}
         actAsExpander
-        showExpandableButton />
+        />
       <CardActions>
         <form onSubmit={_submitTerm}>
-          <FlatButton label="Select" primary>
+          <RaisedButton label="Select" primary>
             <input type="submit" hidden />
-          </FlatButton>
+          </RaisedButton>
         </form>
       </CardActions>
-      <CardText expandable>
-        {props.description || 'Lorem ipsum blah blah blah...'}
-      </CardText>
+      {props.description &&
+        <CardText expandable>
+          {props.description}
+        </CardText>
+      }
     </Card>
   );
 };

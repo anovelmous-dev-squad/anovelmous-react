@@ -19,11 +19,12 @@ class CardVoter extends React.Component {
     return term.toLowerCase().startsWith(this.props.voteText);
   }
 
-  renderVocabCard(id, term, description) {
+  renderVocabCard(id, term, description, tag) {
     return (
       <div key={id} style={{width: 150, padding: 5}}>
         <VocabCard
           term={term}
+          tag={tag}
           description={description}
           onSubmit={this._handleVoteCast}
           />
@@ -39,17 +40,18 @@ class CardVoter extends React.Component {
           this.renderVocabCard(
             edge.node.id,
             edge.node.firstName + ' ' + edge.node.lastName,
-            edge.node.bio
+            edge.node.bio,
+            'Character'
           )
         ))}
         {places.slice(0, 2).map(edge => (
-          this.renderVocabCard(edge.node.id, edge.node.name, edge.node.description)
+          this.renderVocabCard(edge.node.id, edge.node.name, edge.node.description, 'Place')
         ))}
         {plotItems.slice(0, 2).map(edge => (
-          this.renderVocabCard(edge.node.id, edge.node.name, edge.node.description)
+          this.renderVocabCard(edge.node.id, edge.node.name, edge.node.description, 'Plot Item')
         ))}
         {vocabulary.slice(0, 8 - nonVocabLength).map(edge => (
-          this.renderVocabCard(edge.node.id, edge.node.content)
+          this.renderVocabCard(edge.node.id, edge.node.content, '', 'Token')
         ))}
       </div>
     );
