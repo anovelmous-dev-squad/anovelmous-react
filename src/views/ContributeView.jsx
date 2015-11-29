@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import FullContentLayout from 'layouts/FullContentLayout';
 import SidebarLayout from 'layouts/SidebarLayout';
 import CardVoter from 'containers/CardVoter';
 import CastVoteMutation from 'mutations/CastVoteMutation';
@@ -9,99 +10,103 @@ import { Paper, FontIcon, Toolbar, ToolbarGroup } from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
 
 class ContributeView extends React.Component {
-    static propTypes = {
-      relay: React.PropTypes.object.isRequired,
-      history: React.PropTypes.object.isRequired,
-      contributor: React.PropTypes.object.isRequired,
-      viewer: React.PropTypes.object.isRequired,
-      children: React.PropTypes.element.isRequired
+  static propTypes = {
+    relay: React.PropTypes.object.isRequired,
+    history: React.PropTypes.object.isRequired,
+    contributor: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object.isRequired,
+    children: React.PropTypes.element.isRequired
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      voteText: ''
     };
+  }
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        voteText: ''
-      };
-    }
+  _handleTextInputSave = (token) => {
+    const chapter = this.props.viewer.novel.chapter;
+    Relay.Store.update(
+      new CastVoteMutation({
+        tokenId: token.id,
+        chapterId: chapter.id,
+        ordinal: chapter.tokens.totalCount,
+        viewer: this.props.contributor
+      })
+    );
+  }
 
-    _handleTextInputSave = (token) => {
-      const chapter = this.props.viewer.novel.chapter;
-      Relay.Store.update(
-        new CastVoteMutation({
-          tokenId: token.id,
-          chapterId: chapter.id,
-          ordinal: chapter.tokens.totalCount,
-          viewer: this.props.contributor
-        })
-      );
-    }
+  _handleNovelChange = (novelId) => {
+    const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
+    const chapterId = novel.latestChapter.id;
+    const novelContributeUrl = `/contribute/novel/${novelId}/chapter/${chapterId}`;
+    this.props.history.replace(novelContributeUrl);
+  }
 
-    _handleNovelChange = (novelId) => {
-      const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
-      const chapterId = novel.latestChapter.id;
-      const novelContributeUrl = `/contribute/novel/${novelId}/chapter/${chapterId}`;
-      this.props.history.replace(novelContributeUrl);
-    }
+  _handleVoteChange = (voteText) => {
+    this.setState({voteText});
+  }
 
-    _handleVoteChange = (voteText) => {
-      this.setState({voteText});
-    }
+  _handleVoteCast = () => {
 
-    _handleVoteCast = () => {
+  }
 
-    }
-
-    renderNotebook() {
-      const { viewer, history } = this.props;
-      return (
-        <Paper>
-          <Toolbar>
-            <ToolbarGroup key={0} float="left">
-              <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
-              <NovelSelect
-                currentNovelId={viewer.novel.id}
-                novels={viewer.novels}
-                onChange={this._handleNovelChange}
-                />
-            </ToolbarGroup>
-          </Toolbar>
-          <Novel
-            history={history}
-            novel={viewer.novel}
-            vocabulary={viewer.novel.vocabulary}
-            places={viewer.novel.places}
-            characters={viewer.novel.characters}
-            plotItems={viewer.novel.plotItems}
-            >
-            {this.props.children && React.cloneElement(this.props.children, {
-              onVoteChange: this._handleVoteChange
-            })}
-          </Novel>
-        </Paper>
-      );
-    }
-
-    renderCardVoter() {
-      const { viewer } = this.props;
-      return (
-        <CardVoter
-          voteText={this.state.voteText}
+  renderNotebook() {
+    const { viewer, history } = this.props;
+    return (
+      <Paper>
+        <Toolbar>
+          <ToolbarGroup key={0} float="left">
+            <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
+            <NovelSelect
+              currentNovelId={viewer.novel.id}
+              novels={viewer.novels}
+              onChange={this._handleNovelChange}
+              />
+          </ToolbarGroup>
+        </Toolbar>
+        <Novel
+          history={history}
+          novel={viewer.novel}
           vocabulary={viewer.novel.vocabulary}
           places={viewer.novel.places}
           characters={viewer.novel.characters}
           plotItems={viewer.novel.plotItems}
-          />
-      );
-    }
+          >
+          {this.props.children && React.cloneElement(this.props.children, {
+            onVoteChange: this._handleVoteChange
+          })}
+        </Novel>
+      </Paper>
+    );
+  }
 
-    render () {
-      return (
-        <SidebarLayout
-          content={this.renderNotebook()}
-          sidebar={this.renderCardVoter()}
-          />
-      );
-    }
+  renderCardVoter() {
+    const { viewer } = this.props;
+    return (
+      <CardVoter
+        voteText={this.state.voteText}
+        vocabulary={viewer.novel.vocabulary}
+        places={viewer.novel.places}
+        characters={viewer.novel.characters}
+        plotItems={viewer.novel.plotItems}
+        />
+    );
+  }
+
+  render () {
+    return (this.props.viewer.novel.isCompleted) ? (
+      <FullContentLayout
+        content={this.renderNotebook()}
+        />
+    ) : (
+      <SidebarLayout
+        content={this.renderNotebook()}
+        sidebar={this.renderCardVoter()}
+        />
+    );
+  }
 }
 
 export default Relay.createContainer(ContributeView, {
@@ -126,6 +131,7 @@ export default Relay.createContainer(ContributeView, {
       fragment on Query {
         novel(id: $novelId) {
           id
+          isCompleted
           ${Novel.getFragment('novel')}
           vocabulary(first: 10000) {
             ${Novel.getFragment('vocabulary')}
