@@ -16,28 +16,28 @@ class CardVoter extends React.Component {
   }
 
   _filterTerm = (term) => {
-    return term.content.startsWith(this.props.voteText);
+    const textField = term.content || term.name || term.firstName
+    return textField.startsWith(this.props.voteText);
   }
 
-  renderVocabCard(token) {
+  renderVocabCard(term) {
     return (
-      <div key={token.id} style={{width: 150, padding: 5}}>
+      <div key={term.id} style={{width: 150, padding: 5}}>
         <VocabCard
-          term={token.content}
+          term={term.content || term.name || term.firstName}
           onSubmit={this._handleVoteCast} />
       </div>
     );
   }
 
   render() {
-    const { vocabulary, voteText } = this.props;
-    const filteredVocabulary = (voteText === '') ?
-      vocabulary.edges :
-      vocabulary.edges.filter(edge => this._filterTerm(edge.node));
+    const { voteText, vocabulary, places, characters, plotItems } = this.props;
+    const allTerms = characters.edges.concat(places.edges, plotItems.edges, vocabulary.edges);
+    const cardTexts = (voteText === '') ? allTerms : allTerms.filter(edge => this._filterTerm(edge.node));
 
     return (
       <div style={{display: 'flex', flexFlow: 'row wrap'}}>
-        {filteredVocabulary.slice(0, 6).map(edge => (
+        {cardTexts.slice(0, 8).map(edge => (
           this.renderVocabCard(edge.node)
         ))}
       </div>
