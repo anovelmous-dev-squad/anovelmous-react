@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardActions, CardTitle,
-         CardText, RaisedButton, IconButton} from 'material-ui';
+import { Card, CardTitle, CardText, IconButton } from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
 import { hexToRgb } from 'utils';
 
@@ -17,8 +16,7 @@ export default class VocabCard extends React.Component {
     this.state = { detail: false };
   }
 
-  _submitTerm = (event) => {
-    event.preventDefault();
+  _submitTerm = () => {
     this.props.onSelectVote(this.props.term);
   }
 
@@ -26,17 +24,17 @@ export default class VocabCard extends React.Component {
     const { term, tag, description } = this.props;
     let cardColor = '#e0dede';
     switch(tag) {
-      case 'Place':
-        cardColor = Colors.blueGrey800;
-        break;
-      case 'Character':
-        cardColor = Colors.blueGrey400;
-        break;
-      case 'Plot Item':
-        cardColor = Colors.grey500;
-        break;
-      default:
-        cardColor = '#e0dede';
+    case 'Place':
+      cardColor = Colors.blueGrey800;
+      break;
+    case 'Character':
+      cardColor = Colors.blueGrey400;
+      break;
+    case 'Plot Item':
+      cardColor = Colors.grey500;
+      break;
+    default:
+      cardColor = '#e0dede';
     }
     const hex = hexToRgb(cardColor);
     cardColor = `rgba(${hex.r}, ${hex.g}, ${hex.b}, 0.45)`
@@ -53,7 +51,7 @@ export default class VocabCard extends React.Component {
             onClick={() => this.setState({detail: true})}
             />
         )}
-          <div style={{display: 'flex', alignItems: 'center'}}>
+        <div style={{display: 'flex', alignItems: 'center'}}>
           <IconButton iconClassName="material-icons" onClick={this._submitTerm}>
             done
           </IconButton>

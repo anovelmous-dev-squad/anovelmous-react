@@ -8,11 +8,8 @@ class CardVoter extends React.Component {
     places: React.PropTypes.object.isRequired,
     characters: React.PropTypes.object.isRequired,
     plotItems: React.PropTypes.object.isRequired,
-    voteText: React.PropTypes.string.isRequired
-  }
-
-  _handleVoteCast = (term) => {
-    console.log(term);
+    voteText: React.PropTypes.string.isRequired,
+    onVoteCast: React.PropTypes.func
   }
 
   _filterTerm = (term) => {
@@ -26,7 +23,7 @@ class CardVoter extends React.Component {
           term={term}
           tag={tag}
           description={description}
-          onSelectVote={this._handleVoteCast}
+          onSelectVote={this.props.onVoteCast}
           />
       </div>
     );

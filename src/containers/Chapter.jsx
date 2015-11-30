@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Relay from 'react-relay';
-import { LinearProgress, AutoComplete } from 'material-ui';
+import { LinearProgress, AutoComplete, Snackbar } from 'material-ui';
 import { getVotingRoundProgress } from 'utils';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
@@ -13,7 +13,8 @@ class Chapter extends React.Component {
     characters: PropTypes.object.isRequired,
     plotItems: PropTypes.object.isRequired,
     readingHeight: PropTypes.number,
-    onVoteChange: PropTypes.func
+    onVoteChange: PropTypes.func,
+    onVoteCast: PropTypes.func
   }
 
   constructor(props) {
@@ -89,6 +90,7 @@ class Chapter extends React.Component {
                   dataSource={this.state.dataSource}
                   floatingLabelText={'your contribution here'}
                   onUpdateInput={(text) => this.props.onVoteChange(text)}
+                  onNewRequest={(text) => this.props.onVoteCast(text)}
                   filter={this._autoCompleteFilter} />
               </span>
             }

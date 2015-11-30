@@ -6,7 +6,7 @@ import CardVoter from 'containers/CardVoter';
 import CastVoteMutation from 'mutations/CastVoteMutation';
 import NovelSelect from 'containers/NovelSelect';
 import Novel from 'containers/Novel';
-import { Paper, FontIcon, Toolbar, ToolbarGroup } from 'material-ui';
+import { Paper, FontIcon, Toolbar, ToolbarGroup, Snackbar } from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
 
 class ContributeView extends React.Component {
@@ -48,8 +48,8 @@ class ContributeView extends React.Component {
     this.setState({voteText});
   }
 
-  _handleVoteCast = () => {
-
+  _handleVoteCast = (voteText) => {
+    this.refs.votingSnackbar.show();
   }
 
   renderNotebook() {
@@ -75,7 +75,8 @@ class ContributeView extends React.Component {
           plotItems={viewer.novel.plotItems}
           >
           {this.props.children && React.cloneElement(this.props.children, {
-            onVoteChange: this._handleVoteChange
+            onVoteChange: this._handleVoteChange,
+            onVoteCast: this._handleVoteCast
           })}
         </Novel>
       </Paper>
@@ -85,13 +86,17 @@ class ContributeView extends React.Component {
   renderCardVoter() {
     const { viewer } = this.props;
     return (
+      <div>
       <CardVoter
         voteText={this.state.voteText}
         vocabulary={viewer.novel.vocabulary}
         places={viewer.novel.places}
         characters={viewer.novel.characters}
         plotItems={viewer.novel.plotItems}
+        onVoteCast={this._handleVoteCast}
         />
+      <Snackbar ref="votingSnackbar" message="You voted!" autoHideDuration={2000} />
+    </div>
     );
   }
 
