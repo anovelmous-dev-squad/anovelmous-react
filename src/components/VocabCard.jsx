@@ -13,7 +13,7 @@ export default class VocabCard extends React.Component {
 
   constructor() {
     super();
-    this.state = { detail: false };
+    this.state = { detail: false, liked: false };
   }
 
   _submitTerm = () => {
@@ -38,6 +38,7 @@ export default class VocabCard extends React.Component {
     }
     const hex = hexToRgb(cardColor);
     cardColor = `rgba(${hex.r}, ${hex.g}, ${hex.b}, 0.45)`;
+    const { liked } = this.state;
     return (
       <Card style={{backgroundColor: cardColor}}>
         {this.state.detail ? (
@@ -55,8 +56,12 @@ export default class VocabCard extends React.Component {
           <IconButton iconClassName="material-icons" onClick={this._submitTerm}>
             done
           </IconButton>
-          <IconButton iconClassName="material-icons" iconStyle={{color: Colors.red900}}>
-            favorite
+          <IconButton
+            iconClassName="material-icons"
+            iconStyle={{color: Colors.red900}}
+            onClick={() => this.setState({liked: !liked})}
+            >
+            {liked ? 'favorite' : 'favorite_outline'}
           </IconButton>
           <IconButton iconClassName="material-icons">
             more_horiz
