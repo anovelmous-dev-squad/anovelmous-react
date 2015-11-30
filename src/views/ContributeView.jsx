@@ -26,18 +26,6 @@ class ContributeView extends React.Component {
     };
   }
 
-  _handleTextInputSave = (token) => {
-    const chapter = this.props.viewer.novel.chapter;
-    Relay.Store.update(
-      new CastVoteMutation({
-        tokenId: token.id,
-        chapterId: chapter.id,
-        ordinal: chapter.tokens.totalCount,
-        viewer: this.props.contributor
-      })
-    );
-  }
-
   _handleNovelChange = (novelId) => {
     const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
     const chapterId = novel.latestChapter.id;
@@ -49,8 +37,17 @@ class ContributeView extends React.Component {
     this.setState({voteText});
   }
 
-  _handleVoteCast = (voteText) => {
-    this.setState({voteText: '', prevVoteText: voteText});
+  _handleVoteCast = (resourceId, text) => {
+    this.setState({voteText: '', prevVoteText: text});
+    const chapter = this.props.viewer.novel.latestChapter;
+    /*Relay.Store.update(
+      new CastVoteMutation({
+        resourceId,
+        chapterId: chapter.id,
+        ordinal: chapter.tokens.totalCount,
+        contributor: this.props.contributor
+      })
+    );*/
     this.refs.votingSnackbar.show();
   }
 
@@ -144,6 +141,12 @@ export default Relay.createContainer(ContributeView, {
         novel(id: $novelId) {
           id
           isCompleted
+          latestChapter {
+            id
+            tokens(first: 1) {
+              totalCount
+            }
+          }
           ${Novel.getFragment('novel')}
           vocabulary(first: 10000) {
             ${Novel.getFragment('vocabulary')}

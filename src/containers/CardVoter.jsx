@@ -23,7 +23,7 @@ class CardVoter extends React.Component {
           term={term}
           tag={tag}
           description={description}
-          onSelectVote={this.props.onVoteCast}
+          onSelectVote={(text) => this.props.onVoteCast(id, text)}
           />
       </div>
     );
