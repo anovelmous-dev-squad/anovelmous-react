@@ -3,6 +3,8 @@ import { Card, CardTitle, CardText, IconButton } from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
 import { hexToRgb } from 'utils';
 
+const PREVIEW_LENGTH = 65;
+
 export default class VocabCard extends React.Component {
   static propTypes = {
     term: React.PropTypes.string.isRequired,
@@ -18,6 +20,15 @@ export default class VocabCard extends React.Component {
 
   _submitTerm = () => {
     this.props.onSelectVote(this.props.term);
+  }
+
+  _getDescriptionPreview = (description) => {
+    if (description.length < PREVIEW_LENGTH) {
+      return description;
+    }
+    const preview = description.substring(0, PREVIEW_LENGTH);
+
+    return preview.substring(0, preview.lastIndexOf(' ')) + '...';
   }
 
   render() {
@@ -41,9 +52,10 @@ export default class VocabCard extends React.Component {
     const { liked } = this.state;
     return (
       <Card style={{backgroundColor: cardColor}}>
-        {this.state.detail ? (
-          <CardText onClick={() => this.setState({detail: false})}>
-            {description}
+        {this.state.detail && tag !== 'Token' ? (
+          <CardText
+            onClick={() => this.setState({detail: false})}>
+            {this._getDescriptionPreview(description)}
           </CardText>
         ) : (
           <CardTitle
