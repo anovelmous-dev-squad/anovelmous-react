@@ -23,7 +23,7 @@ export default class VocabCard extends React.Component {
   render() {
     const { term, tag, description } = this.props;
     let cardColor = '#e0dede';
-    switch(tag) {
+    switch (tag) {
     case 'Place':
       cardColor = Colors.blueGrey800;
       break;
@@ -37,7 +37,7 @@ export default class VocabCard extends React.Component {
       cardColor = '#e0dede';
     }
     const hex = hexToRgb(cardColor);
-    cardColor = `rgba(${hex.r}, ${hex.g}, ${hex.b}, 0.45)`
+    cardColor = `rgba(${hex.r}, ${hex.g}, ${hex.b}, 0.45)`;
     return (
       <Card style={{backgroundColor: cardColor}}>
         {this.state.detail ? (

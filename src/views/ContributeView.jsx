@@ -21,7 +21,8 @@ class ContributeView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      voteText: ''
+      voteText: '',
+      prevVoteText: ''
     };
   }
 
@@ -49,6 +50,7 @@ class ContributeView extends React.Component {
   }
 
   _handleVoteCast = (voteText) => {
+    this.setState({voteText: '', prevVoteText: voteText});
     this.refs.votingSnackbar.show();
   }
 
@@ -76,7 +78,8 @@ class ContributeView extends React.Component {
           >
           {this.props.children && React.cloneElement(this.props.children, {
             onVoteChange: this._handleVoteChange,
-            onVoteCast: this._handleVoteCast
+            onVoteCast: this._handleVoteCast,
+            voteText: this.state.voteText
           })}
         </Novel>
       </Paper>
@@ -95,7 +98,11 @@ class ContributeView extends React.Component {
         plotItems={viewer.novel.plotItems}
         onVoteCast={this._handleVoteCast}
         />
-      <Snackbar ref="votingSnackbar" message="You voted!" autoHideDuration={2000} />
+      <Snackbar
+        ref="votingSnackbar"
+        message={`You voted for ${this.state.prevVoteText}!`}
+        autoHideDuration={2000}
+        />
     </div>
     );
   }
