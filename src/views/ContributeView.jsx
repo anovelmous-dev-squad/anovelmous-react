@@ -143,9 +143,6 @@ export default Relay.createContainer(ContributeView, {
           isCompleted
           latestChapter {
             id
-            tokens(first: 1) {
-              totalCount
-            }
           }
           ${Novel.getFragment('novel')}
           vocabulary(first: 10000) {
