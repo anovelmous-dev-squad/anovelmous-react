@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, CardActions, CardTitle,
-         CardText, RaisedButton, IconButton } from 'material-ui';
+         CardText, RaisedButton, IconButton} from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
+import { hexToRgb } from 'utils';
 
 export default class VocabCard extends React.Component {
   static propTypes = {
@@ -23,8 +24,24 @@ export default class VocabCard extends React.Component {
 
   render() {
     const { term, tag, description } = this.props;
+    let cardColor = '#e0dede';
+    switch(tag) {
+      case 'Place':
+        cardColor = Colors.blueGrey800;
+        break;
+      case 'Character':
+        cardColor = Colors.blueGrey400;
+        break;
+      case 'Plot Item':
+        cardColor = Colors.grey500;
+        break;
+      default:
+        cardColor = '#e0dede';
+    }
+    const hex = hexToRgb(cardColor);
+    cardColor = `rgba(${hex.r}, ${hex.g}, ${hex.b}, 0.45)`
     return (
-      <Card>
+      <Card style={{backgroundColor: cardColor}}>
         {this.state.detail ? (
           <CardText onClick={() => this.setState({detail: false})}>
             {description}
@@ -36,9 +53,7 @@ export default class VocabCard extends React.Component {
             onClick={() => this.setState({detail: true})}
             />
         )}
-          <div style={{
-          display: 'flex',
-          alignItems: 'center'}}>
+          <div style={{display: 'flex', alignItems: 'center'}}>
           <IconButton iconClassName="material-icons" onClick={this._submitTerm}>
             done
           </IconButton>
@@ -52,4 +67,4 @@ export default class VocabCard extends React.Component {
       </Card>
     );
   }
-};
+}
