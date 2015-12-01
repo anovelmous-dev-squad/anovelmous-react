@@ -14,6 +14,7 @@ class ProposedPlotList extends React.Component {
     return (
       <ScoreCard
         id={plot.id}
+        score={plot.voteScore}
         title={contributor.username + '\'s Idea'}
         description={plot.summary}
         onUpvote={(id) => console.log(id)}
@@ -44,6 +45,7 @@ export default Relay.createContainer(ProposedPlotList, {
         edges {
           node {
             id
+            voteScore
             summary
           }
         }

@@ -13,6 +13,7 @@ class ProposedCharacterList extends React.Component {
     return (
       <ScoreCard
         id={character.id}
+        score={character.voteScore}
         title={character.firstName}
         description={character.bio}
         onUpvote={(id) => console.log(id)}
@@ -45,6 +46,7 @@ export default Relay.createContainer(ProposedCharacterList, {
             id
             firstName
             bio
+            voteScore
           }
         }
       }
