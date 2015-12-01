@@ -3,35 +3,34 @@ import Relay from 'react-relay';
 import ScoreCard from 'components/ScoreCard';
 
 
-class ProposedPlotList extends React.Component {
+class ProposedCharacterList extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
-    plots: React.PropTypes.object.isRequired,
+    characters: React.PropTypes.object.isRequired,
   };
 
-  renderPlotCard(plot) {
-    const { contributor } = this.props;
+  renderPlotCard(character) {
     return (
       <ScoreCard
-        id={plot.id}
-        title={contributor.username + '\'s Idea'}
-        description={plot.summary}
+        id={character.id}
+        title={character.firstName}
+        description={character.bio}
         onUpvote={(id) => console.log(id)}
         />
     );
   }
 
   render() {
-    const { plots } = this.props;
+    const { characters } = this.props;
     return (
       <div>
-        {plots.edges.map(edge => this.renderPlotCard(edge.node))}
+        {characters.edges.map(edge => this.renderPlotCard(edge.node))}
       </div>
     );
   }
 }
 
-export default Relay.createContainer(ProposedPlotList, {
+export default Relay.createContainer(ProposedCharacterList, {
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
@@ -39,12 +38,13 @@ export default Relay.createContainer(ProposedPlotList, {
         username
       }
     `,
-    plots: () => Relay.QL`
-      fragment on PlotConnection {
+    characters: () => Relay.QL`
+      fragment on CharacterConnection {
         edges {
           node {
             id
-            summary
+            firstName
+            bio
           }
         }
       }
