@@ -5,8 +5,8 @@ import CoreLayout from 'layouts/CoreLayout';
 import ContributeView from 'views/ContributeView';
 import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
-import PrewritingView from 'views/PrewritingView';
 import Chapter from 'containers/Chapter';
+import PrewritingView from 'views/PrewritingView';
 import LoadingLarge from 'components/LoadingLarge';
 
 const CONTRIBUTOR_ID = 'Q29udHJpYnV0b3I6MQ==';
@@ -18,6 +18,11 @@ const viewerQueryConfig = {
 const contributeQueryConfig = {
   contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
   viewer: () => Relay.QL`query { viewer }`
+};
+
+const prewritingQueryConfig = {
+  contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
+  novel: () => Relay.QL`query { novel(id: $novelId) }`
 };
 
 const chapterQueryConfig = {
@@ -50,6 +55,13 @@ export default (
         component={Chapter}
         renderLoading={() => <LoadingLarge />}
         />
+      <Route
+        name="prewriting"
+        path="prewriting/"
+        queries={prewritingQueryConfig}
+        component={PrewritingView}
+        renderLoading={() => <LoadingLarge />}
+        />
     </Route>
     <Route
       name="stats"
@@ -60,14 +72,5 @@ export default (
       prepareParams={prepareContributeParams}
       renderLoading={() => <LoadingLarge />}
     />
-    <Route
-      name="prewriting"
-      path="prewriting/:novelId"
-      component={PrewritingView}
-      queries={contributeQueryConfig}
-      stateParams={['contributorId']}
-      prepareParams={prepareContributeParams}
-      renderLoading={() => <LoadingLarge />}
-      />
   </Route>
 );
