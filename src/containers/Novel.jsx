@@ -6,7 +6,7 @@ import Chapter from './Chapter';
 
 class Novel extends React.Component {
   static propTypes = {
-    history: React.PropTypes.object.isRequired,
+    onChapterChange: React.PropTypes.func,
     vocabulary: React.PropTypes.object.isRequired,
     places: React.PropTypes.object.isRequired,
     characters: React.PropTypes.object.isRequired,
@@ -21,11 +21,10 @@ class Novel extends React.Component {
   }
 
   _handleChapterChange = (chapterId) => {
-    const { novel } = this.props;
-    const novelId = novel.id;
-    const chapter = novel.chapters.edges.filter(edge => edge.node.id === chapterId)[0].node;
-    const newState = { allowContribute: !chapter.isCompleted };
-    this.props.history.replaceState(newState, `/contribute/novel/${novelId}/chapter/${chapterId}`);
+    const { onChapterChange } = this.props;
+    if (onChapterChange) {
+      onChapterChange(chapterId);
+    }
     this.setState({tabsValue: chapterId});
   }
 

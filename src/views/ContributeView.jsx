@@ -4,10 +4,8 @@ import FullContentLayout from 'layouts/FullContentLayout';
 import SidebarLayout from 'layouts/SidebarLayout';
 import CardVoter from 'containers/CardVoter';
 import CastVoteMutation from 'mutations/CastVoteMutation';
-import NovelSelect from 'containers/NovelSelect';
-import Novel from 'containers/Novel';
-import { Paper, FontIcon, Toolbar, ToolbarGroup, Snackbar } from 'material-ui';
-import Colors from 'material-ui/lib/styles/colors';
+import { Paper, Snackbar } from 'material-ui';
+import Notebook from 'containers/Notebook';
 
 class ContributeView extends React.Component {
   static propTypes = {
@@ -33,6 +31,11 @@ class ContributeView extends React.Component {
     this.props.history.replace(novelContributeUrl);
   }
 
+  _handleChapterChange = (chapterId) => {
+    const novelId = this.props.viewer.novel.id;
+    this.props.history.replace(`/contribute/novel/${novelId}/chapter/${chapterId}`);
+  }
+
   _handleVoteChange = (voteText) => {
     this.setState({voteText});
   }
@@ -51,35 +54,24 @@ class ContributeView extends React.Component {
     this.refs.votingSnackbar.show();
   }
 
-  renderNotebook() {
-    const { viewer, history } = this.props;
+  renderNovelWorkspace() {
+    const { viewer } = this.props;
     return (
-      <Paper>
-        <Toolbar>
-          <ToolbarGroup key={0} float="left">
-            <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
-            <NovelSelect
-              currentNovelId={viewer.novel.id}
-              novels={viewer.novels}
-              onChange={this._handleNovelChange}
-              />
-          </ToolbarGroup>
-        </Toolbar>
-        <Novel
-          history={history}
-          novel={viewer.novel}
-          vocabulary={viewer.novel.vocabulary}
-          places={viewer.novel.places}
-          characters={viewer.novel.characters}
-          plotItems={viewer.novel.plotItems}
-          >
-          {this.props.children && React.cloneElement(this.props.children, {
-            onVoteChange: this._handleVoteChange,
-            onVoteCast: this._handleVoteCast,
-            voteText: this.state.voteText
-          })}
-        </Novel>
-      </Paper>
+      <Notebook
+        novel={viewer.novel}
+        novels={viewer.novels}
+        vocabulary={viewer.novel.vocabulary}
+        places={viewer.novel.places}
+        characters={viewer.novel.characters}
+        plotItems={viewer.novel.plotItems}
+        onNovelChange={this._handleNovelChange}
+        onChapterChange={this._handleChapterChange}
+        onVoteChange={this._handleVoteChange}
+        onVoteCast={this._handleVoteCast}
+        voteText={this.state.voteText}
+        >
+        {this.props.children}
+      </Notebook>
     );
   }
 
@@ -87,32 +79,33 @@ class ContributeView extends React.Component {
     const { viewer } = this.props;
     return (
       <div>
-      <CardVoter
-        voteText={this.state.voteText}
-        vocabulary={viewer.novel.vocabulary}
-        places={viewer.novel.places}
-        characters={viewer.novel.characters}
-        plotItems={viewer.novel.plotItems}
-        onVoteCast={this._handleVoteCast}
-        />
-      <Snackbar
-        ref="votingSnackbar"
-        message={`You voted for ${this.state.prevVoteText}!`}
-        autoHideDuration={2000}
-        />
-    </div>
+        <CardVoter
+          voteText={this.state.voteText}
+          vocabulary={viewer.novel.vocabulary}
+          places={viewer.novel.places}
+          characters={viewer.novel.characters}
+          plotItems={viewer.novel.plotItems}
+          onVoteCast={this._handleVoteCast}
+          />
+        <Snackbar
+          ref="votingSnackbar"
+          message={`You voted for ${this.state.prevVoteText}!`}
+          autoHideDuration={2000}
+          />
+      </div>
     );
   }
 
   render () {
-    return (this.props.viewer.novel.isCompleted) ? (
-      <FullContentLayout
-        content={this.renderNotebook()}
+    const stage = this.props.viewer.novel.stage;
+    return (stage.name === 'WRITING') ? (
+      <SidebarLayout
+        content={this.renderNovelWorkspace()}
+        sidebar={this.renderCardVoter()}
         />
     ) : (
-      <SidebarLayout
-        content={this.renderNotebook()}
-        sidebar={this.renderCardVoter()}
+      <FullContentLayout
+        content={this.renderNovelWorkspace()}
         />
     );
   }
@@ -140,7 +133,9 @@ export default Relay.createContainer(ContributeView, {
       fragment on Query {
         novel(id: $novelId) {
           id
-          isCompleted
+          stage {
+            name
+          }
           latestChapter {
             id
             tokens {
@@ -148,21 +143,21 @@ export default Relay.createContainer(ContributeView, {
             }
             ${CastVoteMutation.getFragment('chapter')}
           }
-          ${Novel.getFragment('novel')}
+          ${Notebook.getFragment('novel')}
           vocabulary(first: 10000) {
-            ${Novel.getFragment('vocabulary')}
+            ${Notebook.getFragment('vocabulary')}
             ${CardVoter.getFragment('vocabulary')}
           }
           places(first: 50) {
-            ${Novel.getFragment('places')}
+            ${Notebook.getFragment('places')}
             ${CardVoter.getFragment('places')}
           }
           characters(first: 50) {
-            ${Novel.getFragment('characters')}
+            ${Notebook.getFragment('characters')}
             ${CardVoter.getFragment('characters')}
           }
           plotItems(first: 50) {
-            ${Novel.getFragment('plotItems')}
+            ${Notebook.getFragment('plotItems')}
             ${CardVoter.getFragment('plotItems')}
           }
         }
@@ -175,7 +170,7 @@ export default Relay.createContainer(ContributeView, {
               }
             }
           }
-          ${NovelSelect.getFragment('novels')}
+          ${Notebook.getFragment('novels')}
         }
       }
     `
