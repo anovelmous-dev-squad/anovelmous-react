@@ -13,14 +13,14 @@ import { Tabs, Tab, Paper } from 'material-ui';
 class PrewritingView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired
+    novel: React.PropTypes.object.isRequired
   }
 
   _handlePlotCreation = (summary) => {
     Relay.Store.update(
       new CreatePlotMutation({
         summary,
-        novel: this.props.viewer.novel,
+        novel: this.props.novel,
         contributor: this.props.contributor
       })
     );
@@ -32,7 +32,7 @@ class PrewritingView extends React.Component {
         firstName,
         lastName,
         bio,
-        novel: this.props.viewer.novel,
+        novel: this.props.novel,
         contributor: this.props.contributor
       })
     );
@@ -43,7 +43,7 @@ class PrewritingView extends React.Component {
       new CreatePlaceMutation({
         name,
         description,
-        novel: this.props.viewer.novel,
+        novel: this.props.novel,
         contributor: this.props.contributor
       })
     );
@@ -54,7 +54,7 @@ class PrewritingView extends React.Component {
       new CreatePlotItemMutation({
         name,
         description,
-        novel: this.props.viewer.novel,
+        novel: this.props.novel,
         contributor: this.props.contributor
       })
     );
@@ -70,10 +70,8 @@ class PrewritingView extends React.Component {
       return this.renderStructureCreationStage();
     case 'TITLE DECISION':
       return this.renderTitleDecisionStage();
-    case 'WRITING':
-      return this.renderWritingStage();
     default:
-      return this.renderFinishedStage();
+      return <p>this should not happen.</p>;
     }
   }
 
@@ -87,13 +85,13 @@ class PrewritingView extends React.Component {
 
   renderStructureCreationStage() {
     return (
-        <Paper>
-          <Tabs>
-            <Tab label="Create a Character"> <CharacterCreator onCreate={this._handleCharacterCreation}/> </Tab>
-            <Tab label="Create a Place"> <PlaceCreator onCreate={this._handlePlaceCreation} /> </Tab>
-            <Tab label="Create a Plot Item"> <PlotItemCreator onCreate={this._handlePlotItemCreation}/> </Tab>
-          </Tabs>
-        </Paper>
+      <Paper>
+        <Tabs>
+          <Tab label="Create a Character"> <CharacterCreator onCreate={this._handleCharacterCreation}/> </Tab>
+          <Tab label="Create a Place"> <PlaceCreator onCreate={this._handlePlaceCreation} /> </Tab>
+          <Tab label="Create a Plot Item"> <PlotItemCreator onCreate={this._handlePlotItemCreation}/> </Tab>
+        </Tabs>
+      </Paper>
     );
   }
 
@@ -101,28 +99,17 @@ class PrewritingView extends React.Component {
     return <div>Vote on novel title</div>;
   }
 
-  renderWritingStage() {
-    return <div>Currently writing!</div>;
-  }
-
-  renderFinishedStage() {
-    return <div>Novel is finished!</div>;
-  }
-
   render() {
-    const { viewer } = this.props;
+    const { novel } = this.props;
     return (
       <div>
-        {this._getCurrentStageView(viewer.novel.stage)}
+        {this._getCurrentStageView(novel.stage)}
       </div>
     );
   }
 }
 
 export default Relay.createContainer(PrewritingView, {
-  initialVariables: {
-    novelId: null
-  },
   fragments: {
     contributor: () => Relay.QL`
       fragment on Contributor {
@@ -165,18 +152,16 @@ export default Relay.createContainer(PrewritingView, {
         ${CreatePlotItemMutation.getFragment('contributor')}
       }
     `,
-    viewer: () => Relay.QL`
-      fragment on Query {
-        novel(id: $novelId) {
-          title
-          stage {
-            name
-          }
-          ${CreatePlotMutation.getFragment('novel')}
-          ${CreateCharacterMutation.getFragment('novel')}
-          ${CreatePlaceMutation.getFragment('novel')}
-          ${CreatePlotItemMutation.getFragment('novel')}
+    novel: () => Relay.QL`
+      fragment on Novel {
+        title
+        stage {
+          name
         }
+        ${CreatePlotMutation.getFragment('novel')}
+        ${CreateCharacterMutation.getFragment('novel')}
+        ${CreatePlaceMutation.getFragment('novel')}
+        ${CreatePlotItemMutation.getFragment('novel')}
       }
     `
   }

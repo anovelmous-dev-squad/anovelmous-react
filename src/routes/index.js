@@ -5,7 +5,6 @@ import CoreLayout from 'layouts/CoreLayout';
 import ContributeView from 'views/ContributeView';
 import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
-import PrewritingView from 'views/PrewritingView';
 import Chapter from 'containers/Chapter';
 import LoadingLarge from 'components/LoadingLarge';
 
@@ -60,14 +59,5 @@ export default (
       prepareParams={prepareContributeParams}
       renderLoading={() => <LoadingLarge />}
     />
-    <Route
-      name="prewriting"
-      path="prewriting/:novelId"
-      component={PrewritingView}
-      queries={contributeQueryConfig}
-      stateParams={['contributorId']}
-      prepareParams={prepareContributeParams}
-      renderLoading={() => <LoadingLarge />}
-      />
   </Route>
 );

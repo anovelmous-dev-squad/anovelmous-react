@@ -4,8 +4,9 @@ import FullContentLayout from 'layouts/FullContentLayout';
 import SidebarLayout from 'layouts/SidebarLayout';
 import CardVoter from 'containers/CardVoter';
 import CastVoteMutation from 'mutations/CastVoteMutation';
-import { Paper, Snackbar } from 'material-ui';
+import { Snackbar } from 'material-ui';
 import Notebook from 'containers/Notebook';
+import PrewritingView from './PrewritingView';
 
 class ContributeView extends React.Component {
   static propTypes = {
@@ -54,7 +55,8 @@ class ContributeView extends React.Component {
     this.refs.votingSnackbar.show();
   }
 
-  renderNovelWorkspace() {
+
+  renderNotebook() {
     const { viewer } = this.props;
     return (
       <Notebook
@@ -72,6 +74,20 @@ class ContributeView extends React.Component {
         >
         {this.props.children}
       </Notebook>
+    );
+  }
+
+  renderNovelWorkspace(stage) {
+    const { contributor, viewer } = this.props;
+    if (stage.name === 'WRITING' || stage.name === 'FINISHED') {
+      return this.renderNotebook();
+    }
+
+    return (
+      <PrewritingView
+        contributor={contributor}
+        viewer={viewer}
+        />
     );
   }
 
@@ -100,7 +116,7 @@ class ContributeView extends React.Component {
     const stage = this.props.viewer.novel.stage;
     return (stage.name === 'WRITING') ? (
       <SidebarLayout
-        content={this.renderNovelWorkspace()}
+        content={this.renderNovelWorkspace(stage)}
         sidebar={this.renderCardVoter()}
         />
     ) : (
@@ -127,6 +143,7 @@ export default Relay.createContainer(ContributeView, {
           }
         }
         ${CastVoteMutation.getFragment('contributor')}
+        ${PrewritingView.getFragment('contributor')}
       }
     `,
     viewer: () => Relay.QL`
@@ -143,7 +160,6 @@ export default Relay.createContainer(ContributeView, {
             }
             ${CastVoteMutation.getFragment('chapter')}
           }
-          ${Notebook.getFragment('novel')}
           vocabulary(first: 10000) {
             ${Notebook.getFragment('vocabulary')}
             ${CardVoter.getFragment('vocabulary')}
@@ -160,6 +176,8 @@ export default Relay.createContainer(ContributeView, {
             ${Notebook.getFragment('plotItems')}
             ${CardVoter.getFragment('plotItems')}
           }
+          ${Notebook.getFragment('novel')}
+          ${PrewritingView.getFragment('novel')}
         }
         novels(last: 5) {
           edges {
