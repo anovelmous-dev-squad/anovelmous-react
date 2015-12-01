@@ -25,11 +25,15 @@ class ContributeView extends React.Component {
     };
   }
 
+  _isPrewriting = (novel) => {
+    return !(novel.stage.name === 'WRITING' || novel.stage.name === 'FINISHED');
+  }
+
   _handleNovelChange = (novelId) => {
     const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
-    const chapterId = novel.latestChapter.id;
-    const novelContributeUrl = `/contribute/novel/${novelId}/chapter/${chapterId}`;
-    this.props.history.replace(novelContributeUrl);
+    const novelUrl = `/contribute/novel/${novelId}/`;
+    const urlSuffix = this._isPrewriting(novel) ? 'prewriting/' : `chapter/${novel.latestChapter.id}`;
+    this.props.history.replace(novelUrl + urlSuffix);
   }
 
   _handleChapterChange = (chapterId) => {
@@ -77,20 +81,6 @@ class ContributeView extends React.Component {
     );
   }
 
-  renderNovelWorkspace(stage) {
-    const { contributor, viewer } = this.props;
-    if (stage.name === 'WRITING' || stage.name === 'FINISHED') {
-      return this.renderNotebook();
-    }
-
-    return (
-      <PrewritingView
-        contributor={contributor}
-        viewer={viewer}
-        />
-    );
-  }
-
   renderCardVoter() {
     const { viewer } = this.props;
     return (
@@ -116,12 +106,12 @@ class ContributeView extends React.Component {
     const stage = this.props.viewer.novel.stage;
     return (stage.name === 'WRITING') ? (
       <SidebarLayout
-        content={this.renderNovelWorkspace(stage)}
+        content={this.renderNotebook()}
         sidebar={this.renderCardVoter()}
         />
     ) : (
       <FullContentLayout
-        content={this.renderNovelWorkspace()}
+        content={this.renderNotebook()}
         />
     );
   }
@@ -183,6 +173,9 @@ export default Relay.createContainer(ContributeView, {
           edges {
             node {
               id
+              stage {
+                name
+              }
               latestChapter {
                 id
               }

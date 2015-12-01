@@ -38,20 +38,24 @@ class Notebook extends React.Component {
               />
           </ToolbarGroup>
         </Toolbar>
-        <Novel
-          onChapterChange={onChapterChange}
-          novel={novel}
-          vocabulary={vocabulary}
-          places={places}
-          characters={characters}
-          plotItems={plotItems}
-          >
-          {this.props.children && React.cloneElement(this.props.children, {
-            onVoteChange: onVoteChange,
-            onVoteCast: onVoteCast,
-            voteText: voteText
-          })}
-        </Novel>
+        {novel.stage.name === 'WRITING' || novel.stage.name === 'FINISHED' ? (
+          <Novel
+            onChapterChange={onChapterChange}
+            novel={novel}
+            vocabulary={vocabulary}
+            places={places}
+            characters={characters}
+            plotItems={plotItems}
+            >
+            {this.props.children && React.cloneElement(this.props.children, {
+              onVoteChange: onVoteChange,
+              onVoteCast: onVoteCast,
+              voteText: voteText
+            })}
+          </Novel>
+        ) : (
+          this.props.children
+        )}
       </Paper>
     );
   }
@@ -62,6 +66,9 @@ export default Relay.createContainer(Notebook, {
     novel: () => Relay.QL`
       fragment on Novel {
         id
+        stage {
+          name
+        }
         ${NovelSelect.getFragment('currentNovel')}
         ${Novel.getFragment('novel')}
       }
