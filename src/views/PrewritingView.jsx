@@ -13,51 +13,50 @@ import { Tabs, Tab, Paper } from 'material-ui';
 class PrewritingView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired,
-    novelId: React.PropTypes.string.isRequired
+    viewer: React.PropTypes.object.isRequired
   }
 
   _handlePlotCreation = (summary) => {
     Relay.Store.update(
-        new CreatePlotMutation({
-          summary,
-          novelId: this.props.novelId,
-          viewer: this.props.contributor
-        })
+      new CreatePlotMutation({
+        summary,
+        novel: this.props.viewer.novel,
+        contributor: this.props.contributor
+      })
     );
   }
 
   _handleCharacterCreation = ({ firstName, lastName, bio }) => {
     Relay.Store.update(
-        new CreateCharacterMutation({
-          firstName,
-          lastName,
-          bio,
-          novelId: this.props.novelId,
-          viewer: this.props.contributor
-        })
+      new CreateCharacterMutation({
+        firstName,
+        lastName,
+        bio,
+        novel: this.props.viewer.novel,
+        contributor: this.props.contributor
+      })
     );
   }
 
   _handlePlaceCreation = ({ name, description }) => {
     Relay.Store.update(
-        new CreatePlaceMutation({
-          name,
-          description,
-          novelId: this.props.novelId,
-          viewer: this.props.contributor
-        })
+      new CreatePlaceMutation({
+        name,
+        description,
+        novel: this.props.viewer.novel,
+        contributor: this.props.contributor
+      })
     );
   }
 
   _handlePlotItemCreation = ({ name, description }) => {
     Relay.Store.update(
-        new CreatePlotItemMutation({
-          name,
-          description,
-          novelId: this.props.novelId,
-          viewer: this.props.contributor
-        })
+      new CreatePlotItemMutation({
+        name,
+        description,
+        novel: this.props.viewer.novel,
+        contributor: this.props.contributor
+      })
     );
   }
 
@@ -152,7 +151,7 @@ export default Relay.createContainer(PrewritingView, {
             }
           }
         }
-        plotItems(first: 5) {
+        plotitems(first: 5) {
           edges {
             node {
               name
@@ -160,10 +159,10 @@ export default Relay.createContainer(PrewritingView, {
             }
           }
         }
-        ${CreatePlotMutation.getFragment('viewer')}
-        ${CreateCharacterMutation.getFragment('viewer')}
-        ${CreatePlaceMutation.getFragment('viewer')}
-        ${CreatePlotItemMutation.getFragment('viewer')}
+        ${CreatePlotMutation.getFragment('contributor')}
+        ${CreateCharacterMutation.getFragment('contributor')}
+        ${CreatePlaceMutation.getFragment('contributor')}
+        ${CreatePlotItemMutation.getFragment('contributor')}
       }
     `,
     viewer: () => Relay.QL`
@@ -173,6 +172,10 @@ export default Relay.createContainer(PrewritingView, {
           stage {
             name
           }
+          ${CreatePlotMutation.getFragment('novel')}
+          ${CreateCharacterMutation.getFragment('novel')}
+          ${CreatePlaceMutation.getFragment('novel')}
+          ${CreatePlotItemMutation.getFragment('novel')}
         }
       }
     `

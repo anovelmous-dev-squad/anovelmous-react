@@ -23,16 +23,16 @@ class Chapter extends React.Component {
     const { chapter, vocabulary, places, characters, plotItems } = this.props;
     const dataSource = {};
     vocabulary.edges.forEach(edge => (
-      dataSource[edge.node.content] = this._getAutoCompleteItem(edge.node.content)
+      dataSource[edge.node.content] = this._getAutoCompleteItem(edge.node.id, edge.node.content)
     ));
     places.edges.forEach(edge => (
-      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.name)
+      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.id, edge.node.name)
     ));
     characters.edges.forEach(edge => (
-      dataSource[edge.node.firstName] = this._getAutoCompleteItem(edge.node.firstName)
+      dataSource[edge.node.firstName] = this._getAutoCompleteItem(edge.node.id, edge.node.firstName)
     ));
     plotItems.edges.forEach(edge => (
-      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.name)
+      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.id, edge.node.name)
     ));
 
     this.state = {
@@ -52,8 +52,8 @@ class Chapter extends React.Component {
     clearInterval(this.state.intervalId);
   }
 
-  _getAutoCompleteItem(text) {
-    return <AutoComplete.Item primaryText={text} secondaryText="&#9786;" />;
+  _getAutoCompleteItem(id, text) {
+    return <AutoComplete.Item primaryText={text} secondaryText="&#9786;" key={id} />;
   }
 
   _updateVotingRoundProgress() {
@@ -94,7 +94,8 @@ class Chapter extends React.Component {
                   onUpdateInput={(text) => this.props.onVoteChange(text)}
                   onNewRequest={(e) => {
                     const text = (typeof e === 'string') ? e : e.props.primaryText;
-                    return this.props.onVoteCast(text);
+                    const id = this.state.dataSource[text].key;
+                    return this.props.onVoteCast(id, text);
                   }}
                   filter={this._autoCompleteFilter} />
               </span>
@@ -127,6 +128,7 @@ export default Relay.createContainer(Chapter, {
       fragment on VocabTermConnection {
         edges {
           node {
+            id
             content
           }
         }
@@ -136,6 +138,7 @@ export default Relay.createContainer(Chapter, {
       fragment on PlaceConnection {
         edges {
           node {
+            id
             name
           }
         }
@@ -145,6 +148,7 @@ export default Relay.createContainer(Chapter, {
       fragment on CharacterConnection {
         edges {
           node {
+            id
             firstName
           }
         }
@@ -154,6 +158,7 @@ export default Relay.createContainer(Chapter, {
       fragment on PlotItemConnection {
         edges {
           node {
+            id
             name
           }
         }
