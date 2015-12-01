@@ -4,6 +4,7 @@ import Colors from 'material-ui/lib/styles/colors';
 
 export default class PlotCreator extends React.Component {
   static propTypes = {
+    maxSummaryLength: React.PropTypes.number.isRequired,
     onCreate: React.PropTypes.func.isRequired
   }
 
@@ -28,15 +29,19 @@ export default class PlotCreator extends React.Component {
   }
 
   _getErrorStyle = () => {
+    const { maxSummaryLength } = this.props;
     const { summary } = this.state;
-    if (summary.length > 3000) {
+    if (summary.length > maxSummaryLength) {
       return { color: Colors.red900 };
     }
 
-    return { color: summary.length < 2000 ? Colors.green400 : Colors.amber500 };
+    const threshold = maxSummaryLength * (2 / 3);
+
+    return { color: summary.length < threshold ? Colors.green400 : Colors.amber500 };
   }
 
   render() {
+    const { maxSummaryLength } = this.props;
     const { summary } = this.state;
     return (
       <div>
@@ -46,7 +51,7 @@ export default class PlotCreator extends React.Component {
             hintText="Write a back-of-book plot summary that you think this novel should have!"
             floatingLabelText="Plot Summary Proposal"
             errorStyle={this._getErrorStyle()}
-            errorText={`${summary.length} / 3000`}
+            errorText={`${summary.length} / ${maxSummaryLength}`}
             value={summary}
             onChange={this._handleSummaryChange}
             multiLine
@@ -57,7 +62,7 @@ export default class PlotCreator extends React.Component {
             type="submit"
             label="Submit"
             primary
-            disabled={summary.length > 3000}
+            disabled={summary.length > maxSummaryLength}
             />
         </form>
       </div>

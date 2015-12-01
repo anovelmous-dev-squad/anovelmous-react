@@ -80,7 +80,7 @@ class PrewritingView extends React.Component {
   }
 
   renderPlotSummaryStage() {
-    return <PlotCreator onCreate={this._handlePlotCreation} />;
+    return <PlotCreator maxSummaryLength={3000} onCreate={this._handlePlotCreation} />;
   }
 
   renderStructureCreationStage() {
