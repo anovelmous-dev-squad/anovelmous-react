@@ -8,6 +8,8 @@ import { Snackbar } from 'material-ui';
 import Notebook from 'containers/Notebook';
 import PrewritingView from './PrewritingView';
 
+import { isPrewriting } from 'utils';
+
 class ContributeView extends React.Component {
   static propTypes = {
     relay: React.PropTypes.object.isRequired,
@@ -25,14 +27,10 @@ class ContributeView extends React.Component {
     };
   }
 
-  _isPrewriting = (novel) => {
-    return !(novel.stage.name === 'WRITING' || novel.stage.name === 'FINISHED');
-  }
-
   _handleNovelChange = (novelId) => {
     const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
     const novelUrl = `/contribute/novel/${novelId}/`;
-    const urlSuffix = this._isPrewriting(novel) ? 'prewriting/' : `chapter/${novel.latestChapter.id}`;
+    const urlSuffix = isPrewriting(novel) ? 'prewriting/' : `chapter/${novel.latestChapter.id}`;
     this.props.history.replace(novelUrl + urlSuffix);
   }
 

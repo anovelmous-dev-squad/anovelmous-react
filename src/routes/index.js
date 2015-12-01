@@ -6,6 +6,7 @@ import ContributeView from 'views/ContributeView';
 import HomeView from 'views/HomeView';
 import StatsView from 'views/StatsView';
 import Chapter from 'containers/Chapter';
+import PlotDetailDialog from 'containers/PlotDetailDialog';
 import PrewritingView from 'views/PrewritingView';
 import LoadingLarge from 'components/LoadingLarge';
 
@@ -27,6 +28,10 @@ const prewritingQueryConfig = {
 
 const chapterQueryConfig = {
   chapter: () => Relay.QL`query { chapter(id: $chapterId) }`
+};
+
+const plotQueryConfig = {
+  novel: () => Relay.QL`query { novel(id: $novelId) }`
 };
 
 const prepareContributeParams = (params) => {
@@ -54,7 +59,14 @@ export default (
         queries={chapterQueryConfig}
         component={Chapter}
         renderLoading={() => <LoadingLarge />}
-        />
+        >
+        <Route
+          name="plot"
+          path="plot/"
+          queries={plotQueryConfig}
+          component={PlotDetailDialog}
+          />
+      </Route>
       <Route
         name="prewriting"
         path="prewriting/"
