@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import ProposedPlotList from 'containers/ProposedPlotList';
 import CharacterCreator from 'components/CharacterCreator';
 import PlaceCreator from 'components/PlaceCreator';
 import PlotItemCreator from 'components/PlotItemCreator';
@@ -8,6 +9,7 @@ import CreateCharacterMutation from 'mutations/CreateCharacterMutation';
 import CreatePlaceMutation from 'mutations/CreatePlaceMutation';
 import CreatePlotItemMutation from 'mutations/CreatePlotItemMutation';
 import CreatePlotMutation from 'mutations/CreatePlotMutation';
+
 import { Tabs, Tab, Paper } from 'material-ui';
 
 class PrewritingView extends React.Component {
@@ -80,7 +82,13 @@ class PrewritingView extends React.Component {
   }
 
   renderPlotSummaryStage() {
-    return <PlotCreator maxSummaryLength={3000} onCreate={this._handlePlotCreation} />;
+    const { novel, contributor } = this.props;
+    return (
+      <div>
+        <ProposedPlotList plots={novel.proposedPlots} contributor={contributor} />
+        <PlotCreator maxSummaryLength={3000} onCreate={this._handlePlotCreation} />
+      </div>
+    );
   }
 
   renderStructureCreationStage() {
@@ -146,6 +154,7 @@ export default Relay.createContainer(PrewritingView, {
             }
           }
         }
+        ${ProposedPlotList.getFragment('contributor')}
         ${CreatePlotMutation.getFragment('contributor')}
         ${CreateCharacterMutation.getFragment('contributor')}
         ${CreatePlaceMutation.getFragment('contributor')}
@@ -157,6 +166,9 @@ export default Relay.createContainer(PrewritingView, {
         title
         stage {
           name
+        }
+        proposedPlots(first: 20) {
+          ${ProposedPlotList.getFragment('plots')}
         }
         ${CreatePlotMutation.getFragment('novel')}
         ${CreateCharacterMutation.getFragment('novel')}

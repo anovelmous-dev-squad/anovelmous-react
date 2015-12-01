@@ -11,7 +11,7 @@ class ProposedPlotList extends React.Component {
 
   renderPlotCard(plot) {
     const { contributor } = this.props;
-    return <ScoreCard title={contributor.firstName} description={plot.summary} />;
+    return <ScoreCard title={contributor.firstName + '\'s Idea'} description={plot.summary} />;
   }
 
   render() {
