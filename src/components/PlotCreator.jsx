@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextField, RaisedButton } from 'material-ui';
 
 export default class PlotCreator extends React.Component {
   static propTypes = {
@@ -30,11 +31,15 @@ export default class PlotCreator extends React.Component {
     return (
       <div>
         <form onSubmit={this._handleOnSubmit}>
-          <textarea placeholder="Enter a brief summary of the novel's plot"
-                    value={summary}
-                    onChange={this._handleSummaryChange}
-          />
-          <input type="submit" />
+          <TextField
+            hintText="Write a back-of-book plot summary that you think this novel should have!"
+            floatingLabelText="Plot Summary Proposal"
+            value={summary}
+            onChange={this._handleSummaryChange}
+            multiLine
+            fullWidth
+            rows={10} />
+          <RaisedButton type="submit" label="Submit" primary />
         </form>
       </div>
     );
