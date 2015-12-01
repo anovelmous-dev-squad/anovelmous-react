@@ -89,6 +89,7 @@ class Chapter extends React.Component {
               <span>
                 <AutoComplete
                   dataSource={this.state.dataSource}
+                  animated={false}
                   searchText={this.props.voteText}
                   floatingLabelText={'your contribution here'}
                   onUpdateInput={(text) => this.props.onVoteChange(text)}
