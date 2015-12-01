@@ -53,7 +53,12 @@ export default class PlotCreator extends React.Component {
             fullWidth
             rows={10}
             />
-          <RaisedButton type="submit" label="Submit" primary />
+          <RaisedButton
+            type="submit"
+            label="Submit"
+            primary
+            disabled={summary.length > 3000}
+            />
         </form>
       </div>
     );
