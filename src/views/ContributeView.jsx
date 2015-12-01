@@ -40,14 +40,14 @@ class ContributeView extends React.Component {
   _handleVoteCast = (resourceId, text) => {
     this.setState({voteText: '', prevVoteText: text});
     const chapter = this.props.viewer.novel.latestChapter;
-    /*Relay.Store.update(
+    Relay.Store.update(
       new CastVoteMutation({
         resourceId,
-        chapterId: chapter.id,
+        chapter,
         ordinal: chapter.tokens.totalCount,
         contributor: this.props.contributor
       })
-    );*/
+    );
     this.refs.votingSnackbar.show();
   }
 
@@ -143,6 +143,10 @@ export default Relay.createContainer(ContributeView, {
           isCompleted
           latestChapter {
             id
+            tokens {
+              totalCount
+            }
+            ${CastVoteMutation.getFragment('chapter')}
           }
           ${Novel.getFragment('novel')}
           vocabulary(first: 10000) {
