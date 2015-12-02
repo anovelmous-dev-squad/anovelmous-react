@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, IconButton } from 'material-ui';
+import { Paper, IconButton, Card, CardHeader, CardText, CardActions } from 'material-ui';
 
 export default class ScoreCard extends React.Component {
   static propTypes = {
@@ -7,23 +7,35 @@ export default class ScoreCard extends React.Component {
     score: React.PropTypes.number.isRequired,
     title: React.PropTypes.string.isRequired,
     description: React.PropTypes.string.isRequired,
-    onUpvote: React.PropTypes.func.isRequired,
-  }
+    onUpvote: React.PropTypes.func.isRequired
+  };
 
   _handleUpvote = () => {
     this.props.onUpvote(this.props.id);
-  }
+  };
 
   render() {
     const { score, title, description } = this.props;
     return (
-      <Paper>
-        <IconButton iconClassName="material-icons" onClick={this._handleUpvote}>arrow_upward</IconButton>
-        <h3>{score}</h3>
-        <IconButton iconClassName="material-icons">arrow_downward</IconButton>
-        <h2>{title}</h2>
-        <p>{description}</p>
-      </Paper>
+
+        <Card>
+          <CardHeader
+              title={title}
+              avatar={<div></div>}>
+          </CardHeader>
+
+          <CardText>{description}</CardText>
+
+          <CardActions>
+            <IconButton iconClassName="material-icons"
+                        onClick={this._handleUpvote}>arrow_upward</IconButton>
+            <span> {score} </span>
+            <IconButton
+                iconClassName="material-icons">arrow_downward</IconButton>
+          </CardActions>
+
+        </Card>
+
     );
   }
 }
