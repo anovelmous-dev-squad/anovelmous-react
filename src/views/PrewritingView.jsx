@@ -2,6 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import ProposedPlotList from 'containers/ProposedPlotList';
 import ProposedCharacterList from 'containers/ProposedCharacterList';
+import ProposedPlaceList from 'containers/ProposedPlaceList';
 import CharacterCreator from 'components/CharacterCreator';
 import PlaceCreator from 'components/PlaceCreator';
 import PlotItemCreator from 'components/PlotItemCreator';
@@ -17,7 +18,7 @@ class PrewritingView extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
     novel: React.PropTypes.object.isRequired
-  }
+  };
 
   _handlePlotCreation = (summary) => {
     Relay.Store.update(
@@ -27,7 +28,7 @@ class PrewritingView extends React.Component {
         contributor: this.props.contributor
       })
     );
-  }
+  };
 
   _handleCharacterCreation = ({ firstName, lastName, bio }) => {
     Relay.Store.update(
@@ -39,7 +40,7 @@ class PrewritingView extends React.Component {
         contributor: this.props.contributor
       })
     );
-  }
+  };
 
   _handlePlaceCreation = ({ name, description }) => {
     Relay.Store.update(
@@ -50,7 +51,7 @@ class PrewritingView extends React.Component {
         contributor: this.props.contributor
       })
     );
-  }
+  };
 
   _handlePlotItemCreation = ({ name, description }) => {
     Relay.Store.update(
@@ -61,7 +62,7 @@ class PrewritingView extends React.Component {
         contributor: this.props.contributor
       })
     );
-  }
+  };
 
   _getCurrentStageView = (stage) => {
     switch (stage.name) {
@@ -76,7 +77,7 @@ class PrewritingView extends React.Component {
     default:
       return <p>this should not happen.</p>;
     }
-  }
+  };
 
   renderBrainstormingStage() {
     return <div>Think about the upcoming novel.</div>;
@@ -101,7 +102,10 @@ class PrewritingView extends React.Component {
             <ProposedCharacterList characters={novel.proposedCharacters} contributor={contributor} />
             <CharacterCreator onCreate={this._handleCharacterCreation}/>
           </Tab>
-          <Tab label="Create a Place"> <PlaceCreator onCreate={this._handlePlaceCreation} /> </Tab>
+          <Tab label="Create a Place">
+            <ProposedPlaceList places={novel.proposedPlaces} contributor={contributor} />
+            <PlaceCreator onCreate={this._handlePlaceCreation} />
+          </Tab>
           <Tab label="Create a Plot Item"> <PlotItemCreator onCreate={this._handlePlotItemCreation}/> </Tab>
         </Tabs>
       </Paper>
@@ -178,6 +182,9 @@ export default Relay.createContainer(PrewritingView, {
         }
         proposedCharacters(first: 20) {
           ${ProposedCharacterList.getFragment('characters')}
+        }
+        proposedPlaces(first: 20) {
+          ${ProposedPlaceList.getFragment('places')}
         }
         ${CreatePlotMutation.getFragment('novel')}
         ${CreateCharacterMutation.getFragment('novel')}
