@@ -6,10 +6,10 @@ import ScoreCard from 'components/ScoreCard';
 class ProposedCharacterList extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
-    characters: React.PropTypes.object.isRequired,
+    characters: React.PropTypes.object.isRequired
   };
 
-  renderPlotCard(character) {
+  renderCharacterCard(character) {
     return (
       <ScoreCard
         id={character.id}
@@ -25,7 +25,7 @@ class ProposedCharacterList extends React.Component {
     const { characters } = this.props;
     return (
       <div>
-        {characters.edges.map(edge => this.renderPlotCard(edge.node))}
+        {characters.edges.map(edge => this.renderCharacterCard(edge.node))}
       </div>
     );
   }
