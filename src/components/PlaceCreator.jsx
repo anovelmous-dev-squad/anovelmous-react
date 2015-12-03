@@ -33,7 +33,7 @@ export default class PlaceCreator extends React.Component {
 
   render() {
     return (
-      <Paper style={{padding : "12px"}}>
+      <Paper style={{padding: "12px", margin: "6px"}}>
         <TextField
           hintText="Place Name"
           onChange={this._handleNameChange}/>
