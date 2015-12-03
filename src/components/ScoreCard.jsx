@@ -17,7 +17,7 @@ export default class ScoreCard extends React.Component {
         <Paper>
 
           <table>
-            <tr>
+            <tr style={{verticalAlign : "top"}}>
               <td>
                 <IconButton iconClassName="material-icons"
                             onClick={this._handleUpvote}>arrow_upward</IconButton>
@@ -25,7 +25,7 @@ export default class ScoreCard extends React.Component {
                 <IconButton iconClassName="material-icons">arrow_downward</IconButton>
               </td>
 
-              <td style={{verticalAlign : "top"}}>
+              <td>
                 <h2>{title}</h2>
                 {description}
               </td>
