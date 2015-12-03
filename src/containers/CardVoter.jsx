@@ -84,6 +84,7 @@ export default Relay.createContainer(CardVoter, {
       fragment on PlaceConnection {
         edges {
           node {
+            id
             name
             description
           }
@@ -94,6 +95,7 @@ export default Relay.createContainer(CardVoter, {
       fragment on CharacterConnection {
         edges {
           node {
+            id
             firstName
             lastName
             bio
@@ -105,6 +107,7 @@ export default Relay.createContainer(CardVoter, {
       fragment on PlotItemConnection {
         edges {
           node {
+            id
             name
             description
           }

@@ -1,5 +1,9 @@
 import moment from 'moment';
 
+export const isPrewriting = (novel) => {
+  return !(novel.stage.name === 'WRITING' || novel.stage.name === 'FINISHED');
+};
+
 /* Returns the remaining voting time in seconds */
 export const getRemainingVotingTime = (start, duration) => {
   const startTimestamp = moment(start).unix();

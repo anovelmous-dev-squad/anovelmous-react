@@ -15,7 +15,8 @@ class Chapter extends React.Component {
     readingHeight: PropTypes.number,
     onVoteChange: PropTypes.func,
     onVoteCast: PropTypes.func,
-    voteText: PropTypes.string
+    voteText: PropTypes.string,
+    children: PropTypes.element,
   }
 
   constructor(props) {
@@ -83,6 +84,7 @@ class Chapter extends React.Component {
     const { chapter, readingHeight } = this.props;
     return (
       <div>
+        {this.props.children}
         <div style={{height: readingHeight || 500, overflowY: 'scroll'}}>
           <span>{chapter.text} </span>
             {!chapter.isCompleted &&
