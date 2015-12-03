@@ -42,7 +42,7 @@ export default class PlotItemCreator extends React.Component {
           onChange={this._handleDescriptionChange}
           multiLine="true"
           fullWidth="true"
-          rows="6"/>
+          rows="3"/>
         <RaisedButton
           label="Create"
           onClick={this._handleOnCreate}/>
