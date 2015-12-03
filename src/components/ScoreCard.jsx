@@ -17,6 +17,8 @@ export default class ScoreCard extends React.Component {
         <Paper style={{padding: "12px", margin: "6px 0px"}}>
 
           <table>
+            <tbody>
+
             <tr style={{verticalAlign : "top"}}>
               <td>
                 <IconButton iconClassName="material-icons"
@@ -31,6 +33,7 @@ export default class ScoreCard extends React.Component {
               </td>
 
             </tr>
+            </tbody>
           </table>
 
         </Paper>

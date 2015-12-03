@@ -170,6 +170,7 @@ export default Relay.createContainer(PrewritingView, {
         }
         ${ProposedPlotList.getFragment('contributor')}
         ${ProposedCharacterList.getFragment('contributor')}
+        ${ProposedPlaceList.getFragment('contributor')}
         ${ProposedPlotItemList.getFragment('contributor')}
         ${CreatePlotMutation.getFragment('contributor')}
         ${CreateCharacterMutation.getFragment('contributor')}

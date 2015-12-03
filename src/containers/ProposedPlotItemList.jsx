@@ -24,7 +24,6 @@ class ProposedPlotItemList extends React.Component {
 
   render() {
     const { plotItems } = this.props;
-    console.log(this);
     return (
       <div>
         {plotItems.edges.map(edge => this.renderPlotItemCard(edge.node))}
