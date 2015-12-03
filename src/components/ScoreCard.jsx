@@ -14,7 +14,7 @@ export default class ScoreCard extends React.Component {
     const { score, title, description } = this.props;
     return (
 
-        <Paper>
+        <Paper style={{padding: "12px", margin: "6px"}}>
 
           <table>
             <tr style={{verticalAlign : "top"}}>
