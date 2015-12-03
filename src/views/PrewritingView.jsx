@@ -97,22 +97,23 @@ class PrewritingView extends React.Component {
   renderStructureCreationStage() {
     const { novel, contributor } = this.props;
     return (
-      <Paper>
         <Tabs>
           <Tab label="Create a Character">
-            <ProposedCharacterList characters={novel.proposedCharacters} contributor={contributor} />
+            <ProposedCharacterList characters={novel.proposedCharacters}
+                                   contributor={contributor}/>
             <CharacterCreator onCreate={this._handleCharacterCreation}/>
           </Tab>
           <Tab label="Create a Place">
-            <ProposedPlaceList places={novel.proposedPlaces} contributor={contributor} />
-            <PlaceCreator onCreate={this._handlePlaceCreation} />
+            <ProposedPlaceList places={novel.proposedPlaces}
+                               contributor={contributor}/>
+            <PlaceCreator onCreate={this._handlePlaceCreation}/>
           </Tab>
           <Tab label="Create a Plot Item">
-            <ProposedPlotItemList plotItems={novel.proposedPlotitems} contributor={contributor} />
+            <ProposedPlotItemList plotItems={novel.proposedPlotitems}
+                                  contributor={contributor}/>
             <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
           </Tab>
         </Tabs>
-      </Paper>
     );
   }
 

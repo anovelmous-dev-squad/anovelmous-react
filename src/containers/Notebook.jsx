@@ -27,7 +27,7 @@ class Notebook extends React.Component {
     const { novel, novels, vocabulary, places, characters, plotItems,
             onNovelChange, onChapterChange, onVoteChange, onVoteCast, voteText } = this.props;
     return (
-      <Paper>
+      <div>
         <Toolbar>
           <ToolbarGroup key={0} float="left">
             <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
@@ -56,7 +56,7 @@ class Notebook extends React.Component {
         ) : (
           this.props.children
         )}
-      </Paper>
+      </div>
     );
   }
 }
