@@ -37,7 +37,7 @@ export default class CharacterCreator extends React.Component {
 
   render() {
     return (
-      <Paper style={{padding : "12px"}}>
+      <Paper style={{padding: "12px", margin: "6px"}}>
         <TextField
           hintText="First Name"
           onChange={this._handleFirstNameChange}
