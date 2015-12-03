@@ -10,31 +10,30 @@ export default class ScoreCard extends React.Component {
     onUpvote: React.PropTypes.func.isRequired
   };
 
-  _handleUpvote = () => {
-    this.props.onUpvote(this.props.id);
-  };
-
   render() {
     const { score, title, description } = this.props;
     return (
 
-        <Card>
-          <CardHeader
-              title={title}
-              avatar={<div></div>}>
-          </CardHeader>
+        <Paper>
 
-          <CardText>{description}</CardText>
+          <table>
+            <tr>
+              <td>
+                <IconButton iconClassName="material-icons"
+                            onClick={this._handleUpvote}>arrow_upward</IconButton>
+                <div style={{textAlign : "center"}}> {score} </div>
+                <IconButton iconClassName="material-icons">arrow_downward</IconButton>
+              </td>
 
-          <CardActions>
-            <IconButton iconClassName="material-icons"
-                        onClick={this._handleUpvote}>arrow_upward</IconButton>
-            <span> {score} </span>
-            <IconButton
-                iconClassName="material-icons">arrow_downward</IconButton>
-          </CardActions>
+              <td style={{verticalAlign : "top"}}>
+                <h2>{title}</h2>
+                {description}
+              </td>
 
-        </Card>
+            </tr>
+          </table>
+
+        </Paper>
 
     );
   }
