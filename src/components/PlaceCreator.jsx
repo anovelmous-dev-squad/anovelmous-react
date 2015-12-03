@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, RaisedButton } from 'material-ui';
+import { TextField, RaisedButton, Paper } from 'material-ui';
 
 export default class PlaceCreator extends React.Component {
   static propTypes = {
@@ -33,7 +33,7 @@ export default class PlaceCreator extends React.Component {
 
   render() {
     return (
-      <div>
+      <Paper style={{padding : "12px"}}>
         <TextField
           hintText="Place Name"
           onChange={this._handleNameChange}/>
@@ -42,13 +42,13 @@ export default class PlaceCreator extends React.Component {
           onChange={this._handleDescriptionChange}
           multiline="true"
           fullWidth="true"
-          rows="6"
+          rows="3"
           />
         <RaisedButton
           label="Create"
           onClick={this._handleOnCreate}
           />
-      </div>
+      </Paper>
     );
   }
 }
