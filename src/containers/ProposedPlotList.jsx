@@ -10,8 +10,11 @@ class ProposedPlotList extends React.Component {
     plots: React.PropTypes.object.isRequired,
   };
 
-  constructor(props) {
-    super(props);
+  componentWillMount() {
+    console.log(this.props.contributor.id)
+    if (this.props.relay.variables.contributorId === '') {
+      this.props.relay.setVariables({contributorId: this.props.contributor.id});
+    }
   }
 
   _updateVoteScore(resourceId, addend) {
@@ -39,7 +42,9 @@ class ProposedPlotList extends React.Component {
         score={plot.voteScore}
         title={contributor.username + '\'s Idea'}
         description={plot.summary}
+        userScore={plot.vote ? plot.vote.score : 0}
         onUpvote={(id) => console.log(id)}
+        onDownvote={(id) => console.log(id)}
         />
     );
   }
@@ -56,7 +61,7 @@ class ProposedPlotList extends React.Component {
 
 export default Relay.createContainer(ProposedPlotList, {
   initialVariables: {
-    contributorId: '',
+    contributorId: 'Q29udHJpYnV0b3I6MQ==',
   },
   fragments: {
     contributor: () => Relay.QL`
@@ -72,6 +77,9 @@ export default Relay.createContainer(ProposedPlotList, {
             id
             voteScore
             summary
+            vote(contributorId: $contributorId) {
+              score
+            }
           }
         }
       }
