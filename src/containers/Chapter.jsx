@@ -86,9 +86,10 @@ class Chapter extends React.Component {
       self.setState({
         votingRoundProgress: progress,
       });
-      if (progress.percentComplete === 0) {
+      // TODO implement polling
+      /* if (progress.percentComplete === 0) {
         self.props.relay.forceFetch({});
-      }
+      }*/
     }, PROGRESS_BAR_UPDATE_INTERVAL);
     this.setState({ intervalId });
   }
@@ -108,7 +109,7 @@ class Chapter extends React.Component {
     return (
       <div>
         {this.props.children}
-        <div style={{height: readingHeight || 500, overflowY: 'scroll'}}>
+        <div style={{height: readingHeight || 500, overflowY: 'scroll', padding: 10}}>
           <span>{chapter.text} </span>
             {!chapter.isCompleted &&
               <span>
