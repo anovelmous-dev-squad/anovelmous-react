@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, RaisedButton } from 'material-ui';
+import { TextField, RaisedButton, Paper } from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
 
 export default class PlotCreator extends React.Component {
@@ -44,7 +44,7 @@ export default class PlotCreator extends React.Component {
     const { maxSummaryLength } = this.props;
     const { summary } = this.state;
     return (
-      <div>
+      <Paper style={{padding: "12px", margin: "6px 0px"}}>
         <form onSubmit={this._handleOnSubmit}>
           <TextField
             type="text"
@@ -56,7 +56,7 @@ export default class PlotCreator extends React.Component {
             onChange={this._handleSummaryChange}
             multiLine
             fullWidth
-            rows={10}
+            rows={6}
             />
           <RaisedButton
             type="submit"
@@ -65,7 +65,7 @@ export default class PlotCreator extends React.Component {
             disabled={summary.length > maxSummaryLength}
             />
         </form>
-      </div>
+      </Paper>
     );
   }
 }
