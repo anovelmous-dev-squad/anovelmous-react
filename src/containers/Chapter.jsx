@@ -5,6 +5,13 @@ import { getVotingRoundProgress } from 'utils';
 
 const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
 
+const getCharacterFullName = (firstName, lastName) => {
+  if (lastName === '') {
+    return firstName;
+  }
+  return `${firstName} ${lastName}`;
+};
+
 class Chapter extends React.Component {
   static propTypes = {
     chapter: PropTypes.object.isRequired,
@@ -24,16 +31,16 @@ class Chapter extends React.Component {
     const { chapter, vocabulary, places, characters, plotItems } = this.props;
     const dataSource = {};
     vocabulary.edges.forEach(edge => (
-      dataSource[edge.node.content] = this._getAutoCompleteItem(edge.node.id, edge.node.content)
+      dataSource[edge.node.content] = this._getAutoCompleteVocabTerm(edge.node)
     ));
     places.edges.forEach(edge => (
-      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.id, edge.node.name)
+      dataSource[edge.node.name] = this._getAutoCompletePlace(edge.node)
     ));
     characters.edges.forEach(edge => (
-      dataSource[edge.node.firstName] = this._getAutoCompleteItem(edge.node.id, edge.node.firstName)
+      dataSource[getCharacterFullName(edge.node.firstName, edge.node.lastName)] = this._getAutoCompleteCharacter(edge.node)
     ));
     plotItems.edges.forEach(edge => (
-      dataSource[edge.node.name] = this._getAutoCompleteItem(edge.node.id, edge.node.name)
+      dataSource[edge.node.name] = this._getAutoCompletePlotItem(edge.node)
     ));
 
     this.state = {
@@ -53,8 +60,20 @@ class Chapter extends React.Component {
     clearInterval(this.state.intervalId);
   }
 
-  _getAutoCompleteItem(id, text) {
-    return <AutoComplete.Item primaryText={text} secondaryText="&#9786;" key={id} />;
+  _getAutoCompleteVocabTerm(vocabTerm) {
+    return <AutoComplete.Item primaryText={vocabTerm.content} secondaryText="Token" key={vocabTerm.id} />;
+  }
+
+  _getAutoCompletePlace(place) {
+    return <AutoComplete.Item primaryText={place.name} secondaryText="Place" key={place.id} />;
+  }
+
+  _getAutoCompleteCharacter(character) {
+    return <AutoComplete.Item primaryText={getCharacterFullName(character.firstName, character.lastName)} secondaryText="Character" key={character.id} />;
+  }
+
+  _getAutoCompletePlotItem(plotItem) {
+    return <AutoComplete.Item primaryText={plotItem.name} secondaryText="PlotItem" key={plotItem.id} />;
   }
 
   _updateVotingRoundProgress() {
@@ -72,9 +91,9 @@ class Chapter extends React.Component {
 
   _autoCompleteFilter(searchText, key) {
     if (searchText.length > 2) {
-      return key.startsWith(searchText);
+      return key.toLowerCase().startsWith(searchText.toLowerCase());
     }
-    if (searchText === key) {
+    if (searchText === key.toLowerCase()) {
       return true;
     }
     return false;
@@ -153,6 +172,7 @@ export default Relay.createContainer(Chapter, {
           node {
             id
             firstName
+            lastName
           }
         }
       }

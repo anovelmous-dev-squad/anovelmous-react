@@ -13,7 +13,7 @@ class CardVoter extends React.Component {
   }
 
   _filterTerm = (term) => {
-    return term.toLowerCase().startsWith(this.props.voteText);
+    return term.toLowerCase().startsWith(this.props.voteText.toLowerCase());
   }
 
   renderVocabCard(id, term, description, tag) {
