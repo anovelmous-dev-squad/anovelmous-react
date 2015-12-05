@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, RaisedButton } from 'material-ui';
+import { TextField, RaisedButton, Paper } from 'material-ui';
 
 export default class PlotItemCreator extends React.Component {
   static propTypes = {
@@ -33,7 +33,7 @@ export default class PlotItemCreator extends React.Component {
 
   render() {
     return (
-      <div>
+      <Paper style={{padding: "12px", margin: "6px 0px"}}>
         <TextField
           hintText="Plot Item Name"
           onChange={this._handleNameChange}/>
@@ -42,11 +42,11 @@ export default class PlotItemCreator extends React.Component {
           onChange={this._handleDescriptionChange}
           multiLine="true"
           fullWidth="true"
-          rows="6"/>
+          rows="3"/>
         <RaisedButton
           label="Create"
           onClick={this._handleOnCreate}/>
-      </div>
+      </Paper>
     );
   }
 }
