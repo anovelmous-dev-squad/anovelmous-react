@@ -15,7 +15,8 @@ class ContributeView extends React.Component {
     relay: React.PropTypes.object.isRequired,
     history: React.PropTypes.object.isRequired,
     contributor: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired,
+    novel: React.PropTypes.object.isRequired,
+    novels: React.PropTypes.object.isRequired,
     children: React.PropTypes.element.isRequired
   };
 
@@ -28,14 +29,14 @@ class ContributeView extends React.Component {
   }
 
   _handleNovelChange = (novelId) => {
-    const novel = this.props.viewer.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
+    const novel = this.props.novels.edges.filter(edge => edge.node.id === novelId)[0].node;
     const novelUrl = `/contribute/novel/${novelId}/`;
     const urlSuffix = isPrewriting(novel) ? 'prewriting/' : `chapter/${novel.latestChapter.id}`;
     this.props.history.replace(novelUrl + urlSuffix);
   }
 
   _handleChapterChange = (chapterId) => {
-    const novelId = this.props.viewer.novel.id;
+    const novelId = this.props.novel.id;
     this.props.history.replace(`/contribute/novel/${novelId}/chapter/${chapterId}`);
   }
 
@@ -45,7 +46,7 @@ class ContributeView extends React.Component {
 
   _handleVoteCast = (resourceId, text) => {
     this.setState({voteText: '', prevVoteText: text});
-    const chapter = this.props.viewer.novel.latestChapter;
+    const chapter = this.props.novel.latestChapter;
     Relay.Store.update(
       new CastVoteMutation({
         resourceId,
@@ -59,15 +60,15 @@ class ContributeView extends React.Component {
 
 
   renderNotebook() {
-    const { viewer } = this.props;
+    const { novel, novels } = this.props;
     return (
       <Notebook
-        novel={viewer.novel}
-        novels={viewer.novels}
-        vocabulary={viewer.novel.vocabulary}
-        places={viewer.novel.places}
-        characters={viewer.novel.characters}
-        plotItems={viewer.novel.plotItems}
+        novel={novel}
+        novels={novels}
+        vocabulary={novel.vocabulary}
+        places={novel.places}
+        characters={novel.characters}
+        plotItems={novel.plotItems}
         onNovelChange={this._handleNovelChange}
         onChapterChange={this._handleChapterChange}
         onVoteChange={this._handleVoteChange}
@@ -80,15 +81,15 @@ class ContributeView extends React.Component {
   }
 
   renderCardVoter() {
-    const { viewer } = this.props;
+    const { novel } = this.props;
     return (
       <div>
         <CardVoter
           voteText={this.state.voteText}
-          vocabulary={viewer.novel.vocabulary}
-          places={viewer.novel.places}
-          characters={viewer.novel.characters}
-          plotItems={viewer.novel.plotItems}
+          vocabulary={novel.vocabulary}
+          places={novel.places}
+          characters={novel.characters}
+          plotItems={novel.plotItems}
           onVoteCast={this._handleVoteCast}
           />
         <Snackbar
@@ -101,7 +102,7 @@ class ContributeView extends React.Component {
   }
 
   render () {
-    const stage = this.props.viewer.novel.stage;
+    const stage = this.props.novel.stage;
     return (stage.name === 'WRITING') ? (
       <SidebarLayout
         content={this.renderNotebook()}
@@ -134,54 +135,54 @@ export default Relay.createContainer(ContributeView, {
         ${PrewritingView.getFragment('contributor')}
       }
     `,
-    viewer: () => Relay.QL`
-      fragment on Query {
-        novel(id: $novelId) {
+    novel: () => Relay.QL`
+      fragment on Novel {
+        id
+        stage {
+          name
+        }
+        latestChapter {
           id
-          stage {
-            name
+          tokens {
+            totalCount
           }
-          latestChapter {
-            id
-            tokens {
-              totalCount
-            }
-            ${CastVoteMutation.getFragment('chapter')}
-          }
-          vocabulary(first: 10000) {
-            ${Notebook.getFragment('vocabulary')}
-            ${CardVoter.getFragment('vocabulary')}
-          }
-          places(first: 50) {
-            ${Notebook.getFragment('places')}
-            ${CardVoter.getFragment('places')}
-          }
-          characters(first: 50) {
-            ${Notebook.getFragment('characters')}
-            ${CardVoter.getFragment('characters')}
-          }
-          plotItems(first: 50) {
-            ${Notebook.getFragment('plotItems')}
-            ${CardVoter.getFragment('plotItems')}
-          }
-          ${Notebook.getFragment('novel')}
-          ${PrewritingView.getFragment('novel')}
+          ${CastVoteMutation.getFragment('chapter')}
         }
-        novels(last: 5) {
-          edges {
-            node {
-              id
-              stage {
-                name
-              }
-              latestChapter {
-                id
-              }
-            }
-          }
-          ${Notebook.getFragment('novels')}
+        vocabulary(first: 10000) {
+          ${Notebook.getFragment('vocabulary')}
+          ${CardVoter.getFragment('vocabulary')}
         }
+        places(first: 50) {
+          ${Notebook.getFragment('places')}
+          ${CardVoter.getFragment('places')}
+        }
+        characters(first: 50) {
+          ${Notebook.getFragment('characters')}
+          ${CardVoter.getFragment('characters')}
+        }
+        plotItems(first: 50) {
+          ${Notebook.getFragment('plotItems')}
+          ${CardVoter.getFragment('plotItems')}
+        }
+        ${Notebook.getFragment('novel')}
+        ${PrewritingView.getFragment('novel')}
       }
-    `
-  }
+    `,
+    novels: () => Relay.QL`
+      fragment on NovelConnection {
+        edges {
+          node {
+            id
+            stage {
+              name
+            }
+            latestChapter {
+              id
+            }
+          }
+        }
+        ${Notebook.getFragment('novels')}
+      }
+    `,
+  },
 });

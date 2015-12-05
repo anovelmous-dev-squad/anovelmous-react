@@ -18,7 +18,8 @@ const viewerQueryConfig = {
 
 const contributeQueryConfig = {
   contributor: () => Relay.QL`query { contributor(id: $contributorId) }`,
-  viewer: () => Relay.QL`query { viewer }`
+  novel: () => Relay.QL`query { novel(id: $novelId) }`,
+  novels: () => Relay.QL`query { novels }`,
 };
 
 const prewritingQueryConfig = {

@@ -3,7 +3,7 @@ import Relay from 'react-relay';
 import { LinearProgress, AutoComplete } from 'material-ui';
 import { getVotingRoundProgress } from 'utils';
 
-const PROGRESS_BAR_UPDATE_INTERVAL = 200; // in ms
+const PROGRESS_BAR_UPDATE_INTERVAL = 1000; // in ms
 
 const getCharacterFullName = (firstName, lastName) => {
   if (lastName === '') {
@@ -80,11 +80,15 @@ class Chapter extends React.Component {
     const self = this;
     const intervalId = setInterval(() => {
       const { chapter } = self.props;
+      const progress = getVotingRoundProgress(
+        chapter.novel.prevVotingEnded, chapter.votingDuration
+      );
       self.setState({
-        votingRoundProgress: getVotingRoundProgress(
-          chapter.novel.prevVotingEnded, chapter.votingDuration
-        )
+        votingRoundProgress: progress,
       });
+      if (progress.percentComplete === 0) {
+        self.props.relay.forceFetch({});
+      }
     }, PROGRESS_BAR_UPDATE_INTERVAL);
     this.setState({ intervalId });
   }
