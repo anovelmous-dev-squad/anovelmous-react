@@ -19,6 +19,10 @@ class ProposedPlotList extends React.Component {
     );
   }
 
+  _handleUndoVote = (plotId) => {
+    this._updateVoteScore(plotId, 0);
+  }
+
   _handleUpvote = (plotId) => {
     this._updateVoteScore(plotId, 1);
   }
@@ -36,6 +40,7 @@ class ProposedPlotList extends React.Component {
         title={contributor.username + '\'s Idea'}
         description={plot.summary}
         userScore={plot.vote ? plot.vote.score : 0}
+        onUndoVote={(id) => this._handleUndoVote(id)}
         onUpvote={(id) => this._handleUpvote(id)}
         onDownvote={(id) => this._handleDownvote(id)}
         />

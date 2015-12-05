@@ -1,12 +1,13 @@
 import React from 'react';
-import { Paper, IconButton, Card, CardHeader, CardText, CardActions } from 'material-ui';
+import { Paper, IconButton } from 'material-ui';
 import Colors from 'material-ui/lib/styles/colors';
 
 const getScoreColor = (score) => {
-  if (score === 0)
+  if (score === 0) {
     return 'black';
+  }
   return score === 1 ? Colors.red900 : Colors.gray700;
-}
+};
 
 export default class ScoreCard extends React.Component {
   static propTypes = {
@@ -15,6 +16,7 @@ export default class ScoreCard extends React.Component {
     title: React.PropTypes.string.isRequired,
     description: React.PropTypes.string.isRequired,
     userScore: React.PropTypes.number.isRequired,
+    onUndoVote: React.PropTypes.func,
     onUpvote: React.PropTypes.func,
     onDownvote: React.PropTypes.func,
   };
@@ -25,10 +27,16 @@ export default class ScoreCard extends React.Component {
   }
 
   _handleUpvote = () => {
+    if (this.props.userScore === 1) {
+      return this.props.onUndoVote(this.props.id);
+    }
     return this.props.onUpvote(this.props.id);
   }
 
   _handleDownvote = () => {
+    if (this.props.userScore === -1) {
+      return this.props.onUndoVote(this.props.id);
+    }
     return this.props.onDownvote(this.props.id);
   }
 
@@ -47,8 +55,8 @@ export default class ScoreCard extends React.Component {
       score: {
         fontSize: 18,
         color: getScoreColor(score),
-        textAlign : "center",
-        fontWeight: userScore !== 0 ? 'bold': 'normal',
+        textAlign: "center",
+        fontWeight: userScore !== 0 ? 'bold' : 'normal',
       },
     };
 
