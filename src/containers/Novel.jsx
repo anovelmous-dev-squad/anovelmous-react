@@ -3,6 +3,7 @@ import Relay from 'react-relay';
 import { Tabs, Tab } from 'material-ui';
 import Chapter from './Chapter';
 
+import { isPrewriting } from 'utils';
 
 class Novel extends React.Component {
   static propTypes = {
@@ -28,25 +29,36 @@ class Novel extends React.Component {
     this.setState({tabsValue: chapterId});
   }
 
-  render () {
-    const { novel, vocabulary, places, characters, plotItems } = this.props;
+  renderChildren() {
+    const { vocabulary, places, characters, plotItems } = this.props;
     return (
       <div>
-        <Tabs
-          valueLink={{value: this.state.tabsValue,
-                      requestChange: this._handleChapterChange.bind(this)}}
-          >
-          {novel.chapters.edges.map(edge => (
-            <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
-              {this.props.children && React.cloneElement(this.props.children, {
-                vocabulary,
-                places,
-                characters,
-                plotItems
-              })}
-            </Tab>
-          ))}
-        </Tabs>
+        {this.props.children && React.cloneElement(this.props.children, {
+          vocabulary,
+          places,
+          characters,
+          plotItems
+        })}
+      </div>
+    );
+  }
+
+  render () {
+    const { novel } = this.props;
+    return (
+      <div>
+        {isPrewriting(novel) ? this.renderChildren() : (
+          <Tabs
+            valueLink={{value: this.state.tabsValue,
+                        requestChange: this._handleChapterChange.bind(this)}}
+            >
+            {novel.chapters.edges.map(edge => (
+              <Tab key={edge.node.id} label={edge.node.title} value={edge.node.id}>
+                {this.renderChildren()}
+              </Tab>
+            ))}
+          </Tabs>
+        )}
       </div>
     );
   }
@@ -60,6 +72,9 @@ export default Relay.createContainer(Novel, {
         title
         latestChapter {
           id
+        }
+        stage {
+          name
         }
         chapters(last: 4) {
           edges {

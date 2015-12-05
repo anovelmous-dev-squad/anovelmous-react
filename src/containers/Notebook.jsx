@@ -30,56 +30,62 @@ class Notebook extends React.Component {
     this.state = { chapterId: props.novel.latestChapter.id };
   }
 
+  renderNovel() {
+    const { novel, vocabulary, places, characters, plotItems,
+            onChapterChange, onVoteChange, onVoteCast, voteText } = this.props;
+    return (
+      <Novel
+        onChapterChange={(chapterId) => {
+          this.setState({chapterId});
+          onChapterChange(chapterId);
+        }}
+        novel={novel}
+        vocabulary={vocabulary}
+        places={places}
+        characters={characters}
+        plotItems={plotItems}
+        >
+        {this.props.children && React.cloneElement(this.props.children, {
+          onVoteChange: onVoteChange,
+          onVoteCast: onVoteCast,
+          voteText: voteText
+        })}
+      </Novel>
+    );
+  }
+
   render() {
-    const { novel, novels, vocabulary, places, characters, plotItems,
-            onNovelChange, onChapterChange, onVoteChange, onVoteCast, voteText } = this.props;
+    const { novel, novels, onNovelChange } = this.props;
     return (
       <div>
-        <Toolbar>
-          <ToolbarGroup key={0} float="left">
-            <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
-            <NovelSelect
-              currentNovel={novel}
-              novels={novels}
-              onChange={onNovelChange}
-              />
-          </ToolbarGroup>
-          <ToolbarGroup key={1} float="right">
-            {!isPrewriting(novel) &&
-              <Link to={`/contribute/novel/${novel.id}/chapter/${this.state.chapterId}/plot/`}>
-                <IconButton tooltip="Plot">
-                  <FontIcon
-                    className="material-icons"
-                    hoverColor={Colors.red700}
-                    color={Colors.red900}>
-                    description
-                  </FontIcon>
-                </IconButton>
-              </Link>
-            }
-          </ToolbarGroup>
-        </Toolbar>
-        {!isPrewriting(novel) ? (
-          <Novel
-            onChapterChange={(chapterId) => {
-              this.setState({chapterId});
-              onChapterChange(chapterId);
-            }}
-            novel={novel}
-            vocabulary={vocabulary}
-            places={places}
-            characters={characters}
-            plotItems={plotItems}
-            >
-            {this.props.children && React.cloneElement(this.props.children, {
-              onVoteChange: onVoteChange,
-              onVoteCast: onVoteCast,
-              voteText: voteText
-            })}
-          </Novel>
-        ) : (
-          this.props.children
-        )}
+        <Paper>
+          <Toolbar>
+            <ToolbarGroup key={0} float="left">
+              <FontIcon className="material-icons" hoverColor={Colors.red700} color={Colors.red900}>book</FontIcon>
+              <NovelSelect
+                currentNovel={novel}
+                novels={novels}
+                onChange={onNovelChange}
+                />
+            </ToolbarGroup>
+            <ToolbarGroup key={1} float="right">
+              {!isPrewriting(novel) &&
+                <Link to={`/contribute/novel/${novel.id}/chapter/${this.state.chapterId}/plot/`}>
+                  <IconButton tooltip="Plot">
+                    <FontIcon
+                      className="material-icons"
+                      hoverColor={Colors.red700}
+                      color={Colors.red900}>
+                      description
+                    </FontIcon>
+                  </IconButton>
+                </Link>
+              }
+            </ToolbarGroup>
+          </Toolbar>
+          {!isPrewriting(novel) && this.renderNovel()}
+        </Paper>
+        {isPrewriting(novel) && this.renderNovel()}
       </div>
     );
   }
