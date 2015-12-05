@@ -10,13 +10,6 @@ class ProposedPlotList extends React.Component {
     plots: React.PropTypes.object.isRequired,
   };
 
-  componentWillMount() {
-    console.log(this.props.contributor.id)
-    if (this.props.relay.variables.contributorId === '') {
-      this.props.relay.setVariables({contributorId: this.props.contributor.id});
-    }
-  }
-
   _updateVoteScore(resourceId, addend) {
     const { contributor } = this.props;
     Relay.Store.update(
@@ -43,8 +36,8 @@ class ProposedPlotList extends React.Component {
         title={contributor.username + '\'s Idea'}
         description={plot.summary}
         userScore={plot.vote ? plot.vote.score : 0}
-        onUpvote={(id) => console.log(id)}
-        onDownvote={(id) => console.log(id)}
+        onUpvote={(id) => this._handleUpvote(id)}
+        onDownvote={(id) => this._handleDownvote(id)}
         />
     );
   }
@@ -68,6 +61,7 @@ export default Relay.createContainer(ProposedPlotList, {
       fragment on Contributor {
         id
         username
+        ${UpdateVoteScoreMutation.getFragment('contributor')}
       }
     `,
     plots: () => Relay.QL`
