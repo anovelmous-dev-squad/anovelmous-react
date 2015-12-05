@@ -59,7 +59,7 @@ class Notebook extends React.Component {
             }
           </ToolbarGroup>
         </Toolbar>
-        {novel.stage.name === 'WRITING' || novel.stage.name === 'FINISHED' ? (
+        {!isPrewriting(novel) ? (
           <Novel
             onChapterChange={(chapterId) => {
               this.setState({chapterId});

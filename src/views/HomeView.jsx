@@ -2,6 +2,8 @@ import React from 'react';
 import Relay from 'react-relay';
 import LoadingLarge from 'components/LoadingLarge';
 
+import { isPrewriting } from 'utils';
+
 class HomeView extends React.Component {
   static propTypes = {
     viewer: React.PropTypes.object.isRequired,
@@ -10,9 +12,9 @@ class HomeView extends React.Component {
   componentWillMount() {
     const { viewer } = this.props;
     const novel = viewer.novels.edges[0].node;
-    const chapter = novel.latestChapter;
-    const contributeUrl = `/contribute/novel/${novel.id}/chapter/${chapter.id}`;
-    this.props.history.replace(contributeUrl);
+    const novelUrl = `/contribute/novel/${novel.id}/`;
+    const urlSuffix = isPrewriting(novel) ? 'prewriting/' : `chapter/${novel.latestChapter.id}`;
+    this.props.history.replace(novelUrl + urlSuffix);
   }
 
   render() {
@@ -32,6 +34,9 @@ export default Relay.createContainer(HomeView, {
               id
               latestChapter {
                 id
+              }
+              stage {
+                name
               }
             }
           }
