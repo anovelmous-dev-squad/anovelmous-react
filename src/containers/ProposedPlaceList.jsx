@@ -7,17 +7,22 @@ class ProposedPlaceList extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
     places: React.PropTypes.object.isRequired,
+    onUpvote: React.PropTypes.func,
+    onDownvote: React.PropTypes.func,
+    onUndoVote: React.PropTypes.func,
   };
 
   renderPlaceCard(place) {
-    const { contributor } = this.props;
+    const { onUpvote, onDownvote, onUndoVote } = this.props;
     return (
       <ScoreCard
         id={place.id}
         score={place.voteScore}
         title={place.name}
         description={place.description}
-        onUpvote={(id) => console.log(id)}
+        onUpvote={onUpvote}
+        onDownvote={onDownvote}
+        onUndoVote={onUndoVote}
         />
     );
   }

@@ -2,37 +2,23 @@ import React from 'react';
 import Relay from 'react-relay';
 import ScoreCard from 'components/ScoreCard';
 
-import UpdateVoteScoreMutation from 'mutations/UpdateVoteScoreMutation';
-
 class ProposedPlotList extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
     plots: React.PropTypes.object.isRequired,
+    onUpvote: React.PropTypes.func,
+    onDownvote: React.PropTypes.func,
+    onUndoVote: React.PropTypes.func,
   };
 
-  _updateVoteScore(resourceId, addend) {
-    const { contributor } = this.props;
-    Relay.Store.update(
-      new UpdateVoteScoreMutation({
-        resourceId, contributor, addend
-      })
-    );
-  }
-
-  _handleUndoVote = (plotId) => {
-    this._updateVoteScore(plotId, 0);
-  }
-
-  _handleUpvote = (plotId) => {
-    this._updateVoteScore(plotId, 1);
-  }
-
-  _handleDownvote = (plotId) => {
-    this._updateVoteScore(plotId, -1);
-  }
+  static defaultProps = {
+    onUpvote: () => {},
+    onDownvote: () => {},
+    onUndoVote: () => {},
+  };
 
   renderPlotCard(plot) {
-    const { contributor } = this.props;
+    const { contributor, onUpvote, onDownvote, onUndoVote } = this.props;
     return (
       <ScoreCard
         id={plot.id}
@@ -40,9 +26,9 @@ class ProposedPlotList extends React.Component {
         title={contributor.username + '\'s Idea'}
         description={plot.summary}
         userScore={plot.vote ? plot.vote.score : 0}
-        onUndoVote={(id) => this._handleUndoVote(id)}
-        onUpvote={(id) => this._handleUpvote(id)}
-        onDownvote={(id) => this._handleDownvote(id)}
+        onUndoVote={onUndoVote}
+        onUpvote={onUpvote}
+        onDownvote={onDownvote}
         />
     );
   }
@@ -66,7 +52,6 @@ export default Relay.createContainer(ProposedPlotList, {
       fragment on Contributor {
         id
         username
-        ${UpdateVoteScoreMutation.getFragment('contributor')}
       }
     `,
     plots: () => Relay.QL`

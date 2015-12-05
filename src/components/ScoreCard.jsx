@@ -22,6 +22,7 @@ export default class ScoreCard extends React.Component {
   };
 
   static defaultProps = {
+    onUndoVote: () => {},
     onUpvote: () => {},
     onDownvote: () => {},
   }

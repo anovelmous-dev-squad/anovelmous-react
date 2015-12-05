@@ -12,6 +12,7 @@ import CreateCharacterMutation from 'mutations/CreateCharacterMutation';
 import CreatePlaceMutation from 'mutations/CreatePlaceMutation';
 import CreatePlotItemMutation from 'mutations/CreatePlotItemMutation';
 import CreatePlotMutation from 'mutations/CreatePlotMutation';
+import UpdateVoteScoreMutation from 'mutations/UpdateVoteScoreMutation';
 
 import { Tabs, Tab, Paper } from 'material-ui';
 
@@ -65,6 +66,27 @@ class PrewritingView extends React.Component {
     );
   };
 
+  _updateVoteScore(resourceId, addend) {
+    const { contributor } = this.props;
+    Relay.Store.update(
+      new UpdateVoteScoreMutation({
+        resourceId, contributor, addend
+      })
+    );
+  }
+
+  _handleUndoVote = (plotId) => {
+    this._updateVoteScore(plotId, 0);
+  }
+
+  _handleUpvote = (plotId) => {
+    this._updateVoteScore(plotId, 1);
+  }
+
+  _handleDownvote = (plotId) => {
+    this._updateVoteScore(plotId, -1);
+  }
+
   _getCurrentStageView = (stage) => {
     switch (stage.name) {
     case 'BRAINSTORMING':
@@ -88,7 +110,13 @@ class PrewritingView extends React.Component {
     const { novel, contributor } = this.props;
     return (
       <div>
-        <ProposedPlotList plots={novel.proposedPlots} contributor={contributor} />
+        <ProposedPlotList
+          plots={novel.proposedPlots}
+          contributor={contributor}
+          onUpvote={this._handleUpvote}
+          onDownvote={this._handleDownvote}
+          onUndoVote={this._handleUndoVote}
+          />
         <PlotCreator maxSummaryLength={3000} onCreate={this._handlePlotCreation} />
       </div>
     );
@@ -99,18 +127,33 @@ class PrewritingView extends React.Component {
     return (
         <Tabs>
           <Tab label="Create a Character">
-            <ProposedCharacterList characters={novel.proposedCharacters}
-                                   contributor={contributor}/>
+            <ProposedCharacterList
+              characters={novel.proposedCharacters}
+              contributor={contributor}
+              onUpvote={this._handleUpvote}
+              onDownvote={this._handleDownvote}
+              onUndoVote={this._handleUndoVote}
+              />
             <CharacterCreator onCreate={this._handleCharacterCreation}/>
           </Tab>
           <Tab label="Create a Place">
-            <ProposedPlaceList places={novel.proposedPlaces}
-                               contributor={contributor}/>
+            <ProposedPlaceList
+              places={novel.proposedPlaces}
+              contributor={contributor}
+              onUpvote={this._handleUpvote}
+              onDownvote={this._handleDownvote}
+              onUndoVote={this._handleUndoVote}
+              />
             <PlaceCreator onCreate={this._handlePlaceCreation}/>
           </Tab>
           <Tab label="Create a Plot Item">
-            <ProposedPlotItemList plotItems={novel.proposedPlotitems}
-                                  contributor={contributor}/>
+            <ProposedPlotItemList
+              plotItems={novel.proposedPlotitems}
+              contributor={contributor}
+              onUpvote={this._handleUpvote}
+              onDownvote={this._handleDownvote}
+              onUndoVote={this._handleUndoVote}
+              />
             <PlotItemCreator onCreate={this._handlePlotItemCreation}/>
           </Tab>
         </Tabs>
@@ -176,6 +219,7 @@ export default Relay.createContainer(PrewritingView, {
         ${CreateCharacterMutation.getFragment('contributor')}
         ${CreatePlaceMutation.getFragment('contributor')}
         ${CreatePlotItemMutation.getFragment('contributor')}
+        ${UpdateVoteScoreMutation.getFragment('contributor')}
       }
     `,
     novel: () => Relay.QL`

@@ -7,17 +7,22 @@ class ProposedPlotItemList extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
     plotItems: React.PropTypes.object.isRequired,
+    onUpvote: React.PropTypes.func,
+    onDownvote: React.PropTypes.func,
+    onUndoVote: React.PropTypes.func,
   };
 
   renderPlotItemCard(plotItem) {
-    const { contributor } = this.props;
+    const { onUpvote, onDownvote, onUndoVote } = this.props;
     return (
       <ScoreCard
         id={plotItem.id}
         score={plotItem.voteScore}
         title={plotItem.name}
         description={plotItem.description}
-        onUpvote={(id) => console.log(id)}
+        onUpvote={onUpvote}
+        onDownvote={onDownvote}
+        onUndoVote={onUndoVote}
         />
     );
   }

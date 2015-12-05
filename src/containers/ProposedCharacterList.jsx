@@ -6,17 +6,23 @@ import ScoreCard from 'components/ScoreCard';
 class ProposedCharacterList extends React.Component {
   static propTypes = {
     contributor: React.PropTypes.object.isRequired,
-    characters: React.PropTypes.object.isRequired
+    characters: React.PropTypes.object.isRequired,
+    onUpvote: React.PropTypes.func,
+    onDownvote: React.PropTypes.func,
+    onUndoVote: React.PropTypes.func,
   };
 
   renderCharacterCard(character) {
+    const { onUpvote, onDownvote, onUndoVote } = this.props;
     return (
       <ScoreCard
         id={character.id}
         score={character.voteScore}
         title={character.firstName}
         description={character.bio}
-        onUpvote={(id) => console.log(id)}
+        onUpvote={onUpvote}
+        onDownvote={onDownvote}
+        onUndoVote={onUndoVote}
         />
     );
   }
