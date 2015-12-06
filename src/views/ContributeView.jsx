@@ -148,7 +148,7 @@ export default Relay.createContainer(ContributeView, {
           }
           ${CastVoteMutation.getFragment('chapter')}
         }
-        vocabulary(first: 10000) {
+        vocabulary: filteredVocabulary(first: 10000) {
           ${Notebook.getFragment('vocabulary')}
           ${CardVoter.getFragment('vocabulary')}
         }
